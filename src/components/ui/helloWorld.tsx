@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client"
 import { useColorContext } from "../colorContext"
 
@@ -6,7 +8,7 @@ export function HelloWorld() {
 
   return (
     <div>
-      <h1 className={`${activeColorSet?.secondary || 'text-pink-600'}`}>Hello World</h1>
+      <h1 className={`${activeColorSet?.secondary}`}>Hello World</h1>
     </div>
   )
 }
