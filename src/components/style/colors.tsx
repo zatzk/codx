@@ -35,4 +35,13 @@ export const colorSets = {
     bg: 'bg-orange-500',
     borderButton: 'border-orange-600',
   },
+  white: {
+    primary: 'text-white',
+    secondary: 'text-white',
+    // tertiary: 'green-500',
+    // quaternary: 'blue-500',
+    barHover: 'hover:bg-gray-400',
+    bg: 'bg-gray-800',
+    borderButton: 'border-white',
+  }
 };
