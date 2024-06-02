@@ -7,7 +7,7 @@
 import { Menu } from "lucide-react"
 import { Inter, Silkscreen } from "next/font/google";
 import { colorSets } from '~/components/style/colors';
-import { useColorContext } from "~/components/colorContext";
+import { useColorContext } from "~/components/style/colorContext";
 import { motion } from "framer-motion";
 import { useState } from "react";
 

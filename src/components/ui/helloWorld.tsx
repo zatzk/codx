@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client"
-import { useColorContext } from "../colorContext"
+import { useColorContext } from "../style/colorContext";
 
 export function HelloWorld() {
   const { activeColorSet } = useColorContext()
