@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client'
 import { Inter } from "next/font/google";
-import { useColorContext } from "../../components/colorContext"
+import { useColorContext } from "../../components/style/colorContext"
 
 const inter = Inter({
   subsets: ["latin"],
