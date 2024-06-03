@@ -11,6 +11,7 @@ import { useColorContext } from "~/components/style/colorContext";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
+
 const silkscreen = Silkscreen({
   weight: ["400", "700"], 
   subsets: ["latin"], 
@@ -151,11 +152,14 @@ export function TopNav() {
   );
 }
 
+
+
 export default function Template({ children }: { children: React.ReactNode }) {
+ 
   return (
     <main className="w-screen h-screen flex justify-center">
       <TopNav/>
       {children}
     </main>
-)
+  )
 }
