@@ -17,13 +17,13 @@ export default function RootLayout({
     <ColorProvider>
       <html lang="en">
         <body className={`relative h-full w-screen bg-slate-950`}>
-          <div 
+          {/* <div 
             className="
-              absolute w-full h-screen bottom-0 left-0 right-0 top-0 
-              bg-[linear-gradient(to_right,#3d3d3d2d_1px,transparent_1px),linear-gradient(to_bottom,#3d3d3d2d_1px,transparent_1px)] 
+              absolute w-full h-screen bottom-0 left-0 right-0 top-0 z-10
+              bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] 
               bg-[size:34px_34px] 
-              [mask-image:radial-gradientellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]
-              "/>
+              [mask-image:radial-gradient(ellipse_60%_50%_at_50%_100%,#000_70%,transparent_100%)]
+              "/> */}
             {children}
         </body>
       </html>
