@@ -5,9 +5,9 @@
 import { Inter } from "next/font/google";
 import { useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components";
-import { useColorContext } from "~/components/style/colorContext";
-import { type colorSets } from "~/components/style/colors";
-import { HelloWorld } from "~/components/ui/helloWorld";
+import { useColorContext } from "~/lib/colorContext";
+import { type colorSets } from "~/lib/colors";
+import { HelloWorld } from "~/components/helloWorld";
 
 const inter = Inter({
   subsets: ["latin"],

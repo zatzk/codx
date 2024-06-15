@@ -6,8 +6,8 @@
 "use client"
 import { Menu } from "lucide-react"
 import { Inter, Silkscreen } from "next/font/google";
-import { colorSets } from '~/components/style/colors';
-import { useColorContext } from "~/components/style/colorContext";
+import { colorSets } from '~/lib/colors';
+import { useColorContext } from "~/lib/colorContext";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -28,7 +28,6 @@ export function TopNav() {
   const {activeColorSet, setActiveColorSet} = useColorContext();
   const [isAprendaHover, toggleAprendaHover] = useState(false);
   const [isPratiqueHover, togglePratiqueHover] = useState(false);
-  console.log('activecolorset',activeColorSet)
 
 
   const subMenuAnimate = {
@@ -55,7 +54,7 @@ export function TopNav() {
 
 
   return (
-  <div className={` flex justify-center font-sans ${silkscreen.variable} z-10 xl:max-w-6xl lg:max-w-3xl max-h-[60px] px-24 rounded-full absolute text-white`}>
+  <div className={` flex justify-center font-sans ${silkscreen.variable} z-10 xl:max-w-6xl lg:max-w-3xl max-h-[60px] px-24 rounded-full fixed text-white`}>
     <div className="flex items-center justify-between text-xs p-1 w-[1440px]">
  
       <div className="flex items-center text-xs p-1">

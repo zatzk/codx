@@ -1,5 +1,5 @@
 import "~/styles/globals.css";
-import { ColorProvider } from "~/components/style/colorContext";
+import { ColorProvider } from "~/lib/colorContext";
 
 export const metadata = {
   title: "CodX",
