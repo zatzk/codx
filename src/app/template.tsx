@@ -54,7 +54,7 @@ export function TopNav() {
 
 
   return (
-  <div className={` flex justify-center font-sans ${silkscreen.variable} z-10 xl:max-w-6xl lg:max-w-3xl max-h-[60px] px-24 rounded-full fixed text-white`}>
+  <div className={` flex justify-center font-sans ${silkscreen.variable} z-10 xl:max-w-6xl lg:max-w-4xl max-h-[60px] px-24 rounded-full fixed text-white`}>
     <div className="flex items-center justify-between text-xs p-1 w-[1440px]">
  
       <div className="flex items-center text-xs p-1">
@@ -142,7 +142,7 @@ export function TopNav() {
             Sign in
           </span>
         </button>
-        <button className={`flex items-center justify-center ${activeColorSet?.borderButton} hover:border hover:cursor-pointer rounded-full p-3`}>
+        <button className={`flex items-center justify-center ${activeColorSet?.borderButton} hover:border hover:cursor-pointer rounded-full p-3 mr-6`}>
           <Menu className={`mx-3 size-4 text-white`}/>
         </button>
       </div>
@@ -156,7 +156,7 @@ export function TopNav() {
 export default function Template({ children }: { children: React.ReactNode }) {
  
   return (
-    <main className="w-screen h-screen flex justify-center">
+    <main className="w-full h-full flex justify-center">
       <TopNav/>
       {children}
     </main>
