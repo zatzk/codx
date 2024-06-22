@@ -34,7 +34,7 @@ export function QuestionCard({ question, onStatusChange, showAnswer, setShowAnsw
 
       <div className={`h-full flex flex-grow flex-col mx-6 ${!showAnswer ? 'relative' : 'hidden'}`}>
           <div className='flex flex-grow h-full justify-center items-center'>
-            <h2 className='text-3xl text-center '>{question.question}</h2>
+            <h2 className='text-3xl text-center ' dangerouslySetInnerHTML={{__html: markdownToHtml(question.question, false)}}/>
           </div> 
           <div className='flex justify-center items-center mb-5 hover:opacity-70 transition ease-in-out delay-50'>
             <button onClick={() => setShowAnswer(true)}>Clique para mostrar a resposta</button>
