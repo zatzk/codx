@@ -44,8 +44,8 @@ export default function Questoes() {
 
   return (
     <section className={`font-sans ${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20 `}>
-      <SimplePagHeader title="Questões" description="Quizzes to help you test and improve your knowledge and skill up" />
-      <div className="flex bg-gray-100 pb-14 pt-4 sm:pb-16 sm:pt-8">
+      <SimplePagHeader title="Questões" description="Perguntas para ajudá-lo a testar e melhorar seu conhecimento e habilidades" />
+      <div className="w-full flex sm:pb-16 sm:pt-8">
         <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 sm:gap-3">
             {
@@ -53,7 +53,6 @@ export default function Questoes() {
                 <GridItem
                   key={questao.id}
                   name={questao.name} 
-                  id={questao.id}                
                 />
               ))
             }
