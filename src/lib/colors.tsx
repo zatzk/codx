@@ -4,6 +4,7 @@ export const colorSets = {
     secondary: 'text-pink-300',
     barHover: 'hover:bg-pink-400',
     bg: 'bg-pink-500',
+    cardBg: 'bg-red-500',
     borderButton: 'border-pink-600',
     gradientBg: '219, 39, 119',
     g1: '39, 219, 138',
@@ -11,13 +12,15 @@ export const colorSets = {
     g3: '219, 138, 39',
     g4: '200, 50, 50',
     g5: '180, 180, 50',
-    interactive: '140, 100, 255'
+    interactive: '140, 100, 255',
+    paragraph: 'text-[#feebf7]',
   },
   sky: {
     primary: 'text-sky-600',
     secondary: 'text-sky-300',
     barHover: 'hover:bg-sky-400',
     bg: 'bg-sky-500',
+    cardBg: 'bg-sky-500',
     borderButton: 'border-sky-600',
     gradientBg: '2, 132, 199',
     g1: '199, 68, 2',
@@ -25,13 +28,15 @@ export const colorSets = {
     g3: '68, 2, 199',
     g4: '133, 199, 2',
     g5: '199, 2, 133',
-    interactive: '140, 100, 255'
+    interactive: '140, 100, 255',
+    paragraph: 'text-[#eaf6ff]',
   },
   green: {
     primary: 'text-green-600',
     secondary: 'text-green-300',
     barHover: 'hover:bg-green-400',
     bg: 'bg-green-500',
+    cardBg: 'bg-green-500',
     borderButton: 'border-green-600',
     gradientBg: '22, 163, 74',
     g1: '199, 68, 2',
@@ -39,13 +44,15 @@ export const colorSets = {
     g3: '163, 22, 111',
     g4: '200, 50, 50',
     g5: '163, 74, 22',
-    interactive: '140, 100, 255'
+    interactive: '140, 100, 255',
+    paragraph: 'text-[#e5fbeb]',
   },
   orange: {
     primary: 'text-orange-600',
     secondary: 'text-orange-300',
     barHover: 'hover:bg-orange-400',
     bg: 'bg-orange-500',
+    cardBg: 'bg-yellow-500',
     borderButton: 'border-orange-600',
     gradientBg: '234, 88, 12',
     g1: '12, 156, 234',
@@ -53,13 +60,15 @@ export const colorSets = {
     g3: '156, 234, 12',
     g4: '200, 50, 50',
     g5: '180, 180, 50',
-    interactive: '140, 100, 255'
+    interactive: '140, 100, 255',
+    paragraph: 'text-[#feeadd]',
   },
   white: {
     primary: 'text-white',
     secondary: 'text-white',
     barHover: 'hover:bg-gray-400',
     bg: 'bg-gray-800',
+    cardBg: 'bg-gray-800',
     borderButton: 'border-white',
     gradientBg: '86, 205, 226',
     g1: '18, 113, 255',
@@ -67,6 +76,7 @@ export const colorSets = {
     g3: '100, 220, 255',
     g4: '200, 50, 50',
     g5: '180, 180, 50',
-    interactive: '140, 100, 255'
+    interactive: '140, 100, 255',
+    paragraph: 'text-white',
   }
 };
