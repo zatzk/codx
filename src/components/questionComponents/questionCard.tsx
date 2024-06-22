@@ -36,18 +36,19 @@ export function QuestionCard({ question, onStatusChange, showAnswer, setShowAnsw
           <div className='flex flex-grow h-full justify-center items-center'>
             <h2 className='text-3xl text-center '>{question.question}</h2>
           </div> 
-          <div className='flex justify-center items-center mb-5'>
+          <div className='flex justify-center items-center mb-5 hover:opacity-70 transition ease-in-out delay-50'>
             <button onClick={() => setShowAnswer(true)}>Clique para mostrar a resposta</button>
           </div>
         </div>
 
 
         <div className={`h-full flex flex-grow flex-col mx-6 ${showAnswer ? 'relative' : 'hidden'}`}>
+          <span className='text-center mt-5 text-gray-400'>{question.topics[0]} · {question.topics[1]}</span>
           <div className='flex flex-grow h-full justify-center items-center'>
             <p className='text-center' dangerouslySetInnerHTML={{__html: markdownToHtml(question.answer, false)}}/>
           </div> 
-          <div className='flex justify-center items-center mb-5'>
-          <button onClick={() => setShowAnswer(false)}>Esconder a resposta</button>
+          <div className='flex justify-center items-center mb-5 hover:opacity-70 transition ease-in-out delay-50'>
+            <button onClick={() => setShowAnswer(false)}>Esconder a resposta</button>
           </div>
         </div>        
       </div>
