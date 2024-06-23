@@ -20,18 +20,18 @@ interface QuestionGroup {
   title: string;
   description: string;
   questions: Question[];
-}
+}[];
 
 type QuestionProgressType = 'know' | 'dontKnow' | 'skip' | 'reset';
 
-export function QuestionList({ questionGroup }: { questionGroup: QuestionGroup }) {
+export function QuestionList({ questionGroup }: { questionGroup: QuestionGroup[] }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [knowCount, setKnowCount] = useState(0);
   const [didNotKnowCount, setDidNotKnowCount] = useState(0);
   const [skippedCount, setSkippedCount] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
 
-  const totalQuestions = questionGroup[0]?.questions?.length;
+  const totalQuestions = questionGroup[0]?.questions?.length ?? 0;
   const currentQuestion = questionGroup[0]?.questions?.[currentQuestionIndex];
 
   const handleQuestionStatus = (status: QuestionProgressType) => {
@@ -61,7 +61,7 @@ export function QuestionList({ questionGroup }: { questionGroup: QuestionGroup }
       />
       {currentQuestionIndex < totalQuestions ? (
         <QuestionCard 
-          question={currentQuestion} 
+          question={currentQuestion!} 
           onStatusChange={handleQuestionStatus} 
           showAnswer={showAnswer}
           setShowAnswer={setShowAnswer} 
