@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client'
 import { RotateCcw } from "lucide-react";
 import { useColorContext } from "~/lib/colorContext";
