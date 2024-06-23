@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { QuestionCard } from './questionCard';
-import { QuestionLoader } from './questionLoader';
 import { QuestionFinished } from './questionFinished';
 import { QuestionsProgress } from './questionProgress';
 
