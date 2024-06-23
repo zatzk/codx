@@ -9,7 +9,6 @@ import { useParams } from 'next/navigation';
 import { QuestionList } from '~/components/questionComponents/questionList';
 import { QuestionLoader } from '~/components/questionComponents/questionLoader';
 import Link from 'next/link';
-import { useColorContext } from "~/lib/colorContext";
 import { Inter } from 'next/font/google';
 
 const inter = Inter({
@@ -21,7 +20,6 @@ export default function Quizz() {
   const params = useParams<{id: string}>();
   const name = params.id;
 
-  const {activeColorSet} = useColorContext();
 
   interface Question {
     id: number;
