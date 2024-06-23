@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client';
 import { CheckCircle, RotateCcw, SkipForward, Sparkles } from 'lucide-react';
