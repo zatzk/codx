@@ -41,7 +41,7 @@ export default function Quizz() {
   
   console.log('id:', name);
   
-  const [questionGroup, setQuestionGroup] = useState<QuestionGroup  | null>(null);
+  const [questionGroup, setQuestionGroup] = useState<QuestionGroup[]  | null>(null);
 
   useEffect(() => {
     if (name) {
