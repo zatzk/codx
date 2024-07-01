@@ -55,6 +55,71 @@ export const questions = createTable(
   },
 );
 
+export const trilhasGroups = createTable(
+  "trilhas_groups",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    description: varchar("description"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
+export const trilhas = createTable(
+  "trilhas",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    data: text("data"),
+    links: json("links"),
+    level: integer("level"),
+    description: varchar("description"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
+export const roadmaps = createTable(
+  "roadmaps",
+  {
+    id: serial("id").primaryKey(),
+    trilhasId: integer("trilha_id")
+      .references(() => trilhas.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    trilhasGroupsId: integer("trilha_group_id")
+      .references(() => trilhasGroups.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
+export const roadmapsRelations = relations(roadmaps, ({ one }) => ({
+  trilhasGroup: one(trilhasGroups, {
+    fields: [roadmaps.trilhasGroupsId],
+    references: [trilhasGroups.id],
+  }),
+  trilha: one(trilhas, {
+    fields: [roadmaps.trilhasId],
+    references: [trilhas.id],
+  }),
+}));
+
+export const trilhasGroupsRelations = relations(trilhasGroups, ({ many }) => ({
+  roadmaps: many(roadmaps),
+}));
+
+export const trilhasRelations = relations(trilhas, ({ many }) => ({
+  roadmaps: many(roadmaps),
+}));
+
 export const questionGroupRelations = relations(questionGroups, ({ many }) => ({
   questions: many(questions),
 }));
