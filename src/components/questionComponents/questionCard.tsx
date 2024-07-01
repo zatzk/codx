@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable react/no-danger-with-children */
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useColorContext } from "../../lib/colorContext";
 import { markdownToHtml } from '../../lib/markdown';
 import { CheckCircle, SkipForward, Sparkles } from 'lucide-react';
