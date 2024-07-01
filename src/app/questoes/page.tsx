@@ -51,6 +51,7 @@ export default function Questoes() {
             {
               questoes.map((questao) => (
                 <GridItem
+                  route="questoes"
                   key={questao.id}
                   name={questao.name} 
                 />
