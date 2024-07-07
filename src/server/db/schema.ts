@@ -14,6 +14,7 @@ import {
   json,
   integer,
 } from "drizzle-orm/pg-core";
+import { stat } from "fs";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -94,6 +95,20 @@ export const roadmaps = createTable(
     trilhasGroupsId: integer("trilha_group_id")
       .references(() => trilhasGroups.id,
         { onDelete: "cascade", onUpdate: "cascade", }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
+export const desafios = createTable(
+  "desafios",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    difficulty: text("difficulty"),
+    category: text("category"),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
