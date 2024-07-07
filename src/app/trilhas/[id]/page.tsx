@@ -58,18 +58,17 @@ export default function Trilhas() {
 
   return (
   <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
-    <div className="flex flex-col items-center mb-8">
-      
-      <Link href={'../trilhas'} className='mb-4 mt-4 text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
-      <span
-        className='mr-2 mb-[2px] inline-block transform transition-transform group-hover:translate-x-[-2px]'
-      >
-        &larr;
-      </span>
-        <span>Voltar as trilhas</span> 
-      </Link>
-      <h1 className='text-5xl font-bold mb-4 mt-4'>Trilha {name}</h1>
-      <p className='text-lg font-light mt-3'>Encontre o caminho mais eficiente de estudos.</p>
+    <div className="flex w-2/3 flex-col items-left mb-6"> 
+      <div className='flex gap-2'>
+        <Link href={'../../page.tsx'} className='text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
+          <span>codx</span> 
+        </Link>
+        <span className='text-sm'>/</span>
+        <Link href={'../trilhas'} className='text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
+          <span>trilhas</span> 
+        </Link>
+      </div>    
+      <h1 className='text-3xl font-bold mt-1'>{name} Quizz</h1>
     </div>
     <div className="flex flex-col items-center w-2/3">
       {roadmap && <TrilhasList roadmap={roadmap} />}

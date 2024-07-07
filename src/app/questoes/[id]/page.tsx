@@ -64,20 +64,20 @@ export default function Quizz() {
 
   return (
   <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
-    <div className="flex flex-col items-center mb-8">
-      
-      <Link href={'../questoes'} className='mb-4 mt-4 text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
-      <span
-        className='mr-2 mb-[2px] inline-block transform transition-transform group-hover:translate-x-[-2px]'
-      >
-        &larr;
-      </span>
-        <span>Voltar as questões</span> 
-      </Link>
-      <h1 className='text-5xl font-bold mb-4 mt-4'>{name} Quizz</h1>
-      <p className='text-lg font-light mt-3'>Teste, avalie e melhore seu conhecimento com estas perguntas.</p>
+    <div className="flex w-[600px] flex-col items-left mb-6"> 
+      <div className='flex gap-2'>
+        <Link href={'../../page.tsx'} className='text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
+          <span>codx</span> 
+        </Link>
+        <span className='text-sm'>/</span>
+        <Link href={'../questoes'} className='text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
+          <span>questões</span> 
+        </Link>
+      </div>    
+      <h1 className='text-3xl font-bold mt-1'>{name} Quizz</h1>
     </div>
-    <div className="mt-4">
+
+    <div className="">
       <QuestionList questionGroup={questionGroup} />
     </div>
   </section>

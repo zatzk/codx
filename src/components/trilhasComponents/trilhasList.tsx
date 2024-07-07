@@ -76,7 +76,7 @@ export function TrilhasList({ roadmap }: TrilhasListProps) {
   );
 
   return (
-    <div className="mt-4 w-full">
+    <div className="w-full">
       {[1, 2, 3].map((level) => renderLevel(level))}
     </div>
   );
