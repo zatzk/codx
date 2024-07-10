@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <ColorProvider>
       <html lang="en">
-        <body className={`relative h-[1000px] w-screen bg-slate-950`}>
+        <body className={`relative h-full w-screen bg-slate-950`}>
           {children}
         </body>
       </html>
