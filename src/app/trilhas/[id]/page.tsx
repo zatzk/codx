@@ -68,7 +68,7 @@ export default function Trilhas() {
           <span>trilhas</span> 
         </Link>
       </div>    
-      <h1 className='text-3xl font-bold mt-1'>{name} Quizz</h1>
+      <h1 className='text-3xl font-bold mt-1'>Trilha {name}</h1>
     </div>
     <div className="flex flex-col items-center w-2/3">
       {roadmap && <TrilhasList roadmap={roadmap} />}
