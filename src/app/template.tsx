@@ -29,6 +29,7 @@ export function TopNav() {
   const [isAprendaHover, toggleAprendaHover] = useState(false);
   const [isPratiqueHover, togglePratiqueHover] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hoveredColor, setHoveredColor] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,6 +67,13 @@ export function TopNav() {
       }
     }
   };
+
+  const links = [
+    { href: "/", color: "text-pink-600", label: "c" },
+    { href: "/", color: "text-sky-600", label: "o" },
+    { href: "/", color: "text-green-600", label: "d" },
+    { href: "/", color: "text-orange-500", label: "x" }
+  ];
 
   return (
     <div className={`fixed z-10 flex justify-center font-sans ${silkscreen.variable} xl:max-w-6xl lg:max-w-4xl px-24 rounded-full ${scrolled ? 'bg-gray-500 bg-opacity-40 backdrop-blur-md translate-y-3' : 'transparent'} transition-all duration-300`}>
@@ -119,34 +127,20 @@ export function TopNav() {
 
         <div className="flex relative items-center font-bold text-lg p-1">
           <div className="border-none flex items-center rounded-full p-3 hover:cursor-pointer">
-            <a
-              href="/"
-              className="mx-1 text-pink-600"
-              onMouseEnter={() => setActiveColorSet(colorSets.pink)}
-            >
-              c
-            </a>
-            <a
-              href="/"
-              className="mx-1 text-sky-600"
-              onMouseEnter={() => setActiveColorSet(colorSets.sky)}
-            >
-              o
-            </a>
-            <a
-              href="/"
-              className="mx-1 text-green-600"
-              onMouseEnter={() => setActiveColorSet(colorSets.green)}
-            >
-              d
-            </a>
-            <a
-              href="/"
-              className="mx-1 text-orange-500"
-              onMouseEnter={() => setActiveColorSet(colorSets.orange)}
-            >
-              x
-            </a>
+            {links.map(link => (
+              <a
+                key={link.color}
+                href={link.href}
+                className={`mx-1 ${hoveredColor ? (hoveredColor === link.color ? 'text-white' : hoveredColor) : link.color}`}
+                onMouseEnter={() => {
+                  setActiveColorSet(colorSets[link.color.split('-')[1]]);
+                  setHoveredColor(link.color);
+                }}
+                onMouseLeave={() => setHoveredColor('')}
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
 
