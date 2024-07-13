@@ -1,4 +1,25 @@
-export const colorSets = {
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
+interface ColorSets {
+  [key: string]: {
+    primary: string;
+    secondary: string;
+    barHover: string;
+    bg: string;
+    cardBg: string;
+    borderButton: string;
+    hoverBorderButton: string;
+    gradientBg: string;
+    g1: string;
+    g2: string;
+    g3: string;
+    g4: string;
+    g5: string;
+    interactive: string;
+    paragraph: string;
+  };
+}
+
+export const colorSets: ColorSets = {
   pink: {
     primary: 'text-pink-600',
     secondary: 'text-pink-300',
