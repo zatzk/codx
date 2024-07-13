@@ -21,8 +21,8 @@ const ColorContext = createContext<any>(undefined);
 export function ColorProvider({ children }: { children: React.ReactNode }) {
   const [activeColorSet, setActiveColorSet] = useLocalStorage<ColorSet>(
     "activeColorSet",
-    colorSets.white,
-    {initializeWithValue: false}
+    colorSets.white ?? { primary: "", secondary: "", barHover: "", bg: "", borderButton: "" },
+    { initializeWithValue: false }
   );
 
 
