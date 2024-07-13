@@ -8,8 +8,8 @@ import { Menu } from "lucide-react"
 import { Inter, Silkscreen } from "next/font/google";
 import { colorSets } from '~/lib/colors';
 import { useColorContext } from "~/lib/colorContext";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { color, motion } from "framer-motion";
+import { SetStateAction, useEffect, useState } from "react";
 
 
 const silkscreen = Silkscreen({
@@ -74,6 +74,16 @@ export function TopNav() {
     { href: "/", color: "text-green-600", label: "d" },
     { href: "/", color: "text-orange-500", label: "x" }
   ];
+  const handleMouseEnter = (color: string) => {
+    const colorKey = color.split('-')[1];
+    if (colorKey && colorSets[colorKey]) {
+      setActiveColorSet(colorSets[colorKey]);
+    }
+    setHoveredColor(color);
+  };
+  const handleMouseLeave = () => {
+    setHoveredColor('');
+  };
 
   return (
     <div className={`fixed z-10 flex justify-center font-sans ${silkscreen.variable} xl:max-w-6xl lg:max-w-4xl px-24 rounded-full ${scrolled ? 'bg-gray-500 bg-opacity-40 backdrop-blur-md translate-y-3' : 'transparent'} transition-all duration-300`}>
@@ -132,11 +142,8 @@ export function TopNav() {
                 key={link.color}
                 href={link.href}
                 className={`mx-1 ${hoveredColor ? (hoveredColor === link.color ? 'text-white' : hoveredColor) : link.color}`}
-                onMouseEnter={() => {
-                  setActiveColorSet(colorSets[link.color.split('-')[1]]);
-                  setHoveredColor(link.color);
-                }}
-                onMouseLeave={() => setHoveredColor('')}
+                onMouseEnter={() => handleMouseEnter(link.color)}
+                onMouseLeave={() => handleMouseLeave()}
               >
                 {link.label}
               </a>
