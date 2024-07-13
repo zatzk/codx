@@ -8,8 +8,8 @@ import { Menu } from "lucide-react"
 import { Inter, Silkscreen } from "next/font/google";
 import { colorSets } from '~/lib/colors';
 import { useColorContext } from "~/lib/colorContext";
-import { color, motion } from "framer-motion";
-import { SetStateAction, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 
 const silkscreen = Silkscreen({
