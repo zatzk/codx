@@ -14,7 +14,6 @@ import {
   json,
   integer,
 } from "drizzle-orm/pg-core";
-import { stat } from "fs";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
