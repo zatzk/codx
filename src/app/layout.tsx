@@ -1,5 +1,8 @@
 import "~/styles/globals.css";
 import { ColorProvider } from "~/lib/colorContext";
+import {Providers} from "./providers";
+import { TopNav } from "~/components/topNav";
+
 
 export const metadata = {
   title: "CodX",
@@ -10,16 +13,25 @@ export const metadata = {
 
 export default function RootLayout({
   children,
+  auth,
 }: {
   children: React.ReactNode;
+  auth: React.ReactNode;
 }) {
   return (
-    <ColorProvider>
-      <html lang="en">
-        <body className={`relative h-full w-screen bg-slate-950`}>
-          {children}
-        </body>
-      </html>
-    </ColorProvider>
+      <ColorProvider>
+        <html lang="en">
+          <body className={`h-screen w-full flex justify-center bg-slate-950`}>
+            <Providers>
+              <TopNav />
+              <main className="w-full h-full flex justify-center">
+                {children}
+                {auth}
+                <div id="modal-root" />
+              </main>
+            </Providers>
+          </body>
+        </html>
+      </ColorProvider>
   );
 }
