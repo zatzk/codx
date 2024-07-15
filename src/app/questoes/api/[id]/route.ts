@@ -4,7 +4,7 @@ import { db } from '~/server/db';
 import { eq } from 'drizzle-orm';
 import { questionGroups } from '~/server/db/schema';
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 export async function GET(request: Request) {
   console.log('Received request for ID:', request);

@@ -3,7 +3,7 @@ import { db } from '~/server/db';
 import { eq } from 'drizzle-orm';
 import { roadmaps, trilhasGroups } from '~/server/db/schema';
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);

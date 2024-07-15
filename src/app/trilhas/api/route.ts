@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '~/server/db';
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 export async function GET() {
   try {
