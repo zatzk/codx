@@ -10,6 +10,8 @@ import { colorSets } from '~/lib/colors';
 import { useColorContext } from "~/lib/colorContext";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react"
+import Link from "next/link";
 
 
 const silkscreen = Silkscreen({
@@ -152,11 +154,11 @@ export function TopNav() {
         </div>
 
         <div className="flex items-center justify-center text-xs p-1 text-white">
-          <button className={`flex relative items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
+          <Link href="/signIn" className={`flex relative items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
             <span className={`flex relative items-center justify-center mx-2 hover:text-white ${activeColorSet?.secondary}`}>
               Sign in
             </span>
-          </button>
+          </Link>
           <button className={`flex items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
             <Menu className={`mx-3 size-4 text-white`} />
           </button>
@@ -164,16 +166,4 @@ export function TopNav() {
       </div>
     </div>
   );
-}
-
-
-
-export default function Template({ children }: { children: React.ReactNode }) {
- 
-  return (
-    <main className="w-full h-full flex justify-center">
-      <TopNav/>
-      {children}
-    </main>
-  )
 }
