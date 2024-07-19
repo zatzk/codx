@@ -30,8 +30,10 @@ export function TopNav() {
   const { activeColorSet, setActiveColorSet } = useColorContext();
   const [isAprendaHover, toggleAprendaHover] = useState(false);
   const [isPratiqueHover, togglePratiqueHover] = useState(false);
+  const [isProfileHover, toggleProfileHover] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredColor, setHoveredColor] = useState('');
+  const { data: session } = useSession()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -154,12 +156,36 @@ export function TopNav() {
         </div>
 
         <div className="flex items-center justify-center text-xs p-1 text-white">
-          <Link href="/signIn" className={`flex relative items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
-            <span className={`flex relative items-center justify-center mx-2 hover:text-white ${activeColorSet?.secondary}`}>
-              Sign in
-            </span>
-          </Link>
-          <button className={`flex items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
+        {session ? (
+            <div className="border-none rounded-full p-3 hover:cursor-pointer mr-6">
+              <motion.div
+                className={`mx-2 ${activeColorSet?.secondary || 'text-white'}`}
+                onHoverStart={() => toggleProfileHover(true)}
+                onHoverEnd={() => toggleProfileHover(false)}
+              >
+                <a className="hover:text-white">Perfil</a>
+                <motion.div
+                  className={`absolute ${activeColorSet?.bg} origin-[50%_-30px] px-3 pt-3 mt-2 rounded-md top-[40px]`}
+                  initial="exit"
+                  animate={isProfileHover ? "enter" : "exit"}
+                  variants={subMenuAnimate}
+                >
+                  <div className="absolute origin-[0_0] shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] inset-0" />
+                  <div className={`flex flex-col`}>
+                    <a href="/perfil" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white`}>Ver Perfil</a>
+                    <a onClick={() => signOut()} className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white cursor-pointer`}>Sign out</a>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          ) : (
+            <Link href="/signIn" className={`flex relative items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
+              <span className={`flex relative items-center justify-center mx-2 hover:text-white ${activeColorSet?.secondary}`}>
+                Sign in
+              </span>
+            </Link>
+          )}
+          <button className={`flex items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-12`}>
             <Menu className={`mx-3 size-4 text-white`} />
           </button>
         </div>
