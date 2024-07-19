@@ -1,3 +1,4 @@
+// src\app\layout.tsx
 import "~/styles/globals.css";
 import { ColorProvider } from "~/lib/colorContext";
 import {Providers} from "./providers";
@@ -19,19 +20,19 @@ export default function RootLayout({
   auth: React.ReactNode;
 }) {
   return (
-      <ColorProvider>
-        <html lang="en">
-          <body className={`h-screen w-full flex justify-center bg-slate-950`}>
-            <Providers>
-              <TopNav />
-              <main className="w-full h-full flex justify-center">
-                {children}
-                {auth}
-                <div id="modal-root" />
-              </main>
-            </Providers>
-          </body>
-        </html>
-      </ColorProvider>
+      <Providers>
+        <ColorProvider>
+            <html lang="en">
+              <body className={`h-screen w-full flex justify-center bg-slate-950`}>
+                  <TopNav />
+                  <main className="w-full h-full flex justify-center">
+                    {children}
+                    {auth}
+                    <div id="modal-root" />
+                  </main>
+              </body>
+            </html>
+        </ColorProvider>
+      </Providers>
   );
 }
