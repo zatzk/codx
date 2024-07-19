@@ -91,7 +91,7 @@ export const ModalBody = ({
             ref={modalRef}
             className={cn(
               "min-h-[50%] max-h-[90%] md:max-w-[40%] bg-opacity-30 backdrop-blur-sm border-none md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-hidden",
-              activeColorSet?.cardBg,
+              activeColorSet?.cardGradient,
               className
             )}
             initial={{
