@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react"
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Silkscreen } from "next/font/google";
-
+import { redirect } from 'next/navigation'
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,7 +20,11 @@ const silkscreen = Silkscreen({
 export default function Perfil() {
   const { data: session } = useSession()
 
+  if(!session) {
+    redirect('/')
+  }
   return (
+    
     <div className="w-full h-screen text-white flex flex-col justify-center items-center">
         <div className="w-44 h-44 relative mb-4">
         <Image
