@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSession, signOut } from "next-auth/react"
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Silkscreen } from "next/font/google";
-import { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation';
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,13 +19,16 @@ const silkscreen = Silkscreen({
   variable: "--font-sans" 
 });
 export default function Perfil() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
-  if(!session) {
-    redirect('/')
-  }
+  useEffect(() => {
+    if (status === 'loading') return; 
+    if (!session) redirect('/'); 
+  }, [session, status]);
+
+  if (!session) return null;
+
   return (
-    
     <div className="w-full h-screen text-white flex flex-col justify-center items-center">
         <div className="w-44 h-44 relative mb-4">
         <Image
