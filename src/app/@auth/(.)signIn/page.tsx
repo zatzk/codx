@@ -1,12 +1,14 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 // src/app/@modal/(.)signIn/page.tsx
 'use client'
 import React from 'react'
 import { Modal, ModalBody, ModalContent } from '~/components/animated-modal'
 import { Inter } from "next/font/google";
 import { Silkscreen } from "next/font/google";
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
+import { redirect } from 'next/navigation';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,6 +21,11 @@ const silkscreen = Silkscreen({
   variable: "--font-sans" 
 });
 export default function signInModal() {
+  const { data: session } = useSession()
+  
+  if (session) {
+    redirect('/')
+  }
   return (
       <Modal>
         <ModalBody className="text-red-500">
