@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable react/no-danger-with-children */
+// src\components\questionComponents\questionCard.tsx
 'use client';
 import { useEffect } from 'react';
 import { useColorContext } from "../../lib/colorContext";
@@ -32,7 +33,7 @@ export function QuestionCard({ question, onStatusChange, showAnswer, setShowAnsw
   
   return (
     <div className='flex flex-col items-center'>
-      <div className={`flex flex-col mb-6 ${activeColorSet?.cardBg} bg-opacity-30 min-h-[400px] w-[600px] rounded-md`}>
+      <div className={`flex flex-col mb-6 mt-6 ${activeColorSet?.cardBg} bg-opacity-30 min-h-[400px] w-[600px] rounded-md`}>
 
       <div className={`h-full flex flex-grow flex-col mx-6 ${!showAnswer ? 'relative' : 'hidden'}`}>
           <div className='flex flex-grow h-full justify-center items-center'>

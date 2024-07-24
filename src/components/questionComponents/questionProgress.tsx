@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+// src\components\questionComponents\questionProgress.tsx
 'use client';
 import { CheckCircle, RotateCcw, SkipForward, Sparkles } from 'lucide-react';
 import { useColorContext } from "../../lib/colorContext";
@@ -25,7 +26,7 @@ export function QuestionsProgress({
   const donePercentage = (totalSolved / totalCount) * 100;
 
   return (
-    <div className={`flex flex-col mb-6 ${activeColorSet?.cardBg} bg-opacity-30 h-20 w-[600px] rounded-md`}>
+    <div className={`flex flex-col ${activeColorSet?.cardBg} bg-opacity-30 h-20 w-[600px] rounded-md`}>
       <div className='ml-4 mt-3 mr-8'>
         <div className='flex items-center justify-between'>
           <div
