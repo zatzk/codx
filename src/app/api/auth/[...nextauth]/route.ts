@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // src\app\api\auth\route.ts
 import NextAuth from 'next-auth'
-import { authOptions } from "~/lib/auth";
+import { authOptions } from "~/server/auth";
 
 const handler = NextAuth(authOptions);
 
