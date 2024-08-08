@@ -18,7 +18,7 @@ const inter = Inter({
 
 export default function Desafios() {
   const {activeColorSet} = useColorContext();
-  const [desafios, setDesafios] = useState<{ id: string, name: string, difficulty: string, category: string }[]>([]);
+  const [desafios, setDesafios] = useState<{ id: string, title: string, difficulty: string, category: string }[]>([]);
 
   const difficultyColor: Record<string, string> = {
     'Easy': 'bg-green-600',
@@ -70,11 +70,11 @@ export default function Desafios() {
           <tbody className="h-96">
             {desafios.map((desafio) => (
               <tr 
-                onClick={() => redirectToDesafio(desafio.name)} 
+                onClick={() => redirectToDesafio(desafio.title)} 
                 key={desafio.id} 
                 className={`text-white border-b border-black cursor-pointer ${activeColorSet?.bg} hover:bg-opacity-30 bg-opacity-20 `}
                 >
-                <td className="pl-8">{desafio.name}</td>
+                <td className="pl-8">{desafio.title}</td>
                 <td className={`pl-8`}><span className={`${difficultyColor[desafio.difficulty]} text-xs px-3 py-[5px] rounded-xl`}>{desafio.difficulty}</span></td>
                 <td className="pl-8">{desafio.category}</td>
               </tr>
