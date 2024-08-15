@@ -161,8 +161,8 @@ export const questions = createTable(
       .references(() => questionGroups.id,
         { onDelete: "cascade", onUpdate: "cascade", }),
     question: varchar("question"),
-    answer: text("answer"), // Use text data type for potentially longer answers
-    topics: json("topics"), // Store topics as a JSON array
+    answer: text("answer"),
+    topics: json("topics"),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -220,7 +220,11 @@ export const desafios = createTable(
   "desafios",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    title: varchar("title", { length: 256 }),
+    problemStatement: text("problem_statement"),
+    starterCode: text("starter_code"),
+    functionName: text("function_name"),
+    examples: json("examples"),
     difficulty: text("difficulty"),
     category: text("category"),
     createdAt: timestamp("created_at")
@@ -229,6 +233,33 @@ export const desafios = createTable(
     updatedAt: timestamp("updatedAt"),
   },
 );
+export const testCases = createTable(
+  "test_cases",
+  {
+    id: serial("id").primaryKey(),
+    desafioId: integer("desafio_id")
+      .references(() => desafios.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    input: text("input"),
+    target: text("target"),
+    expectedOutput: text("expected_output"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+)
+
+export const desafioRelations = relations(desafios, ({ many }) => ({
+  testCases: many(testCases),
+}));
+
+export const testCasesRelations = relations(testCases, ({ one }) => ({
+  desafio: one(desafios, {
+    fields: [testCases.desafioId],
+    references: [desafios.id],
+  }),
+}));
 
 export const roadmapsRelations = relations(roadmaps, ({ one }) => ({
   trilhasGroup: one(trilhasGroups, {
