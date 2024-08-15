@@ -23,7 +23,7 @@ export default function RootLayout({
       <Providers>
         <ColorProvider>
             <html lang="en">
-              <body className={`h-screen w-full flex justify-center bg-slate-950`}>
+              <body className={`h-screen w-full flex justify-center bg-[#0f0f0f]`}>
                   <TopNav />
                   <main className="w-full h-full flex justify-center">
                     {children}
