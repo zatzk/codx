@@ -21,11 +21,17 @@ export interface DesafioProps {
 	title: string;
   functionName: string;
 	problemStatement: string;
-	examples: JSON[];
+	examples: ExamplesProps[];
   testCases: TestCaseProps[];
 	starterCode: string;
   difficulty: string;
   category: string;
+}
+
+export interface ExamplesProps {
+  id: string;
+  inputText: string;
+  outputText: string;
 }
 
 export interface TestCaseProps {
@@ -62,7 +68,7 @@ export default function Desafio() {
 
 
   return (
-  <section className={`font-sans ${inter.variable} w-full bg-[#282828] mt-28 text-white`}>
+  <section className={`font-sans ${inter.variable} w-[98%] mt-28 text-white`}>
     <TopBar title={desafio.title}/>
     <Workspace desafio={desafio}/>
   </section>
