@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function PreferenceNav() {
   return (
-    <div>PreferenceNav</div>
+    <div className='bg-[#262626]'>PreferenceNav</div>
   )
 }
