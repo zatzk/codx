@@ -1,18 +1,25 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // components/desafiosComponents/workspace.tsx
+'use client';
 import React from "react";
 import { useState, useEffect } from "react";
-import { type TestCaseProps, type DesafioProps } from "~/app/desafios/[id]/page";
+import {
+  type TestCaseProps,
+  type DesafioProps,
+} from "~/app/desafios/[id]/page";
 import PreferenceNav from "./preferenceNav";
 import Split from "react-split";
 import CodeMirror from "@uiw/react-codemirror";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { githubDark } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
 import { useLocalStorage } from "usehooks-ts";
 import { useSession } from "next-auth/react";
+import { useColorContext } from '~/lib/colorContext';
 import EditorFooter from "./editorFooter";
 
 export interface ISettings {
@@ -23,11 +30,15 @@ export interface ISettings {
 
 export default function Playground({ desafio }: { desafio: DesafioProps }) {
   const { data: session } = useSession();
+  const {activeColorSet} = useColorContext();
   const [fontSize, setFontSize] = useLocalStorage("lcc-fontSize", "16px");
   const [userCode, setUserCode] = useState<string>(desafio.starterCode);
   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
   const [results, setResults] = useState<string[]>([]);
+  const [resultsEvaluate, setResultsEvaluate] = useState<boolean | null>(null);
+  const [resultsCount, setResultsCount] = useState<number>(0);
   const [showResults, setShowResults] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<"test" | "submit">("test");
 
   const [settings, setSettings] = useState<ISettings>({
     fontSize: fontSize,
@@ -35,28 +46,45 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
     dropdownIsOpen: false,
   });
 
-  const handleRunCode = async (userCode, testCases, functionName) => {
-    const inputs = testCases.map(testCase => JSON.parse(testCase.input));
-    const concatenatedInputs = JSON.stringify(inputs);
-    console.log("Concatenated inputs:", concatenatedInputs);
+  const handleRunCode = async (
+    userCode: string,
+    testCases: string | unknown[],
+    expectedOutputs: unknown[],
+    functionName: string,
+  ) => {
+    const concatenatedInputs = JSON.stringify(testCases);
+    const concatenatedExpectedOutputs = JSON.stringify(expectedOutputs);
 
     const codeToExecute = `
       ${userCode}
-
+  
       process.stdin.on('data', function(data) {
         const inputs = JSON.parse(data.toString().trim());
-        const results = inputs.map(inputArray => {
+        const expectedOutputs = JSON.parse(process.argv[2]);
+        
+        let count = 0;
+        const results = inputs.map((inputArray, index) => {
           const outputArray = ${functionName}(inputArray);
-          return JSON.stringify(outputArray);
+          const outputString = JSON.stringify(outputArray);
+          const expectedOutputString = JSON.stringify(expectedOutputs[index]);
+  
+          if (outputString === expectedOutputString) {
+            count++;
+          }
+  
+          return outputString;
         });
-        results.forEach(result => console.log(result));
+  
+        const evaluate = count === inputs.length;
+  
+        console.log(JSON.stringify(results));
+        console.log(count);
+        console.log(evaluate);
       });
-
+  
       process.stdin.resume();
-  `;
-  
-    console.log("Running code handleRunCode:", codeToExecute);
-  
+    `;
+
     try {
       const response = await fetch("https://emkc.org/api/v2/piston/execute", {
         method: "POST",
@@ -65,67 +93,107 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
         },
         body: JSON.stringify({
           language: "javascript",
-          version: "*", // Use the latest version available
-          files: [{
-            name: "script.js",
-            content: codeToExecute
-          }],
+          version: "*",
+          files: [
+            {
+              name: "script.js",
+              content: codeToExecute,
+            },
+          ],
           stdin: concatenatedInputs,
-          // args: testCase.expectedOutput,
+          args: [concatenatedExpectedOutputs],
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Failed to submit code: ${response.statusText}`);
       }
-  
+
       const result = await response.json();
-      console.log("Execution status:", result);
-  
+
       if (result.run.code === 0) {
-        console.log("Execution result:", result.run.stdout);
-        return result.run.stdout;
+        const stdout = result.run.stdout.trim().split("\n");
+
+        const resultsOutput = JSON.parse(stdout[0]).map((res: string) =>
+          JSON.parse(res),
+        );
+        const resultsCount = parseInt(stdout[1], 10);
+        const resultsEvaluate = stdout[2] === "true";
+
+        return { resultsOutput, resultsCount, resultsEvaluate };
       } else {
-        return `Error: ${result.run.stderr}`;
+        throw new Error(`Execution error: ${result.run.stderr}`);
       }
     } catch (error) {
       console.error("Failed to run code:", error);
-      return "Error";
+      return {
+        resultsOutput: Array(testCases.length).fill("undefined"),
+        resultsCount: 0,
+        resultsEvaluate: false,
+      };
     }
   };
-  
+
   const handleRun = async () => {
-    console.log("Running code handleRun:", userCode);
-    const testCases = desafio.testCases;
-    const result = await handleRunCode(userCode, testCases, desafio.functionName);
-    setResults([result]);
+    const testCases = desafio.testCases
+      .slice(0, 3)
+      .map((testCase) => JSON.parse(testCase.input));
+    const expectedOutputs = desafio.testCases
+      .slice(0, 3)
+      .map((testCase) => JSON.parse(testCase.expectedOutput));
+    const { resultsOutput, resultsCount, resultsEvaluate } =
+      await handleRunCode(
+        userCode,
+        testCases,
+        expectedOutputs,
+        desafio.functionName,
+      );
+
+    console.log("Results:", resultsOutput);
+    setResults(resultsOutput);
     setShowResults(true);
+    setActiveTab("test");
   };
 
   const handleSubmit = async () => {
-    console.log("Running code...");
-    const allResults = await Promise.all(
-      desafio.testCases.map((testCase) => handleRunCode(userCode, testCase, desafio.functionName))
+    const testCases = desafio.testCases.map((testCase) =>
+      JSON.parse(testCase.input),
     );
-    console.log("Results:", allResults);
-    setResults(allResults);
+    const expectedOutputs = desafio.testCases.map((testCase) =>
+      JSON.parse(testCase.expectedOutput),
+    );
+    const { resultsOutput, resultsCount, resultsEvaluate } =
+      await handleRunCode(
+        userCode,
+        testCases,
+        expectedOutputs,
+        desafio.functionName,
+      );
+
+    console.log("Submit Results:", resultsOutput);
+    setResults(resultsOutput);
+    setResultsEvaluate(resultsEvaluate);
+    setResultsCount(resultsCount);
     setShowResults(true);
+    setActiveTab("submit");
   };
- 
 
   useEffect(() => {
-		const code = localStorage.getItem(`code-${JSON.stringify(session)}`);
-		if (session) {
-			setUserCode(code ? JSON.parse(code) : desafio.starterCode);
-		} else {
-			setUserCode(desafio.starterCode);
-		}
-	}, [session, desafio.starterCode]);
+    const code = localStorage.getItem(`code-${JSON.stringify(session)}`);
+    if (session) {
+      setUserCode(code ? JSON.parse(code) : desafio.starterCode);
+    } else {
+      setUserCode(desafio.starterCode);
+    }
+  }, [session, desafio.starterCode]);
 
   const onChange = (value: string) => {
     setUserCode(value);
     if (session) {
-      localStorage.setItem(`code-${JSON.stringify(session)}`, JSON.stringify(value));
+      localStorage.setItem(
+        `code-${JSON.stringify(session)}`,
+        JSON.stringify(value),
+      );
     }
   };
 
@@ -133,71 +201,214 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
   console.log("desafio playground", desafio);
 
   return (
-     <div className="relative flex flex-col overflow-x-hidden bg-[#282828]">
+    <div className="relative flex flex-col overflow-hidden rounded-lg">
+      <div className={`flex h-9 items-center rounded-t-lg ${activeColorSet?.bg}`}>
+        <div className="ml-3">Source code</div>
+      </div>
       <PreferenceNav />
-      <Split className="h-[calc(100vh-160px)]" direction="vertical" sizes={[60, 40]} minSize={60}>
-        <div className="w-full overflow-auto">
+      <Split
+        className="h-[calc(100vh-230px)] "
+        direction="vertical"
+        sizes={[60, 40]}
+        minSize={60}
+      >
+        <div className="flex w-full flex-col justify-between overflow-auto rounded-b-lg bg-[#262626]">
           <CodeMirror
             value={userCode}
-            theme={vscodeDark}
+            theme={githubDark}
             onChange={onChange}
             extensions={[javascript()]}
             style={{ fontSize: settings.fontSize }}
           />
+          <EditorFooter onRun={handleRun} onSubmit={handleSubmit} />
         </div>
-        <div className="w-full overflow-auto px-5">
-          <div className="flex flex-col items-start h-10 ">
-            <div className="relative flex h-fullcursor-pointer flex-col justify-center">
-              <div className="text-sm font-medium leading-5 text-white">Testcases</div>
-              <hr className="absolute bottom-0 h-0.5 w-full rounded-full border-none bg-white" />
+
+        <div className="mt-1 w-full overflow-x-hidden rounded-lg bg-[#262626]">
+          <div className={`absolute z-10 flex h-9 w-full items-center justify-start rounded-t-lg ${activeColorSet?.bg}`}>
+            <div className="ml-3">
+              <button
+                className={`mr-2 rounded-md px-2 py-1 text-sm hover:bg-gray-500 ${activeTab === "test" ? "font-bold" : ""}`}
+                onClick={() => setActiveTab("test")}
+              >
+                Test Result
+              </button>
+              <button
+                className={`mr-2 rounded-md px-2 py-1 text-sm hover:bg-gray-500 ${activeTab === "submit" ? "font-bold" : ""}`}
+                onClick={() => setActiveTab("submit")}
+              >
+                Submit Result
+              </button>
             </div>
-            <div className="flex">
-              {desafio?.examples?.map((example, index) => (
-                <div
-                  className="mr-2 mt-2 items-start "
-                  key={example?.id}
-                  onClick={() => setActiveTestCaseId(index)}
-                >
-                  <div className="flex flex-wrap items-center gap-y-4">
+          </div>
+
+          {activeTab === "test" && (
+            <div className="ml-3 mt-10 flex h-10 flex-col items-start">
+              <div className="flex">
+                {desafio?.examples?.map((example, index) => {
+                  const isMatched =
+                    showResults &&
+                    JSON.stringify(results[index]) ===
+                      JSON.stringify(
+                        JSON.parse(desafio?.examples[index]?.outputText ?? ""),
+                      );
+
+                  return (
                     <div
-                      className={`bg-dark-fill-3 hover:bg-dark-fill-2 relative inline-flex cursor-pointer items-center whitespace-nowrap rounded-lg px-4 py-1 font-medium transition-all focus:outline-none
-                      ${activeTestCaseId === index ? "text-white" : "text-gray-500"}`}
+                      className="mr-2 mt-2 items-start"
+                      key={example?.id}
+                      onClick={() => setActiveTestCaseId(index)}
                     >
-                      Case {index + 1}
+                      <div className="flex flex-wrap items-center gap-y-4">
+                        <div
+                          className={`relative inline-flex cursor-pointer items-center whitespace-nowrap rounded-lg px-4 py-1 font-medium transition-all focus:outline-none ${
+                            activeTestCaseId === index
+                              ? "text-white"
+                              : "text-gray-500"
+                          } hover:bg-gray-400 hover:text-white`}
+                        >
+                          {showResults && (
+                            <span
+                              className={`mr-1 flex items-center text-xs ${
+                                isMatched ? "text-green-500" : "text-red-500"
+                              }`}
+                            >
+                              •
+                            </span>
+                          )}
+                          Case {index + 1}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="ml-4 w-full pb-10 font-semibold">
+                <p className="ml-1 mt-4 text-xs font-medium text-white">
+                  Input:
+                </p>
+                <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                  {desafio?.examples?.[activeTestCaseId]?.inputText
+                    .split("=")
+                    .map(
+                      (
+                        part:
+                          | string
+                          | number
+                          | bigint
+                          | boolean
+                          | React.ReactElement<
+                              unknown,
+                              string | React.JSXElementConstructor<unknown>
+                            >
+                          | Iterable<React.ReactNode>
+                          | Promise<React.AwaitedReactNode>
+                          | null
+                          | undefined,
+                        index: React.Key | null | undefined,
+                      ) => (
+                        <React.Fragment key={index}>
+                          {index === 0 ? (
+                            <span className="text-xs">{part} =</span>
+                          ) : (
+                            <span>
+                              <br />
+                              {part?.toString().trim() ?? ''}
+                            </span>
+                          )}
+                        </React.Fragment>
+                      ),
+                    )}
+                </div>
+                {showResults && (
+                  <div className="w-full overflow-auto">
+                    <div className="ml-1 mt-4 text-xs font-medium text-white">
+                      Output:
+                    </div>
+                    <div
+                      className={`mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white`}
+                    >
+                      <div>{JSON.stringify(results[activeTestCaseId])}</div>
                     </div>
                   </div>
+                )}
+                <p className="ml-1 mt-4 text-xs font-medium text-white">
+                  Expected:
+                </p>
+                <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                  {desafio?.examples?.[activeTestCaseId]?.outputText}
                 </div>
-              ))}
-            </div>
-            <div className="my-4 font-semibold">
-              <p className="mt-4 text-sm font-medium text-white">Input:</p>
-              <div className="bg-dark-fill-3 mt-2 w-full cursor-text rounded-lg border border-transparent px-3 py-[10px] text-white">
-                {desafio?.examples?.[activeTestCaseId]?.inputText}
-              </div>
-              <p className="mt-4 text-sm font-medium text-white">Output:</p>
-              <div className="bg-dark-fill-3 mt-2 w-full cursor-text rounded-lg border border-transparent px-3 py-[10px] text-white">
-                {desafio?.examples?.[activeTestCaseId]?.outputText}
               </div>
             </div>
-          </div>
+          )}
+
+          {activeTab === "submit" && (
+            <div className="ml-3 mt-10 flex h-10 flex-col items-start">
+              {resultsEvaluate !== null ? (
+                <>
+                  <div className="ml-3 mt-3 flex flex-row items-center">
+                    <h2
+                      className={`text-2xl font-bold ${resultsEvaluate ? "text-green-500" : "text-red-500"}`}
+                    >
+                      {resultsEvaluate ? "Correct Answer" : "Wrong Answer"}
+                    </h2>
+                    <p className="ml-3 text-xs text-[#787867]">
+                      {`| ${resultsCount}/${desafio.testCases.length} testcases passed`}
+                    </p>
+                  </div>
+
+                  <div className="ml-4 w-full font-semibold">
+                    <p className="ml-1 mt-4 text-xs font-medium text-white">
+                      Input:
+                    </p>
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                      {desafio?.examples?.[0]?.inputText
+                        .split("=")
+                        .map((part: string, index: number) => (
+                          <React.Fragment key={index}>
+                            {index === 0 ? (
+                              <span className="text-xs">{part} =</span>
+                            ) : (
+                              <span>
+                                <br />
+                                {part.trim()}
+                              </span>
+                            )}
+                          </React.Fragment>
+                        ))}
+                    </div>
+
+                    <p className="ml-1 mt-4 text-xs font-medium text-white">
+                      Output:
+                    </p>
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                      {JSON.stringify(results[0])}
+                    </div>
+
+                    <p className="ml-1 mt-4 text-xs font-medium text-white">
+                      Expected Output:
+                    </p>
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                      {desafio?.examples?.[0]?.outputText}
+                    </div>
+                  </div>
+
+                  <div className="ml-4 w-full pb-10 font-semibold">
+                    <p className="ml-1 mt-4 text-xs font-medium text-white">
+                      Code:
+                    </p>
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                      <pre>{userCode}</pre>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="ml-4 w-full pb-10 font-semibold text-white">
+                </div>
+              )}
+            </div>
+          )}
         </div>
-        {showResults && (
-          <div className="w-full overflow-auto px-5">
-            <div className="text-sm font-medium leading-5 text-white">Results</div>
-            <div className="bg-dark-fill-3 mt-2 w-full cursor-text rounded-lg border border-transparent px-3 py-[10px] text-white">
-              {results.map((result, index) => (
-                <div key={index} className="my-2">
-                  <strong>Case {index + 1}:</strong> {result}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </Split>
-      <EditorFooter
-        onRun={handleRun}
-        onSubmit={handleSubmit}
-      />
     </div>
   );
 }
