@@ -28,7 +28,7 @@ export default function signInModal() {
   }
   return (
       <Modal>
-        <ModalBody className="text-red-500">
+        <ModalBody>
           <ModalContent className={`text-white flex flex-col justify-center items-center ${silkscreen.className}`}>
             <p className="text-2xl font-bold mb-6">Sign In</p>
             <div className={`flex flex-col ${inter.className}`}>
