@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 //components/desafiosComponents/workspace.tsx
 import React from 'react'
 import Split from "react-split";
@@ -11,9 +12,9 @@ export default function Workspace({desafio}: {desafio: DesafioProps}) {
   const { width, height } = useWindowSize();
   const [solved, setSolved] = useState(false);
   return (
-    <Split className='split' minSize={0}>
+    <Split className='split mb-2' minSize={0}>
       <ProblemDescription desafio={desafio} />
-      <div className=''>
+      <div className='bg-[#0f0f0f] rounded-lg'>
         <Playground desafio={desafio} />
       </div>
     </Split>
