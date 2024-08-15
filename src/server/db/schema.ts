@@ -241,6 +241,7 @@ export const testCases = createTable(
       .references(() => desafios.id,
         { onDelete: "cascade", onUpdate: "cascade", }),
     input: text("input"),
+    target: text("target"),
     expectedOutput: text("expected_output"),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
