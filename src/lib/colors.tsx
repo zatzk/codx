@@ -10,6 +10,8 @@ interface ColorSets {
     borderButton: string;
     hoverBorderButton: string;
     gradientBg: string;
+    radialGradientBg1: string;
+    radialGradientBg2: string;
     g1: string;
     g2: string;
     g3: string;
@@ -31,6 +33,8 @@ export const colorSets: ColorSets = {
     borderButton: 'border-pink-600',
     hoverBorderButton: 'hover:border-pink-400',
     gradientBg: '219, 39, 119',
+    radialGradientBg1: 'bg-[radial-gradient(circle,#db2777_0%,transparent_50%)]',
+    radialGradientBg2: 'bg-[radial-gradient(circle,#7a1d5a_0%,transparent_50%)]',
     g1: '39, 219, 138',
     g2: '39, 120, 219',
     g3: '219, 138, 39',
@@ -49,6 +53,8 @@ export const colorSets: ColorSets = {
     borderButton: 'border-sky-600',
     hoverBorderButton: 'hover:border-sky-400',
     gradientBg: '2, 132, 199',
+    radialGradientBg1: 'bg-[radial-gradient(circle,#0a4481_0%,transparent_50%)]',
+    radialGradientBg2: 'bg-[radial-gradient(circle,#221594_0%,transparent_50%)]',
     g1: '199, 68, 2',
     g2: '133, 199, 2',
     g3: '68, 2, 199',
@@ -67,6 +73,8 @@ export const colorSets: ColorSets = {
     borderButton: 'border-green-600',
     hoverBorderButton: 'hover:border-green-400',
     gradientBg: '22, 163, 74',
+    radialGradientBg1: 'bg-[radial-gradient(circle,#1b543a_0%,transparent_50%)]',
+    radialGradientBg2: 'bg-[radial-gradient(circle,#0a4481_0%,transparent_50%)]',
     g1: '199, 68, 2',
     g2: '133, 199, 2',
     g3: '163, 22, 111',
@@ -85,6 +93,8 @@ export const colorSets: ColorSets = {
     borderButton: 'border-orange-600',
     hoverBorderButton: 'hover:border-orange-400',
     gradientBg: '234, 88, 12',
+    radialGradientBg1: 'bg-[radial-gradient(circle,#763205_0%,transparent_50%)]',
+    radialGradientBg2: 'bg-[radial-gradient(circle,#1b543a_0%,transparent_50%)]',
     g1: '12, 156, 234',
     g2: '90, 12, 234',
     g3: '156, 234, 12',
@@ -103,6 +113,8 @@ export const colorSets: ColorSets = {
     borderButton: 'border-white',
     hoverBorderButton: 'hover:border-gray-400',
     gradientBg: '86, 205, 226',
+    radialGradientBg1: 'bg-[radial-gradient(circle,#56cde2_0%,transparent_50%)]',
+    radialGradientBg2: 'bg-[radial-gradient(circle,#6c7a1d_0%,transparent_50%)]',
     g1: '18, 113, 255',
     g2: '221, 74, 255',
     g3: '100, 220, 255',
