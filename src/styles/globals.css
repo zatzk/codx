@@ -101,3 +101,106 @@ code {
 	color: white;
 	font-size: 1rem;
 }
+
+.bg-noise {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200vh;
+  background: transparent url('http://assets.iceable.com/img/noise-transparent.png') repeat 0 0;
+  background-repeat: repeat;
+  animation: bg-animation 0.2s infinite;
+  opacity: 0.7;
+  visibility: visible;
+}
+
+@keyframes bg-animation {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(-15%, 0); }
+  90% { transform: translate(10%, 5%); }
+  100% { transform: translate(5%, 0); }
+}
+
+.gradient-container {
+	max-width: 100vw;
+	max-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  flex-basis: auto;
+  box-sizing: border-box;
+  position: fixed;
+  min-height: 0px;
+  min-width: 0px;
+  font-size: 0;
+  flex-direction: column;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+  transform: translateY(100px);
+  transition: all ease-in-out 1s;
+}
+
+.gradient-box {
+  display: flex;
+  align-items: stretch;
+  flex-basis: auto;
+  box-sizing: border-box;
+  position: absolute;
+  min-height: 0px;
+  min-width: 0px;
+  flex-shrink: 0;
+  flex-direction: column;
+  opacity: 1;
+  overflow: hidden;
+  height: 100vh;
+  max-height: 1000px;
+  width: 1000px;
+  top: 0px;
+  left: calc(-500px + 50vw);
+}
+
+.gradient-box-1 {
+  transform: translateY(370px) translateX(290px) scaleX(1.3) scale(3);
+}
+
+.gradient-box-2 {
+  transform: translateY(314px) translateX(-530px) scaleX(1.3) scale(1.5);
+}
+
+.gradient-inner {
+  display: flex;
+  align-items: stretch;
+  flex-basis: auto;
+  box-sizing: border-box;
+  position: absolute;
+  min-height: 0px;
+  min-width: 0px;
+  flex-shrink: 0;
+  flex-direction: column;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  transition: all 1000ms ease-in-out 0s;
+}
+
+.gradient-inner-1 {
+  background: radial-gradient(#17a5a5 0%, transparent 50%);
+}
+
+.gradient-inner-2 {
+  background: radial-gradient(#f11364 0%, transparent 50%);
+}
+
