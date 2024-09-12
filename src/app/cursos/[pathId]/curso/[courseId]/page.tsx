@@ -23,6 +23,7 @@ interface Module {
   title: string;
   description: string;
   order: number;
+  lessons: Lesson[];
 }
 
 interface Course {
@@ -30,6 +31,13 @@ interface Course {
   title: string;
   description: string;
   modules: Module[];
+}
+
+interface Lesson {
+  id: number;
+  title: string;
+  description: string;
+  order: number;
 }
 
 export default function CourseModulesPage({ params }: { params: { pathId: string, courseId: string } }) {
@@ -70,9 +78,6 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
   return (
     <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20 `}>
       <SimplePagHeader title={course.title} description={course.description} />
-      {/* <h1 className="text-2xl font-bold mb-4">{course.title}</h1>
-      <p className="mb-6">{course.description}</p> */}
-      {/* <div className="space-y-4"> */}
       <div className="w-full flex pb-16 pt-12">
         <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-1 gap-x-12 gap-y-6 xs:grid-cols-1">
@@ -83,13 +88,6 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
                 onClick={() => handleModuleClick(module.id)}
                 session={session}
               />
-              // <div
-              //   className="border rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer"
-              //   onClick={() => router.push(`/cursos/${params.pathId}/curso/${course.id}/modulo/${module.id}`)}
-              // >
-              //   <h2 className="text-xl font-bold">{module.title}</h2>
-              //   <p>{module.description}</p>
-              // </div>
             ))}
           </div>
         </div>

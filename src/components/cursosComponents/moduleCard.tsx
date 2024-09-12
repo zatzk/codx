@@ -4,6 +4,7 @@
 import { type Session } from 'next-auth';
 import { useColorContext } from '~/lib/colorContext';
 import { Inter, Silkscreen } from "next/font/google";
+import { lessons } from '~/server/db/schema';
 
 const silkscreen = Silkscreen({
   weight: ["400", "700"], 
@@ -22,15 +23,19 @@ interface ModuleCardProps {
     title: string;
     description: string;
     order: number;
-    lessons: string[];
+    lessons: LessonProps[];
   };
   onClick: () => void;
   session: Session | null;
 }
+interface LessonProps {
+  id: number;
+  title: string;
+}
 
 export default function ModuleCard({ module, onClick, session }: ModuleCardProps) {
   const {activeColorSet} = useColorContext();
-
+  console.log('module', module);
 
   return (
     <div
@@ -50,18 +55,16 @@ export default function ModuleCard({ module, onClick, session }: ModuleCardProps
   `} 
       onClick={onClick}
     >
-      <h2 className="text-xl pb-2 border-b w-full">{module.title}</h2>
-      {/* {progress !== null && (
-        <div className="mt-2">
-          <div className={`rounded-full h-2.5 ${activeColorSet.bg}`}>
-            <div 
-              className="bg-blue-600 h-2.5 rounded-full" 
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          <p className="text-xs mt-1">{progress}% complete</p>
+      <h2 className="text-xl pb-2 mb-4 border-b w-full">{module.title}</h2>
+      {module.lessons.map((lesson) => (
+        <div
+          key={lesson.id}
+          className="flex text-sm w-full items-center mb-2"
+        >
+          <span className="pixelarticons--book-open mr-3"></span>
+          <p className={`${inter.className}`}>{lesson.title}</p>
         </div>
-      )} */}
+      ))}
     </div>
   )
 }
