@@ -1,6 +1,5 @@
 // components/CourseCard.tsx
 import { type Session } from 'next-auth';
-import { useState, useEffect } from 'react';
 import { useColorContext } from '~/lib/colorContext';
 import { Inter, Silkscreen } from "next/font/google";
 
@@ -22,32 +21,19 @@ interface CourseCardProps {
     description: string;
     modules: { id: number }[];
   };
+  progress?: {
+    courseId: number;
+    currentModuleIndex: number;
+    currentLessonIndex: number;
+  };
   onClick: () => void;
   session: Session | null;
 }
 
-export default function CourseCard({ course, onClick, session }: CourseCardProps) {
-  const [progress, setProgress] = useState<number | null>(null);
+export default function CourseCard({ course, onClick, progress }: CourseCardProps) {
   const { activeColorSet } = useColorContext();
-
-  useEffect(() => {
-    if (session?.user?.id) {
-      fetchProgress();
-    }
-  }, [session, course.id]);
-
-  const fetchProgress = async () => {
-    try {
-      const response = await fetch(`/cursos/api/progress?userId=${session.user.id}&courseId=${course.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setProgress(data.progress);
-      }
-    } catch (error) {
-      console.error('Failed to fetch progress:', error);
-    }
-  };
-
+  console.log('progress inside card', progress);
+  
   return (
     <div
     className={`
@@ -69,7 +55,10 @@ export default function CourseCard({ course, onClick, session }: CourseCardProps
       <p className='text-xs'>{course.modules.length} Modules</p>
       <h2 className="text-xl mb-2">{course.title}</h2>
       <p className="mb-4">{course.description}</p>
-      {progress !== null && (
+      {progress && (
+        <span>Current Lesson Index: {progress.currentLessonIndex}</span>
+      )}
+      {/* {progress !== null && (
         <div className="mt-2">
           <div className={`rounded-full h-2.5 ${activeColorSet.bg}`}>
             <div 
@@ -79,7 +68,7 @@ export default function CourseCard({ course, onClick, session }: CourseCardProps
           </div>
           <p className="text-xs mt-1">{progress}% complete</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
