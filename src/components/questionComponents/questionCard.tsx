@@ -6,7 +6,6 @@
 import { useEffect } from 'react';
 import { useColorContext } from "../../lib/colorContext";
 import { markdownToHtml } from '../../lib/markdown';
-import { CheckCircle, SkipForward, Sparkles } from 'lucide-react';
 
 interface Question {
   id: number;
@@ -60,21 +59,21 @@ export function QuestionCard({ question, onStatusChange, showAnswer, setShowAnsw
             className={`${activeColorSet?.cardBg} rounded-md px-[1rem] pr-24 py-3 flex items-center hover:bg-opacity-80`} 
             onClick={() => {onStatusChange('know'); setShowAnswer(false)}}
           >
-            <CheckCircle className='mr-1 h-4'/>
+            <span className="pixelarticons--checkbox text-xl mr-1 h-4"></span>
             <span>Já Sei</span>
           </button>
           <button 
             className={`${activeColorSet?.cardBg} rounded-md px-[1rem] pr-24 py-3 flex items-center hover:bg-opacity-80`} 
             onClick={() => {onStatusChange('dontKnow'); setShowAnswer(false)}}
           >
-            <Sparkles className='mr-1 h-4'/>
+            <span className="pixelarticons--downasaur text-xl mr-1 h-4"></span>
             <span>Não Sei</span>
           </button>
           <button 
             className={`${activeColorSet?.cardBg} rounded-md px-[1rem] pr-24 py-3 flex items-center hover:bg-opacity-80`} 
             onClick={() => {onStatusChange('skip'); setShowAnswer(false)}}
           >
-            <SkipForward className='mr-1 h-4'/>
+            <span className="pixelarticons--next text-xl mr-1 h-4"></span>
             <span>Pular</span>
           </button>
       </div>
