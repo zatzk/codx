@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // app/cursos/page.tsx
 'use client'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import PathCard from '~/components/cursosComponents/pathCard';
 import { useColorContext } from "~/lib/colorContext";
 import { SimplePagHeader } from "~/components/simplePageHeader";
@@ -17,12 +19,12 @@ interface Path {
   id: number;
   title: string;
   description: string;
+  pathCourses: unknown;
 }
 
 export default function PathsPage() {
   const [paths, setPaths] = useState<Path[]>([]);
   const router = useRouter();
-  const { data: session } = useSession();
   const {activeColorSet} = useColorContext();
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export default function PathsPage() {
       }
     }
 
-    fetchPaths();
+    void fetchPaths();
   }, []);
   console.log('paths', paths);
 

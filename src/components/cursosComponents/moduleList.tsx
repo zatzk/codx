@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // components/ModuleList.tsx
 import { useEffect, useState } from 'react';
 
@@ -32,7 +35,7 @@ export default function ModuleList({ modules, onModuleClick, userId, courseId }:
       }
     }
 
-    fetchProgress();
+    void fetchProgress();
   }, [userId, courseId]);
 
   return (

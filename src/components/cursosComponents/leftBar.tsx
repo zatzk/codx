@@ -1,5 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 // components/LeftBar.tsx
-export default function LeftBar({ modules, onModuleClick, currentModuleId }) {
+interface Module {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+interface LeftBarProps {
+  modules: Module[];
+  onModuleClick: (module: Module) => void;
+  currentModuleId: string;
+}
+
+export default function LeftBar({ modules, onModuleClick, currentModuleId }: LeftBarProps) {
   return (
     <div className="w-1/4 bg-gray-100 p-4">
       <h2 className="text-xl font-bold mb-4">Course Modules</h2>

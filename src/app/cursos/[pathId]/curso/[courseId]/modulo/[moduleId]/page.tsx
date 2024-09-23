@@ -42,6 +42,7 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
   const { data: session } = useSession();
   const { activeColorSet } = useColorContext();
 
+  // Fetch the module first
   useEffect(() => {
     async function fetchModule() {
       try {
@@ -59,31 +60,39 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
       }
     }
 
-    async function fetchProgress() {
-      if (!session?.user?.id) return;
-      console.log('session',session.user.id)
+    void fetchModule();
+  }, [params.moduleId]);
 
+  // Fetch progress only after module is fetched
+  useEffect(() => {
+    async function fetchProgress() {
+      if (!session?.user?.id || !module) return;
+    
       try {
-        const response = await fetch(`/cursos/api/progress/${session.user.id}/${module?.courseId}`);
-        console.log('response',response)
+        const response = await fetch(`/cursos/api/progress/${session.user.id}/${module.courseId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch progress in the module page');
         }
         const data = await response.json();
-        setProgress(data.currentLessonIndex);
+        
+        const moduleProgress = data.moduleProgress || {};
+        if (module.id in moduleProgress) {
+          setProgress(moduleProgress[module.id]); // Set progress to the current lesson index for this module
+        } else {
+          setProgress(0); // If no progress found, start from 0
+        }
       } catch (error) {
         console.error('Error fetching progress:', error);
       }
     }
 
-    void fetchProgress();
-    void fetchModule();
-  }, [module?.courseId, session?.user.id, params.moduleId]);
-
-
+    if (module) {
+      void fetchProgress();
+    }
+  }, [session?.user.id, module]);
 
   const markLessonAsComplete = async (lessonId: number) => {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id || !module) return;
   
     try {
       const response = await fetch('/cursos/api/progress', {
@@ -94,6 +103,8 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
         body: JSON.stringify({
           userId: session.user.id,
           lessonId: lessonId,
+          moduleId: module.id, // Pass the current module ID
+          currentLessonIndex: activeLesson?.order, // Save the current lesson index
         }),
       });
   
@@ -101,25 +112,21 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
         throw new Error('Failed to mark lesson as complete');
       }
   
-      const lesson = module?.lessons.find(lesson => lesson.id === lessonId);
+      const lesson = module.lessons.find(lesson => lesson.id === lessonId);
       if (lesson) {
-        setProgress(prev => Math.max(prev, lesson.order));
+        setProgress(prev => Math.max(prev, lesson.order)); // Update progress
       }
     } catch (error) {
       console.error('Error marking lesson as complete:', error);
     }
   };
-  
-
-  console.log('progress', progress);
-  console.log('module', module);
 
   if (!module) {
     return <div>Loading...</div>;
   }
 
   const sortedLessons = [...module.lessons].sort((a, b) => a.order - b.order);
-  console.log('sortedLessons', sortedLessons)  
+
   return (
     <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full overflow-hidden text-white flex-col items-center mt-20`}>
       <SimplePagHeader title={module.title} description={module.description} />
@@ -180,3 +187,4 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
     </section>
   );
 }
+

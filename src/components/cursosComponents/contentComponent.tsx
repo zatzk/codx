@@ -1,5 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // components/ContentComponent.tsx
-export default function ContentComponent({ module, onMarkAsComplete }) {
+interface Module {
+  title: string;
+  content: string;
+}
+
+interface ContentComponentProps {
+  module: Module | null;
+  onMarkAsComplete: () => void;
+}
+
+export default function ContentComponent({ module, onMarkAsComplete }: ContentComponentProps) {
   if (!module) {
     return <div className="w-3/4 p-4">Select a module to view content</div>;
   }

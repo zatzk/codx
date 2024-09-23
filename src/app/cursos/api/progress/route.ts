@@ -1,27 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { NextResponse } from 'next/server';
 import { db } from '~/server/db';
 import { courseUserProgress, lessons, courseModules, courses } from '~/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, sql, is } from 'drizzle-orm';
 
 export async function POST(
   request: Request
 ) {
   const body = await request.json();
-  const { userId, lessonId } = body;
+  const { userId, lessonId, moduleId, currentLessonIndex } = body;
 
-  if (!userId || !lessonId) {
-    return NextResponse.json({ error: 'Missing userId or lessonId' }, { status: 400 });
+  if (!userId || !lessonId || !moduleId || currentLessonIndex == null) {
+    return NextResponse.json({ error: 'Missing userId, lessonId, moduleId, or currentLessonIndex' }, { status: 400 });
   }
 
   try {
     const lessonInfo = await db.select({
       courseId: courses.id,
-      moduleId: courseModules.id,
       moduleOrder: courseModules.order,
-      lessonOrder: lessons.order,
     })
     .from(lessons)
     .innerJoin(courseModules, eq(lessons.courseModuleId, courseModules.id))
@@ -33,22 +33,59 @@ export async function POST(
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
 
-    const { courseId, moduleOrder, lessonOrder } = lessonInfo?.[0] ?? {};
+    const { courseId, moduleOrder } = lessonInfo?.[0] ?? {};
 
-    // Update or create progress
+    if (courseId === undefined) {
+      return NextResponse.json({ error: 'Course ID not found' }, { status: 404 });
+    }
+
+    // Fetch total lessons in the course
+    const totalLessonsData = await db.select({
+      totalLessons: sql<number>`COUNT(${lessons.id})`
+    })
+    .from(lessons)
+    .innerJoin(courseModules, eq(lessons.courseModuleId, courseModules.id))
+    .where(eq(courseModules.courseId, courseId))
+    .execute();
+
+    const totalLessons = totalLessonsData?.[0]?.totalLessons ?? 0;
+
+    // Fetch the existing user progress
+    const existingProgress = await db
+      .select()
+      .from(courseUserProgress)
+      .where(
+        and(
+          eq(courseUserProgress.userId, userId),
+          eq(courseUserProgress.courseId, courseId)
+        )
+      )
+      .execute();
+
+    const moduleProgress: Record<number, number> = existingProgress[0]?.moduleProgress as Record<number, number> || {};
+
+    // Update the moduleProgress field with the current module and lesson index
+    moduleProgress[moduleId] = currentLessonIndex;
+
+    // Update or create the progress record
     const result = await db
       .insert(courseUserProgress)
       .values({
         userId,
         courseId,
         currentModuleIndex: moduleOrder ?? 0,
-        currentLessonIndex: lessonOrder ?? 0,
+        currentLessonIndex: currentLessonIndex ?? 0,
+        moduleProgress, // Save the updated moduleProgress object
+        totalLessons,   // Store total lessons count
+        updatedAt: new Date(),
       })
       .onConflictDoUpdate({
         target: [courseUserProgress.userId, courseUserProgress.courseId],
-      set: {
+        set: {
           currentModuleIndex: moduleOrder ?? 0,
-          currentLessonIndex: lessonOrder ?? 0,
+          currentLessonIndex: currentLessonIndex ?? 0,
+          moduleProgress, // Save the updated moduleProgress object
+          totalLessons,   // Update total lessons count
           updatedAt: new Date(),
         },
       })

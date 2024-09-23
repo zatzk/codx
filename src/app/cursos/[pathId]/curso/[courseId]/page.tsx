@@ -1,17 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 'use client'
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { SimplePagHeader } from "~/components/simplePageHeader";
 import { useColorContext } from "~/lib/colorContext";
-import { Inter, Silkscreen } from "next/font/google";
+import { Inter } from "next/font/google";
 import ModuleCard from "~/components/cursosComponents/moduleCard";
 
-const silkscreen = Silkscreen({
-  weight: ["400", "700"], 
-  subsets: ["latin"], 
-  variable: "--font-sans" 
-});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,9 +40,10 @@ interface Lesson {
 
 export default function CourseModulesPage({ params }: { params: { pathId: string, courseId: string } }) {
   const [course, setCourse] = useState<Course | null>(null);
+  const [progressData, setProgressData] = useState<Record<number, number>>({});
   const router = useRouter();
   const { data: session } = useSession();
-  const {activeColorSet} = useColorContext();
+  const { activeColorSet } = useColorContext();
 
   useEffect(() => {
     async function fetchCourse() {
@@ -60,23 +59,43 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
       }
     }
 
-    fetchCourse();
+    void fetchCourse();
   }, [params.courseId]);
 
+  useEffect(() => {
+    async function fetchProgress() {
+      if (!session?.user?.id || !course) return;
+
+      try {
+        const response = await fetch(`/cursos/api/progress/${session.user.id}/${course.id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch progress');
+        }
+        const data = await response.json();
+        setProgressData(data.moduleProgress || {});
+      } catch (error) {
+        console.error('Error fetching progress:', error);
+      }
+    }
+
+    if (course) {
+      void fetchProgress();
+    }
+  }, [session?.user?.id, course]);
+
+  const sortedModules = [...(course?.modules ?? [])].sort((a, b) => a.order - b.order);
+
+  const handleModuleClick = (moduleId: number) => {
+    router.push(`/cursos/${params.pathId}/curso/${course?.id}/modulo/${moduleId}`)
+  };
 
   if (!course) {
     return <div>Loading...</div>;
   }
-
-  const sortedModules = [...course.modules].sort((a, b) => a.order - b.order);
-
-  const handleModuleClick = (moduleId: number) => {
-    router.push(`/cursos/${params.pathId}/curso/${course.id}/modulo/${moduleId}`)
-  };
-
+  console.log('course', course);
 
   return (
-    <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20 `}>
+    <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20`}>
       <SimplePagHeader title={course.title} description={course.description} />
       <div className="w-full flex pb-16 pt-12">
         <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -85,8 +104,8 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
               <ModuleCard
                 key={module.id}
                 module={module}
+                progress={progressData[module.id] ?? 0}
                 onClick={() => handleModuleClick(module.id)}
-                session={session}
               />
             ))}
           </div>

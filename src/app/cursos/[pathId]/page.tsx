@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // app/cursos/[pathId]/page.tsx
 'use client'
 import { useEffect, useState } from "react";
@@ -40,7 +38,8 @@ interface Progress {
   courseId: number;
   userId: number;
   order: number;
-  course: Course;
+  moduleProgress: Record<number, number>;
+  totalLessons: number;
 }
 
 export default function PathCoursesPage({ params }: { params: { pathId: string } }) {
@@ -48,7 +47,7 @@ export default function PathCoursesPage({ params }: { params: { pathId: string }
   const [progress, setProgress] = useState<Progress[] | null>(null);
   const router = useRouter();
   const { data: session } = useSession();
-  const {activeColorSet} = useColorContext();
+  const { activeColorSet } = useColorContext();
 
   useEffect(() => {
     if (!session?.user?.id) return;
@@ -78,13 +77,9 @@ export default function PathCoursesPage({ params }: { params: { pathId: string }
       }
     }
 
-    fetchProgress();
-    fetchPath();
+    void fetchProgress();
+    void fetchPath();
   }, [params.pathId, session]);
-
-
-  console.log('path', path?.pathCourses);
-  console.log('progress', progress);
 
   const handleCourseClick = (courseId: number) => {
     router.push(`/cursos/${params.pathId}/curso/${courseId}`);
@@ -102,17 +97,21 @@ export default function PathCoursesPage({ params }: { params: { pathId: string }
           <div className="grid md:grid-cols-2 gap-x-12 gap-y-6 xs:grid-cols-1">
             {path.pathCourses.map(({ course }) => {
               // Find the progress that matches the course ID
-              const courseProgress = progress?.find((p) => p.courseId === course.id) ?? {
-                courseId: course.id,
-                currentModuleIndex: 0,
-                currentLessonIndex: 0,
-              };
+              const courseProgress = progress?.find((p) => p.courseId === course.id);
+
+              // Calculate completedLessons by summing moduleProgress values
+              const completedLessons = courseProgress
+                ? Object.values(courseProgress.moduleProgress).reduce((sum, lessons) => sum + lessons, 0)
+                : 0;
+
+              const totalLessons = courseProgress?.totalLessons ?? 0;
 
               return (
                 <CourseCard 
                   key={`${course.id}-${course.title}`}  
                   course={course} 
-                  progress={courseProgress}  // Pass the matching or default progress
+                  completedLessons={completedLessons} 
+                  totalLessons={totalLessons} 
                   onClick={() => handleCourseClick(course.id)}
                   session={session}
                 />
