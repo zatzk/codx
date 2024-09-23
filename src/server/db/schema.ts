@@ -18,6 +18,7 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import { object } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -339,6 +340,8 @@ export const courseUserProgress = createTable(
         { onDelete: "cascade", onUpdate: "cascade", }),
     currentModuleIndex: integer("current_module_index").default(0).notNull(),
     currentLessonIndex: integer("current_lesson_index").default(0).notNull(),
+    moduleProgress: json("module_progress").default({}).notNull(),
+    totalLessons: integer("total_lessons").default(0).notNull(),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
