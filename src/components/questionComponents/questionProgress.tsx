@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // src\components\questionComponents\questionProgress.tsx
 'use client';
-import { CheckCircle, RotateCcw, SkipForward, Sparkles } from 'lucide-react';
 import { useColorContext } from "../../lib/colorContext";
 interface QuestionsProgressProps {
   knowCount: number;
