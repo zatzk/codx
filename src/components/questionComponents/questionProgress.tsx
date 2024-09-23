@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // src\components\questionComponents\questionProgress.tsx
 'use client';
-import { CheckCircle, RotateCcw, SkipForward, Sparkles } from 'lucide-react';
 import { useColorContext } from "../../lib/colorContext";
 interface QuestionsProgressProps {
   knowCount: number;
@@ -40,19 +39,19 @@ export function QuestionsProgress({
         
         <div className="flex mt-3">
           <div className="flex items-center mr-3">
-            <CheckCircle className="mr-1 h-4"/>
+            <span className="pixelarticons--checkbox text-xl mr-1 h-4"></span>
             <p className='font-light text-sm'>Sei: <span className={`${activeColorSet?.cardBg} rounded-md px-[6px] py-[2px]`}>{knowCount} itens</span></p>
           </div>
           <div className="flex items-center mr-3">
-            <Sparkles className="mr-1 h-4"/>
+          <span className="pixelarticons--downasaur text-xl mr-1 h-4"></span>
             <p className='font-light text-sm'>Não sei: <span className={`${activeColorSet?.cardBg} rounded-md px-[6px] py-[2px]`}>{didNotKnowCount} itens</span></p>
           </div>
           <div className="flex items-center mr-3">
-            <SkipForward className="mr-1 h-4"/>
+            <span className="pixelarticons--next text-xl mr-1 h-4"></span>
             <p className='font-light text-sm'>Pulei: <span className={`${activeColorSet?.cardBg} rounded-md px-[6px] py-[2px]`}>{skippedCount} itens</span></p>
           </div>
           <div className={`${activeColorSet?.primary} flex items-center`}>
-           <RotateCcw className="mr-1 h-4" />
+          <span className="pixelarticons--redo text-xl rotate-180 mr-1 h-4"></span>
             <button className={`font-light text-sm`} onClick={onResetClick}>Limpar</button>
           </div>
         </div>

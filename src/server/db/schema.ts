@@ -18,6 +18,7 @@ import {
   unique,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import { object } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -249,6 +250,128 @@ export const testCases = createTable(
     updatedAt: timestamp("updatedAt"),
   },
 )
+
+export const paths = createTable(
+  "paths",
+  {
+    id: serial("id").primaryKey(),
+    title: varchar("title", { length: 256 }),
+    description: varchar("description"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
+export const pathCourses = createTable(
+  "path_courses",
+  {
+    id: serial("id").primaryKey(),
+    pathId: integer("path_id")
+      .references(() => paths.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    courseId: integer("course_id")
+      .references(() => courses.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    order: integer("order"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+export const courses = createTable (
+  "courses",
+  {
+    id: serial("id").primaryKey(),
+    title: varchar("title", { length: 256 }),
+    description: varchar("description"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+export const courseModules = createTable(
+  "course_modules",
+  {
+    id: serial("id").primaryKey(),
+    courseId: integer("course_id")
+      .references(() => courses.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    title: varchar("title", { length: 256 }),
+    description: varchar("description"),
+    order: integer("order"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+export const lessons = createTable(
+  "lessons",
+  {
+    id: serial("id").primaryKey(),
+    courseModuleId: integer("course_module_id")
+      .references(() => courseModules.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    title: varchar("title", { length: 256 }),
+    content: text("content"),
+    videoUrl: varchar("video_url", { length: 256 }),
+    description: varchar("description"),
+    order: integer("order"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+);
+
+export const courseUserProgress = createTable(
+  "course_user_progress",
+  {
+    id: serial("id").primaryKey(),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    courseId: integer("course_id")
+      .references(() => courses.id,
+        { onDelete: "cascade", onUpdate: "cascade", }),
+    currentModuleIndex: integer("current_module_index").default(0).notNull(),
+    currentLessonIndex: integer("current_lesson_index").default(0).notNull(),
+    moduleProgress: json("module_progress").default({}).notNull(),
+    totalLessons: integer("total_lessons").default(0).notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => ({
+    userCourseUnique: unique().on(table.userId, table.courseId),
+  })
+);
+
+export const pathCoursesRelations = relations(pathCourses, ({ one }) => ({
+  path: one(paths, { fields: [pathCourses.pathId], references: [paths.id] }),
+  course: one(courses, { fields: [pathCourses.courseId], references: [courses.id] }),
+}));
+export const pathsRelations = relations(paths, ({ many }) => ({
+  pathCourses: many(pathCourses),
+}));
+export const coursesRelations = relations(courses, ({ many }) => ({
+  pathCourses: many(pathCourses),
+  modules: many(courseModules),
+}));
+export const courseModulesRelations = relations(courseModules, ({ one, many }) => ({
+  course: one(courses, { fields: [courseModules.courseId], references: [courses.id] }),
+  lessons: many(lessons),
+}));
+export const lessonsRelations = relations(lessons, ({ one }) => ({
+  module: one(courseModules, { fields: [lessons.courseModuleId], references: [courseModules.id] }),
+}));
+
+
 
 export const desafioRelations = relations(desafios, ({ many }) => ({
   testCases: many(testCases),

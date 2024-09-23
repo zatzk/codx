@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // components/questionComponents/questionList.tsx
 'use client'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { QuestionCard } from './questionCard';
 import { QuestionFinished } from './questionFinished';
 import { QuestionsProgress } from './questionProgress';
@@ -35,7 +35,6 @@ export function QuestionList({ questionGroup }: { questionGroup: QuestionGroup[]
   const [skippedCount, setSkippedCount] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [showLoginMessage, setShowLoginMessage] = useState(false);
-  const firstQuestionIndexUpdate = useRef(false);
 
   const totalQuestions = questionGroup[0]?.questions?.length ?? 0;
   const currentQuestion = questionGroup[0]?.questions?.[currentQuestionIndex];

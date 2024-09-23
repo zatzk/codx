@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client"
-import { Menu } from "lucide-react"
 import { Inter, Silkscreen } from "next/font/google";
 import { colorSets } from '~/lib/colors';
 import { useColorContext } from "~/lib/colorContext";
@@ -186,7 +185,7 @@ export function TopNav() {
             </Link>
           )}
           <button className={`flex items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-12`}>
-            <Menu className={`mx-3 size-4 text-white`} />
+            <span className="pixelarticons--menu mx-3 text-lg text-white"></span>
           </button>
         </div>
       </div>

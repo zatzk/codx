@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client'
-import { RotateCcw } from "lucide-react";
 import { useColorContext } from "~/lib/colorContext";
 
 interface QuestionFinishedProps {
@@ -43,7 +42,7 @@ export function QuestionFinished({
           className={`${activeColorSet?.cardBg} rounded-md px-[1rem] pr-24 py-3 flex items-center hover:bg-opacity-80`} 
           onClick={() => onReset('reset')}
         >
-          <RotateCcw className='mr-1 h-4'/>
+          <span className="pixelarticons--redo text-xl rotate-180 mr-1 h-4"></span>
           <span>Reiniciar</span>
         </button>
       </div>
