@@ -45,9 +45,9 @@ export default function Trilhas() {
   return (
     <section className={`font-sans ${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20 `}>
       <SimplePagHeader title="Trilhas" description="Trilhas com melhores conteudos de aprendizado" />
-      <div className="w-full flex sm:pb-16 sm:pt-8">
-        <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 sm:gap-3">
+      <div className="w-full flex pb-16 pt-8">
+        <div className="ml-auto mr-auto max-w-7xl px-8">
+          <div className="grid md:grid-cols-2 gap-x-12 gap-y-6 xs:grid-cols-1">
             {
               trilhas.map((trilha) => (
                 <GridItem

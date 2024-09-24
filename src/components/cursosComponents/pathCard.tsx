@@ -37,7 +37,8 @@ export default function PathCard({ path, onClick }: PathCardProps) {
           text-white 
           hover:bg-opacity-30 
           bg-opacity-20 
-          p-5 rounded-2xl 
+          p-5 
+          rounded-2xl 
           w-[380px] 
           h-[260px] 
           flex flex-col 

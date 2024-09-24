@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import TrilhasList from '~/components/trilhasComponents/trilhasList';
+import { SimplePagHeader } from '~/components/simplePageHeader';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,21 +59,10 @@ export default function Trilhas() {
 
   return (
   <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
-    <div className="flex w-2/3 flex-col items-left mb-6"> 
-      <div className='flex gap-2'>
-        <Link href={'../../page.tsx'} className='text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
-          <span>codx</span> 
-        </Link>
-        <span className='text-sm'>/</span>
-        <Link href={'../trilhas'} className='text-sm flex items-center text-gray-400 hover:text-white transition ease-in-out delay-50'>
-          <span>trilhas</span> 
-        </Link>
-      </div>    
-      <h1 className='text-3xl font-bold mt-1'>Trilha {name}</h1>
-    </div>
-    <div className="flex flex-col items-center w-2/3">
-      {roadmap && <TrilhasList roadmap={roadmap} />}
-    </div>
+    <SimplePagHeader title="Trilhas" description="Trilhas com melhores conteudos de aprendizado" />
+      <div className="flex flex-col items-center justify-center pb-16 pt-12 w-2/3">
+        {roadmap && <TrilhasList roadmap={roadmap} />}
+      </div>
   </section>
   );
 };
