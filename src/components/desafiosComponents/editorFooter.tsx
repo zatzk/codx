@@ -8,7 +8,7 @@ export default function EditorFooter({ onRun, onSubmit }: { onRun: () => void, o
         <div className='ml-auto flex items-center space-x-4'>
           <button
             className='border hover:bg-gray-700 px-4 py-2 text-sm font-medium items-center whitespace-nowrap transition-all focus:outline-none inline-flex bg-dark-fill-3 hover:bg-dark-fill-2 text-dark-label-2 rounded-lg'
-            onClick={onRun}
+            onClick={onRun} 
           >
             Run
           </button>

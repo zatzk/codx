@@ -214,28 +214,33 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
 
   return (
     <div className="relative flex flex-col overflow-hidden rounded-lg">
-      <div className={`flex h-9 items-center rounded-t-lg bg-opacity-50 ${activeColorSet?.bg}`}>
-        <div className={`${silkscreen.className} text-sm ml-4`}>Source code</div>
-      </div>
-      <PreferenceNav />
+      
       <Split
-        className="h-[calc(100vh-245px)]"
+        className="h-[calc(100vh-235px)]"
         direction="vertical"
         sizes={[60, 40]}
         minSize={60}
       >
-        <div className="flex w-full flex-col justify-between overflow-auto rounded-b-lg ">
-          <CodeMirror
-            value={userCode}
-            theme={githubDark}
-            onChange={onChange}
-            extensions={[javascript()]}
-            style={{ fontSize: settings.fontSize }}
-          />
-          <EditorFooter onRun={handleRun} onSubmit={handleSubmit} />
+        <div className="border rounded-lg flex flex-col justify-between">
+          <div className={`flex min-h-9 h-9 items-center rounded-t-lg bg-opacity-50 ${activeColorSet?.bg}`}>
+            <div className={`${silkscreen.className} text-sm ml-4`}>Source code</div>
+          </div>
+          <PreferenceNav />
+          <div className="flex w-full flex-col justify-between overflow-auto">
+            <CodeMirror
+              value={userCode}
+              theme={githubDark}
+              onChange={onChange}
+              extensions={[javascript()]}
+              style={{ fontSize: settings.fontSize }}
+            />
+            <EditorFooter onRun={handleRun} onSubmit={handleSubmit} />
+          </div>
         </div>
 
-        <div className="mt-1 w-full overflow-x-hidden rounded-lg ">
+        <div className="w-full overflow-hidden rounded-lg border flex flex-col">
+
+
           <div className={`absolute z-10 flex h-9 w-full items-center bg-opacity-50 justify-start rounded-t-lg ${activeColorSet?.bg}`}>
             <div className={`${silkscreen.className} ml-4`}>
               <button
@@ -253,172 +258,176 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
             </div>
           </div>
 
-          {activeTab === "test" && (
-            <div className="ml-3 mt-10 flex h-10 flex-col items-start">
-              <div className="flex">
-                {desafio?.examples?.map((example, index) => {
-                  const isMatched =
-                    showResults &&
-                    JSON.stringify(results[index]) ===
-                      JSON.stringify(
-                        JSON.parse(desafio?.examples[index]?.outputText ?? ""),
-                      );
 
-                  return (
-                    <div
-                      className="mr-2 mt-2 items-start"
-                      key={example?.id}
-                      onClick={() => setActiveTestCaseId(index)}
-                    >
-                      <div className="flex flex-wrap items-center gap-y-4">
-                        <div
-                          className={`relative inline-flex cursor-pointer items-center whitespace-nowrap rounded-lg px-4 py-1 font-medium transition-all focus:outline-none ${
-                            activeTestCaseId === index
-                              ? "text-white"
-                              : "text-gray-500"
-                          } hover:border hover:text-white`}
-                        >
-                          {showResults && (
-                            <span
-                              className={`mr-1 flex items-center text-xs ${
-                                isMatched ? "text-green-500" : "text-red-500"
-                              }`}
-                            >
-                              •
-                            </span>
-                          )}
-                          Case {index + 1}
+
+          <div className="overflow-x-hidden h-full mt-9 overflow-y-auto">
+            {activeTab === "test" && (
+              <div className="ml-3 flex h-10 flex-col items-start">
+                <div className="flex">
+                  {desafio?.examples?.map((example, index) => {
+                    const isMatched =
+                      showResults &&
+                      JSON.stringify(results[index]) ===
+                        JSON.stringify(
+                          JSON.parse(desafio?.examples[index]?.outputText ?? ""),
+                        );
+
+                    return (
+                      <div
+                        className="mr-2 mt-2 items-start"
+                        key={example?.id}
+                        onClick={() => setActiveTestCaseId(index)}
+                      >
+                        <div className="flex flex-wrap items-center gap-y-4">
+                          <div
+                            className={`relative inline-flex cursor-pointer items-center whitespace-nowrap rounded-lg px-4 py-1 font-medium transition-all focus:outline-none ${
+                              activeTestCaseId === index
+                                ? "text-white"
+                                : "text-gray-500"
+                            } hover:border hover:text-white`}
+                          >
+                            {showResults && (
+                              <span
+                                className={`mr-1 flex items-center text-xs ${
+                                  isMatched ? "text-green-500" : "text-red-500"
+                                }`}
+                              >
+                                •
+                              </span>
+                            )}
+                            Case {index + 1}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="ml-4 w-full pb-10 font-semibold">
-                <p className="ml-1 mt-4 text-xs font-medium text-white">
-                  Input:
-                </p>
-                <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                  {desafio?.examples?.[activeTestCaseId]?.inputText
-                    .split("=")
-                    .map(
-                      (
-                        part:
-                          | string
-                          | number
-                          | bigint
-                          | boolean
-                          | React.ReactElement<
-                              unknown,
-                              string | React.JSXElementConstructor<unknown>
-                            >
-                          | Iterable<React.ReactNode>
-                          | Promise<React.AwaitedReactNode>
-                          | null
-                          | undefined,
-                        index: React.Key | null | undefined,
-                      ) => (
-                        <React.Fragment key={index}>
-                          {index === 0 ? (
-                            <span className="text-xs">{part} =</span>
-                          ) : (
-                            <span>
-                              <br />
-                              {part?.toString().trim() ?? ''}
-                            </span>
-                          )}
-                        </React.Fragment>
-                      ),
-                    )}
+                    );
+                  })}
                 </div>
-                {showResults && (
-                  <div className="w-full overflow-auto">
-                    <div className="ml-1 mt-4 text-xs font-medium text-white">
-                      Output:
-                    </div>
-                    <div
-                      className={`mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white`}
-                    >
-                      <div>{JSON.stringify(results[activeTestCaseId])}</div>
-                    </div>
-                  </div>
-                )}
-                <p className="ml-1 mt-4 text-xs font-medium text-white">
-                  Expected:
-                </p>
-                <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                  {desafio?.examples?.[activeTestCaseId]?.outputText}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "submit" && (
-            <div className="ml-3 mt-10 flex h-10 flex-col items-start">
-              {resultsEvaluate !== null ? (
-                <>
-                  <div className="ml-3 mt-3 flex flex-row items-center">
-                    <h2
-                      className={`text-2xl font-bold ${resultsEvaluate ? "text-green-500" : "text-red-500"}`}
-                    >
-                      {resultsEvaluate ? "Correct Answer" : "Wrong Answer"}
-                    </h2>
-                    <p className="ml-3 text-xs text-[#787867]">
-                      {`| ${resultsCount}/${desafio.testCases.length} testcases passed`}
-                    </p>
-                  </div>
-
-                  <div className="ml-4 w-full font-semibold">
-                    <p className="ml-1 mt-4 text-xs font-medium text-white">
-                      Input:
-                    </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                      {desafio?.examples?.[0]?.inputText
-                        .split("=")
-                        .map((part: string, index: number) => (
+                <div className="ml-4 w-full pb-10 font-semibold">
+                  <p className="ml-1 mt-4 text-xs font-medium text-white">
+                    Input:
+                  </p>
+                  <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                    {desafio?.examples?.[activeTestCaseId]?.inputText
+                      .split("=")
+                      .map(
+                        (
+                          part:
+                            | string
+                            | number
+                            | bigint
+                            | boolean
+                            | React.ReactElement<
+                                unknown,
+                                string | React.JSXElementConstructor<unknown>
+                              >
+                            | Iterable<React.ReactNode>
+                            | Promise<React.AwaitedReactNode>
+                            | null
+                            | undefined,
+                          index: React.Key | null | undefined,
+                        ) => (
                           <React.Fragment key={index}>
                             {index === 0 ? (
                               <span className="text-xs">{part} =</span>
                             ) : (
                               <span>
                                 <br />
-                                {part.trim()}
+                                {part?.toString().trim() ?? ''}
                               </span>
                             )}
                           </React.Fragment>
-                        ))}
-                    </div>
-
-                    <p className="ml-1 mt-4 text-xs font-medium text-white">
-                      Output:
-                    </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                      {JSON.stringify(results[0])}
-                    </div>
-
-                    <p className="ml-1 mt-4 text-xs font-medium text-white">
-                      Expected Output:
-                    </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                      {desafio?.examples?.[0]?.outputText}
-                    </div>
+                        ),
+                      )}
                   </div>
-
-                  <div className="ml-4 w-full pb-10 font-semibold">
-                    <p className="ml-1 mt-4 text-xs font-medium text-white">
-                      Code:
-                    </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                      <pre>{userCode}</pre>
+                  {showResults && (
+                    <div className="w-full overflow-auto">
+                      <div className="ml-1 mt-4 text-xs font-medium text-white">
+                        Output:
+                      </div>
+                      <div
+                        className={`mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white`}
+                      >
+                        <div>{JSON.stringify(results[activeTestCaseId])}</div>
+                      </div>
                     </div>
+                  )}
+                  <p className="ml-1 mt-4 text-xs font-medium text-white">
+                    Expected:
+                  </p>
+                  <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                    {desafio?.examples?.[activeTestCaseId]?.outputText}
                   </div>
-                </>
-              ) : (
-                <div className="ml-4 w-full pb-10 font-semibold text-white">
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+
+            {activeTab === "submit" && (
+              <div className="ml-3 mt-10 flex h-10 flex-col items-start">
+                {resultsEvaluate !== null ? (
+                  <>
+                    <div className="ml-3 mt-3 flex flex-row items-center">
+                      <h2
+                        className={`text-2xl font-bold ${resultsEvaluate ? "text-green-500" : "text-red-500"}`}
+                      >
+                        {resultsEvaluate ? "Correct Answer" : "Wrong Answer"}
+                      </h2>
+                      <p className="ml-3 text-xs text-[#787867]">
+                        {`| ${resultsCount}/${desafio.testCases.length} testcases passed`}
+                      </p>
+                    </div>
+
+                    <div className="ml-4 w-full font-semibold">
+                      <p className="ml-1 mt-4 text-xs font-medium text-white">
+                        Input:
+                      </p>
+                      <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                        {desafio?.examples?.[0]?.inputText
+                          .split("=")
+                          .map((part: string, index: number) => (
+                            <React.Fragment key={index}>
+                              {index === 0 ? (
+                                <span className="text-xs">{part} =</span>
+                              ) : (
+                                <span>
+                                  <br />
+                                  {part.trim()}
+                                </span>
+                              )}
+                            </React.Fragment>
+                          ))}
+                      </div>
+
+                      <p className="ml-1 mt-4 text-xs font-medium text-white">
+                        Output:
+                      </p>
+                      <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                        {JSON.stringify(results[0])}
+                      </div>
+
+                      <p className="ml-1 mt-4 text-xs font-medium text-white">
+                        Expected Output:
+                      </p>
+                      <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                        {desafio?.examples?.[0]?.outputText}
+                      </div>
+                    </div>
+
+                    <div className="ml-4 w-full pb-10 font-semibold">
+                      <p className="ml-1 mt-4 text-xs font-medium text-white">
+                        Code:
+                      </p>
+                      <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                        <pre>{userCode}</pre>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="ml-4 w-full pb-10 font-semibold text-white">
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </Split>
     </div>

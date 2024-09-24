@@ -21,7 +21,7 @@ export default function ProblemDescription({desafio}: {desafio: DesafioProps}) {
   const {activeColorSet} = useColorContext();
   
   return (
-    <div className='rounded-lg '>
+    <div className='rounded-lg border'>
       <div className={`${activeColorSet?.bg} ${silkscreen.className} bg-opacity-50 rounded-t-lg h-9 items-center flex`}>
         <div className='ml-4 text-sm'>Descrição</div>
       </div>
