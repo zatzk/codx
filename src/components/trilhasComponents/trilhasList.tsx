@@ -4,6 +4,18 @@
 import React, { useState } from 'react';
 import { useColorContext } from "~/lib/colorContext";
 import { markdownToHtml } from '../../lib/markdown';
+import { Inter, Silkscreen } from "next/font/google";
+
+const silkscreen = Silkscreen({
+  weight: ["400", "700"], 
+  subsets: ["latin"], 
+  variable: "--font-sans" 
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 interface Link {
   type: string;
@@ -43,12 +55,12 @@ export function TrilhasList({ roadmap }: TrilhasListProps) {
     <div key={trilha.id} className="mb-4">
       <button
         onClick={() => toggleAccordion(trilha.id)}
-        className={`${activeColorSet?.cardBg} ${activeTrilha === trilha.id ? 'rounded-b-none' : 'rounded-md'} bg-opacity-50 w-full text-left p-3 px-6 rounded-md`}
+        className={`${activeColorSet?.cardBg} ${activeTrilha === trilha.id ? 'rounded-b-none' : 'rounded-md'} bg-opacity-30 w-full text-left p-3 px-6 rounded-md`}
       >
-        <h3 className="text-xl font-semibold">{trilha.name}</h3>
+        <h3 className="text-md font-semibold">{trilha.name}</h3>
       </button>
       <div className={`overflow-hidden rounded-md rounded-t-none transition-max-height duration-500 ease-in-out ${activeTrilha === trilha.id ? 'max-h-[2200px]' : 'max-h-0'}`}>
-        <div className={`px-6 py-2 pb-8 ${activeColorSet?.cardBg} bg-opacity-50 rounded-md rounded-t-none mt-[-4px]`}>
+        <div className={`px-6 py-2 pb-8 ${activeColorSet?.cardBg} bg-opacity-30 rounded-md rounded-t-none mt-[-4px]`}>
           <p className="mb-6" dangerouslySetInnerHTML={{ __html: markdownToHtml(trilha.data, false) }} />
           <ul className={`rounded-md border-2 p-3 ${activeColorSet?.borderButton}`}>
             {trilha.links.map((link, index) => (
@@ -66,7 +78,7 @@ export function TrilhasList({ roadmap }: TrilhasListProps) {
 
   const renderLevel = (level: number) => (
     <div key={level} className="mb-8">
-      <h2 className={`text-3xl font-bold mb-4 py-4 rounded-md ${activeColorSet?.cardBg} bg-opacity-90`}>
+      <h2 className={`text-lg font-bold mb-4 py-2 rounded-md ${silkscreen.className} ${activeColorSet?.cardBg} bg-opacity-60`}>
         <span className={` ${activeColorSet?.paragraph} ml-6`}>Nível {level}</span>  
       </h2>
       {roadmap
@@ -76,7 +88,7 @@ export function TrilhasList({ roadmap }: TrilhasListProps) {
   );
 
   return (
-    <div className="w-full">
+    <div className={`w-full `}>
       {[1, 2, 3].map((level) => renderLevel(level))}
     </div>
   );
