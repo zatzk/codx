@@ -21,6 +21,18 @@ import { useLocalStorage } from "usehooks-ts";
 import { useSession } from "next-auth/react";
 import { useColorContext } from '~/lib/colorContext';
 import EditorFooter from "./editorFooter";
+import { Inter, Silkscreen } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const silkscreen = Silkscreen({
+  weight: ["400", "700"], 
+  subsets: ["latin"], 
+  variable: "--font-sans" 
+});
 
 export interface ISettings {
   fontSize: string;
@@ -202,17 +214,17 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
 
   return (
     <div className="relative flex flex-col overflow-hidden rounded-lg">
-      <div className={`flex h-9 items-center rounded-t-lg ${activeColorSet?.bg}`}>
-        <div className="ml-3">Source code</div>
+      <div className={`flex h-9 items-center rounded-t-lg bg-opacity-50 ${activeColorSet?.bg}`}>
+        <div className={`${silkscreen.className} text-sm ml-4`}>Source code</div>
       </div>
       <PreferenceNav />
       <Split
-        className="h-[calc(100vh-230px)] "
+        className="h-[calc(100vh-245px)]"
         direction="vertical"
         sizes={[60, 40]}
         minSize={60}
       >
-        <div className="flex w-full flex-col justify-between overflow-auto rounded-b-lg bg-[#262626]">
+        <div className="flex w-full flex-col justify-between overflow-auto rounded-b-lg ">
           <CodeMirror
             value={userCode}
             theme={githubDark}
@@ -223,17 +235,17 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
           <EditorFooter onRun={handleRun} onSubmit={handleSubmit} />
         </div>
 
-        <div className="mt-1 w-full overflow-x-hidden rounded-lg bg-[#262626]">
-          <div className={`absolute z-10 flex h-9 w-full items-center justify-start rounded-t-lg ${activeColorSet?.bg}`}>
-            <div className="ml-3">
+        <div className="mt-1 w-full overflow-x-hidden rounded-lg ">
+          <div className={`absolute z-10 flex h-9 w-full items-center bg-opacity-50 justify-start rounded-t-lg ${activeColorSet?.bg}`}>
+            <div className={`${silkscreen.className} ml-4`}>
               <button
-                className={`mr-2 rounded-md px-2 py-1 text-sm hover:bg-gray-500 ${activeTab === "test" ? "font-bold" : ""}`}
+                className={`mr-2 rounded-md px-2 py-1 text-xs hover:border ${activeTab === "test" ? "font-bold" : ""}`}
                 onClick={() => setActiveTab("test")}
               >
                 Test Result
               </button>
               <button
-                className={`mr-2 rounded-md px-2 py-1 text-sm hover:bg-gray-500 ${activeTab === "submit" ? "font-bold" : ""}`}
+                className={`mr-2 rounded-md px-2 py-1 text-xs hover:border ${activeTab === "submit" ? "font-bold" : ""}`}
                 onClick={() => setActiveTab("submit")}
               >
                 Submit Result
@@ -264,7 +276,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                             activeTestCaseId === index
                               ? "text-white"
                               : "text-gray-500"
-                          } hover:bg-gray-400 hover:text-white`}
+                          } hover:border hover:text-white`}
                         >
                           {showResults && (
                             <span
@@ -286,7 +298,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                 <p className="ml-1 mt-4 text-xs font-medium text-white">
                   Input:
                 </p>
-                <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
                   {desafio?.examples?.[activeTestCaseId]?.inputText
                     .split("=")
                     .map(
@@ -325,7 +337,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                       Output:
                     </div>
                     <div
-                      className={`mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white`}
+                      className={`mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white`}
                     >
                       <div>{JSON.stringify(results[activeTestCaseId])}</div>
                     </div>
@@ -334,7 +346,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                 <p className="ml-1 mt-4 text-xs font-medium text-white">
                   Expected:
                 </p>
-                <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
                   {desafio?.examples?.[activeTestCaseId]?.outputText}
                 </div>
               </div>
@@ -360,7 +372,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                     <p className="ml-1 mt-4 text-xs font-medium text-white">
                       Input:
                     </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
                       {desafio?.examples?.[0]?.inputText
                         .split("=")
                         .map((part: string, index: number) => (
@@ -380,14 +392,14 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                     <p className="ml-1 mt-4 text-xs font-medium text-white">
                       Output:
                     </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
                       {JSON.stringify(results[0])}
                     </div>
 
                     <p className="ml-1 mt-4 text-xs font-medium text-white">
                       Expected Output:
                     </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
                       {desafio?.examples?.[0]?.outputText}
                     </div>
                   </div>
@@ -396,7 +408,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                     <p className="ml-1 mt-4 text-xs font-medium text-white">
                       Code:
                     </p>
-                    <div className="mt-2 w-[90%] cursor-text rounded-lg border border-transparent bg-[#353535] px-3 py-[10px] text-white">
+                    <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
                       <pre>{userCode}</pre>
                     </div>
                   </div>

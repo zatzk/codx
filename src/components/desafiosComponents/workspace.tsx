@@ -14,7 +14,7 @@ export default function Workspace({desafio}: {desafio: DesafioProps}) {
   return (
     <Split className='split mb-2' minSize={0}>
       <ProblemDescription desafio={desafio} />
-      <div className='bg-[#0f0f0f] rounded-lg'>
+      <div className=' rounded-lg'>
         <Playground desafio={desafio} />
       </div>
     </Split>
