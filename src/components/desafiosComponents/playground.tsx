@@ -221,12 +221,12 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
         sizes={[60, 40]}
         minSize={60}
       >
-        <div className="border rounded-lg flex flex-col justify-between">
+        <div className="border rounded-lg flex flex-col">
           <div className={`flex min-h-9 h-9 items-center rounded-t-lg bg-opacity-50 ${activeColorSet?.bg}`}>
             <div className={`${silkscreen.className} text-sm ml-4`}>Source code</div>
           </div>
           <PreferenceNav />
-          <div className="flex w-full flex-col justify-between overflow-auto">
+          <div className="flex w-full h-[80%] flex-col justify-between overflow-auto">
             <CodeMirror
               value={userCode}
               theme={githubDark}
