@@ -23,7 +23,8 @@ export default function ProblemDescription({desafio}: {desafio: DesafioProps}) {
   return (
     <div className='rounded-lg border'>
       <div className={`${activeColorSet?.bg} ${silkscreen.className} bg-opacity-50 rounded-t-lg h-9 items-center flex`}>
-        <div className='ml-4 text-sm'>Descrição</div>
+        <span className="pixelarticons--list-box ml-4 mr-2"></span>
+        <div className=' text-sm'>Description</div>
       </div>
       <div>
         <div className='flex items-center justify-between p-3'>

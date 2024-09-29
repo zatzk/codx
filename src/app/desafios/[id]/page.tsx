@@ -35,6 +35,7 @@ export interface ExamplesProps {
 }
 
 export interface TestCaseProps {
+  target: string | null;
   id: string;
   input: string;
   expectedOutput: string;
