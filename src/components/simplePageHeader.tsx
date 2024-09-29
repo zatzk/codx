@@ -25,7 +25,7 @@ export function SimplePagHeader( props: SimplePagHeaderProps ) {
     <div className={`w-2/3 border rounded-2xl px-3 py-3 ${silkscreen.className}`}>
       <div className="px-[1rem]">
         <div className="flex items-center mb-1">
-          <span onClick={() => window.history.back()} className="pixelarticons--arrow-left text-xl mr-2 cursor-pointer"></span>
+          <span onClick={() => window.history.back()} className="pixelarticons--arrow-left text-xl mr-2 cursor-pointer text-white"></span>
           <h1 className={`text-white text-md`}>{props.title}</h1>
         </div>
       <p className={`text-gray-400 text-xs ml-1 ${inter.className}`}>{props.description}</p>
