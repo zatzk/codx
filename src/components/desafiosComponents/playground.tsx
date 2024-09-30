@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // components/desafiosComponents/workspace.tsx
-'use client';
+"use client";
 import React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -19,7 +19,7 @@ import { githubDark } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
 import { useLocalStorage } from "usehooks-ts";
 import { useSession } from "next-auth/react";
-import { useColorContext } from '~/lib/colorContext';
+import { useColorContext } from "~/lib/colorContext";
 import EditorFooter from "./editorFooter";
 import { Inter, Silkscreen } from "next/font/google";
 
@@ -29,9 +29,9 @@ const inter = Inter({
 });
 
 const silkscreen = Silkscreen({
-  weight: ["400", "700"], 
-  subsets: ["latin"], 
-  variable: "--font-sans" 
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export interface ISettings {
@@ -42,7 +42,7 @@ export interface ISettings {
 
 export default function Playground({ desafio }: { desafio: DesafioProps }) {
   const { data: session } = useSession();
-  const {activeColorSet} = useColorContext();
+  const { activeColorSet } = useColorContext();
   const [fontSize, setFontSize] = useLocalStorage("lcc-fontSize", "16px");
   const [userCode, setUserCode] = useState<string>(desafio.starterCode);
   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
@@ -63,9 +63,11 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
     testCases: string | unknown[],
     expectedOutputs: unknown[],
     functionName: string,
+    targets: (number | null)[],
   ) => {
     const concatenatedInputs = JSON.stringify(testCases);
     const concatenatedExpectedOutputs = JSON.stringify(expectedOutputs);
+    const concatenatedTargets = JSON.stringify(targets);
 
     const codeToExecute = `
       ${userCode}
@@ -73,11 +75,17 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
       process.stdin.on('data', function(data) {
         const inputs = JSON.parse(data.toString().trim());
         const expectedOutputs = JSON.parse(process.argv[2]);
+        const targets = JSON.parse(process.argv[3]);
         
         let count = 0;
         const results = inputs.map((inputArray, index) => {
-          const outputArray = ${functionName}(inputArray);
-          const outputString = JSON.stringify(outputArray);
+          let output;
+          if (targets[index] !== null) {
+            output = ${functionName}(inputArray, targets[index]);
+          } else {
+            output = ${functionName}(inputArray);
+          }
+          const outputString = JSON.stringify(output);
           const expectedOutputString = JSON.stringify(expectedOutputs[index]);
   
           if (outputString === expectedOutputString) {
@@ -113,7 +121,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
             },
           ],
           stdin: concatenatedInputs,
-          args: [concatenatedExpectedOutputs],
+          args: [concatenatedExpectedOutputs, concatenatedTargets],
         }),
       });
 
@@ -153,12 +161,16 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
     const expectedOutputs = desafio.testCases
       .slice(0, 3)
       .map((testCase) => JSON.parse(testCase.expectedOutput));
+    const targets = desafio.testCases
+      .slice(0, 3)
+      .map((testCase) => testCase.target !== null ? Number(testCase.target) : null);
     const { resultsOutput, resultsCount, resultsEvaluate } =
       await handleRunCode(
         userCode,
         testCases,
         expectedOutputs,
         desafio.functionName,
+        targets,
       );
 
     console.log("Results:", resultsOutput);
@@ -174,12 +186,14 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
     const expectedOutputs = desafio.testCases.map((testCase) =>
       JSON.parse(testCase.expectedOutput),
     );
+    const targets = desafio.testCases.map((testCase) => testCase.target !== null ? Number(testCase.target) : null);
     const { resultsOutput, resultsCount, resultsEvaluate } =
       await handleRunCode(
         userCode,
         testCases,
         expectedOutputs,
         desafio.functionName,
+        targets,
       );
 
     console.log("Submit Results:", resultsOutput);
@@ -191,19 +205,21 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
   };
 
   useEffect(() => {
-    const code = localStorage.getItem(`code-${JSON.stringify(session)}`);
+    const code = localStorage.getItem(
+      `code-${desafio.id}-${JSON.stringify(session)}`,
+    );
     if (session) {
       setUserCode(code ? JSON.parse(code) : desafio.starterCode);
     } else {
       setUserCode(desafio.starterCode);
     }
-  }, [session, desafio.starterCode]);
+  }, [session, desafio.starterCode, desafio.id]);
 
   const onChange = (value: string) => {
     setUserCode(value);
     if (session) {
       localStorage.setItem(
-        `code-${JSON.stringify(session)}`,
+        `code-${desafio.id}-${JSON.stringify(session)}`,
         JSON.stringify(value),
       );
     }
@@ -214,19 +230,25 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
 
   return (
     <div className="relative flex flex-col overflow-hidden rounded-lg">
-      
       <Split
         className="h-[calc(100vh-235px)]"
         direction="vertical"
         sizes={[60, 40]}
         minSize={60}
       >
-        <div className="border rounded-lg flex flex-col justify-between">
-          <div className={`flex min-h-9 h-9 items-center rounded-t-lg bg-opacity-50 ${activeColorSet?.bg}`}>
-            <div className={`${silkscreen.className} text-sm ml-4`}>Source code</div>
+        <div className="flex flex-col rounded-lg border">
+          <div
+            className={`flex h-9 min-h-9 items-center rounded-t-lg bg-opacity-50 ${activeColorSet?.bg}`}
+          >
+            <div
+              className={`${silkscreen.className} ml-4 flex items-center text-sm`}
+            >
+              <span className="pixelarticons--chevrons-horizontal mr-2 text-2xl"></span>
+              Source code
+            </div>
           </div>
           <PreferenceNav />
-          <div className="flex w-full flex-col justify-between overflow-auto">
+          <div className="flex h-[80%] w-full flex-col justify-between overflow-auto">
             <CodeMirror
               value={userCode}
               theme={githubDark}
@@ -238,10 +260,10 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
           </div>
         </div>
 
-        <div className="w-full overflow-hidden rounded-lg border flex flex-col">
-
-
-          <div className={`absolute z-10 flex h-9 w-full items-center bg-opacity-50 justify-start rounded-t-lg ${activeColorSet?.bg}`}>
+        <div className="flex w-full flex-col overflow-hidden rounded-lg border">
+          <div
+            className={`absolute z-10 flex h-9 w-full items-center justify-start rounded-t-lg bg-opacity-50 ${activeColorSet?.bg}`}
+          >
             <div className={`${silkscreen.className} ml-4`}>
               <button
                 className={`mr-2 rounded-md px-2 py-1 text-xs hover:border ${activeTab === "test" ? "font-bold" : ""}`}
@@ -258,24 +280,20 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
             </div>
           </div>
 
-
-
-          <div className="overflow-x-hidden h-full mt-9 overflow-y-auto">
+          <div className="mt-9 h-full overflow-y-auto overflow-x-hidden">
             {activeTab === "test" && (
               <div className="ml-3 flex h-10 flex-col items-start">
                 <div className="flex">
-                  {desafio?.examples?.map((example, index) => {
+                  {desafio?.testCases?.slice(0, 3).map((testCase, index) => {
                     const isMatched =
                       showResults &&
                       JSON.stringify(results[index]) ===
-                        JSON.stringify(
-                          JSON.parse(desafio?.examples[index]?.outputText ?? ""),
-                        );
+                        JSON.stringify(JSON.parse(testCase.expectedOutput));
 
                     return (
                       <div
                         className="mr-2 mt-2 items-start"
-                        key={example?.id}
+                        key={testCase.id}
                         onClick={() => setActiveTestCaseId(index)}
                       >
                         <div className="flex flex-wrap items-center gap-y-4">
@@ -307,38 +325,20 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                     Input:
                   </p>
                   <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                    {desafio?.examples?.[activeTestCaseId]?.inputText
-                      .split("=")
-                      .map(
-                        (
-                          part:
-                            | string
-                            | number
-                            | bigint
-                            | boolean
-                            | React.ReactElement<
-                                unknown,
-                                string | React.JSXElementConstructor<unknown>
-                              >
-                            | Iterable<React.ReactNode>
-                            | Promise<React.AwaitedReactNode>
-                            | null
-                            | undefined,
-                          index: React.Key | null | undefined,
-                        ) => (
-                          <React.Fragment key={index}>
-                            {index === 0 ? (
-                              <span className="text-xs">{part} =</span>
-                            ) : (
-                              <span>
-                                <br />
-                                {part?.toString().trim() ?? ''}
-                              </span>
-                            )}
-                          </React.Fragment>
-                        ),
-                      )}
+                    {JSON.parse(
+                      desafio?.testCases?.[activeTestCaseId]?.input ?? "[]",
+                    ).toString()}
                   </div>
+                  {desafio?.testCases?.[activeTestCaseId]?.target !== null && (
+                    <>
+                      <p className="ml-1 mt-4 text-xs font-medium text-white">
+                        Target:
+                      </p>
+                      <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                        {desafio?.testCases?.[activeTestCaseId]?.target}
+                      </div>
+                    </>
+                  )}
                   {showResults && (
                     <div className="w-full overflow-auto">
                       <div className="ml-1 mt-4 text-xs font-medium text-white">
@@ -355,7 +355,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                     Expected:
                   </p>
                   <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                    {desafio?.examples?.[activeTestCaseId]?.outputText}
+                    {desafio?.testCases?.[activeTestCaseId]?.expectedOutput}
                   </div>
                 </div>
               </div>
@@ -381,21 +381,21 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                         Input:
                       </p>
                       <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                        {desafio?.examples?.[0]?.inputText
-                          .split("=")
-                          .map((part: string, index: number) => (
-                            <React.Fragment key={index}>
-                              {index === 0 ? (
-                                <span className="text-xs">{part} =</span>
-                              ) : (
-                                <span>
-                                  <br />
-                                  {part.trim()}
-                                </span>
-                              )}
-                            </React.Fragment>
-                          ))}
+                        {JSON.parse(
+                          desafio?.testCases?.[0]?.input ?? "[]",
+                        ).toString()}
                       </div>
+
+                      {desafio?.testCases?.[0]?.target !== null && (
+                        <>
+                          <p className="ml-1 mt-4 text-xs font-medium text-white">
+                            Target:
+                          </p>
+                          <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
+                            {desafio?.testCases?.[0]?.target}
+                          </div>
+                        </>
+                      )}
 
                       <p className="ml-1 mt-4 text-xs font-medium text-white">
                         Output:
@@ -408,7 +408,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                         Expected Output:
                       </p>
                       <div className="mt-2 w-[90%] cursor-text rounded-lg border px-3 py-[10px] text-white">
-                        {desafio?.examples?.[0]?.outputText}
+                        {desafio?.testCases?.[0]?.expectedOutput}
                       </div>
                     </div>
 
@@ -423,6 +423,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
                   </>
                 ) : (
                   <div className="ml-4 w-full pb-10 font-semibold text-white">
+                    Run your code to see the results.
                   </div>
                 )}
               </div>

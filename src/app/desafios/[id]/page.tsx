@@ -32,9 +32,11 @@ export interface ExamplesProps {
   id: string;
   inputText: string;
   outputText: string;
+  explanation: string;
 }
 
 export interface TestCaseProps {
+  target: string | null;
   id: string;
   input: string;
   expectedOutput: string;
