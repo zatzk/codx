@@ -66,17 +66,17 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
   // Fetch progress only after module is fetched
   useEffect(() => {
     async function fetchProgress() {
-      if (!session?.user?.id || !module) return;
+      // if (!session?.user?.id || !module) return;
     
       try {
-        const response = await fetch(`/cursos/api/progress/${session.user.id}/${module.courseId}`);
+        const response = await fetch(`/cursos/api/progress/${session?.user.id}/${module?.courseId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch progress in the module page');
         }
         const data = await response.json();
         
         const moduleProgress = data.moduleProgress || {};
-        if (module.id in moduleProgress) {
+        if (module && module.id in moduleProgress) {
           setProgress(moduleProgress[module.id]); // Set progress to the current lesson index for this module
         } else {
           setProgress(0); // If no progress found, start from 0
@@ -103,8 +103,8 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
         body: JSON.stringify({
           userId: session.user.id,
           lessonId: lessonId,
-          moduleId: module.id, // Pass the current module ID
-          currentLessonIndex: activeLesson?.order, // Save the current lesson index
+          moduleId: module.id,
+          currentLessonIndex: activeLesson?.order,
         }),
       });
   
@@ -122,7 +122,7 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
   };
 
   if (!module) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center h-screen  text-white">Loading...</div>;
   }
 
   const sortedLessons = [...module.lessons].sort((a, b) => a.order - b.order);

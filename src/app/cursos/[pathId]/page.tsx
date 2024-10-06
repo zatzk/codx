@@ -50,7 +50,7 @@ export default function PathCoursesPage({ params }: { params: { pathId: string }
   const { activeColorSet } = useColorContext();
 
   useEffect(() => {
-    if (!session?.user?.id) return;
+    // if (!session?.user?.id) return;
 
     async function fetchPath() {
       try {
@@ -86,7 +86,7 @@ export default function PathCoursesPage({ params }: { params: { pathId: string }
   };
 
   if (!path) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center h-screen  text-white">Loading...</div>;
   }
 
   return (
