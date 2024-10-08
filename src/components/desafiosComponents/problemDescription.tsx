@@ -44,7 +44,7 @@ export default function ProblemDescription({ desafio }: { desafio: DesafioProps 
     setLoading(true) ;
     setAiResponse(''); 
 
-    const response = await fetch('/api/ask-ai', {
+    const response = await fetch('/api/askai', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
