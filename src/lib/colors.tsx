@@ -8,6 +8,7 @@ interface ColorSets {
     cardBg: string;
     cardGradient: string;
     borderButton: string;
+    bgButton: string;
     hoverBorderButton: string;
     gradientBg: string;
     radialGradientBg1: string;
@@ -30,7 +31,8 @@ export const colorSets: ColorSets = {
     bg: 'bg-pink-500',
     cardBg: 'bg-red-500',
     cardGradient: 'bg-gradient-to-tr from-pink-500/5 to-red-500/25',
-    borderButton: 'border-pink-600',
+    borderButton: 'border-pink-400',
+    bgButton: 'bg-pink-600',
     hoverBorderButton: 'hover:border-pink-400',
     gradientBg: '219, 39, 119',
     radialGradientBg1: 'bg-[radial-gradient(circle,#db2777_0%,transparent_50%)]',
@@ -50,7 +52,8 @@ export const colorSets: ColorSets = {
     bg: 'bg-sky-500',
     cardBg: 'bg-sky-500',
     cardGradient: 'bg-gradient-to-tr from-sky-500/5 to-blue-500/25',
-    borderButton: 'border-sky-600',
+    borderButton: 'border-sky-400',
+    bgButton: 'bg-sky-600',
     hoverBorderButton: 'hover:border-sky-400',
     gradientBg: '2, 132, 199',
     radialGradientBg1: 'bg-[radial-gradient(circle,#0a4481_0%,transparent_50%)]',
@@ -70,7 +73,8 @@ export const colorSets: ColorSets = {
     bg: 'bg-green-500',
     cardBg: 'bg-green-500',
     cardGradient: 'bg-gradient-to-tr from-green-500/5 to-green-500/25',
-    borderButton: 'border-green-600',
+    borderButton: 'border-green-400',
+    bgButton: 'bg-green-600',
     hoverBorderButton: 'hover:border-green-400',
     gradientBg: '22, 163, 74',
     radialGradientBg1: 'bg-[radial-gradient(circle,#1b543a_0%,transparent_50%)]',
@@ -90,7 +94,8 @@ export const colorSets: ColorSets = {
     bg: 'bg-orange-500',
     cardBg: 'bg-yellow-500',
     cardGradient: 'bg-gradient-to-tr from-orange-500/5 to-yellow-500/25',
-    borderButton: 'border-orange-600',
+    borderButton: 'border-orange-400',
+    bgButton: 'bg-orange-600',
     hoverBorderButton: 'hover:border-orange-400',
     gradientBg: '234, 88, 12',
     radialGradientBg1: 'bg-[radial-gradient(circle,#763205_0%,transparent_50%)]',
@@ -111,6 +116,7 @@ export const colorSets: ColorSets = {
     cardBg: 'bg-gray-800',
     cardGradient: 'bg-gradient-to-tr from-gray-800/5 to-gray-800/25',
     borderButton: 'border-white',
+    bgButton: 'bg-gray-600',
     hoverBorderButton: 'hover:border-gray-400',
     gradientBg: '86, 205, 226',
     radialGradientBg1: 'bg-[radial-gradient(circle,#56cde2_0%,transparent_50%)]',
