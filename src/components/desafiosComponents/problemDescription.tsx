@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { type DesafioProps } from '~/app/desafios/[id]/page';
 import { useColorContext } from '~/lib/colorContext';
 import { Inter, Silkscreen } from 'next/font/google';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+
+
+
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,15 +27,21 @@ const silkscreen = Silkscreen({
 export default function ProblemDescription({ desafio }: { desafio: DesafioProps }) {
   const { activeColorSet } = useColorContext();
   const [activeTab, setActiveTab] = useState<'description' | 'ask-ai'>('description');
-  const [aiResponse, setAiResponse] = useState<string>('test');
-  const [loading, setLoading] = useState(false);
+  const [aiResponse, setAiResponse] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [parsedResponse, setParsedResponse] = useState<string | null>(null);
+
+  marked.setOptions({
+    gfm: true,
+    breaks: true,
+  });
 
   const handleTabClick = (tab: 'description' | 'ask-ai') => {
     setActiveTab(tab);
   };
 
   const handleAskAi = async (prompt: string) => {
-    setLoading(true);
+    setLoading(true) ;
     setAiResponse(''); 
 
     const response = await fetch('/api/ask-ai', {
@@ -52,7 +64,7 @@ export default function ProblemDescription({ desafio }: { desafio: DesafioProps 
       done = readerDone;
       const chunk = decoder.decode(value, { stream: true });
       try {
-        parsedChunk = JSON.parse(chunk);
+        const parsedChunk = JSON.parse(chunk);
         setAiResponse((prev) => prev + parsedChunk.text);
       } catch (error) {
         setAiResponse((prev) => prev + chunk);
@@ -60,6 +72,16 @@ export default function ProblemDescription({ desafio }: { desafio: DesafioProps 
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (aiResponse) {
+      void (async () => {
+        const result = DOMPurify.sanitize(await marked.parse(aiResponse));
+        setParsedResponse(result);
+      })();
+    }
+  }, [aiResponse]);
+
 
   const generatePrompt = (type: string) => {
     let prompt = `Problem Statement: ${desafio.problemStatement}\n`;
@@ -69,13 +91,13 @@ export default function ProblemDescription({ desafio }: { desafio: DesafioProps 
 
     switch (type) {
       case 'explain-like-5':
-        prompt += 'Explain this problem as if I were 5 years old. - write in HTML.';
+        prompt += 'Explain this problem as if I were 5 years old. - write in markdown.';
         break;
       case 'step-by-step':
-        prompt += 'Explain the solution step-by-step in javascript. - write in HTML.';
+        prompt += 'Explain the solution step-by-step in javascript. - write in markdown.';
         break;
       case 'code-explanation':
-        prompt += 'Give me a code explanation for solving this problem in javascript. - write in HTML.';
+        prompt += 'Give me a code explanation for solving this problem in javascript. - write in markdown.';
         break;
       default:
         prompt += '';
@@ -136,9 +158,8 @@ export default function ProblemDescription({ desafio }: { desafio: DesafioProps 
           <div className='flex flex-col h-[68vh]'>
             {/* Display the streaming AI response */}
             <div className=' p-4 text-sm text-white mb-3 min-h-96 overflow-y-auto'>
-              
-                {loading ? 'Generating response...' : (aiResponse ? <p dangerouslySetInnerHTML={{ __html: aiResponse }}></p> : 'No response yet.')}
-              </div>
+              {loading ? 'Generating response...' : (aiResponse ? <p dangerouslySetInnerHTML={{ __html: parsedResponse ?? '' }}></p> : 'No response yet.')}
+            </div>
 
             <div className='p-3 flex flex-col justify-end h-full'>
               <div className='flex flex-col'>

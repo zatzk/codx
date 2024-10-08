@@ -5,7 +5,7 @@
 import { NextResponse } from 'next/server';
 import { generateText } from "ai"
 import { google } from '@ai-sdk/google';
-import { streamText } from 'ai';
+// import { streamText } from 'ai';
 
 export async function POST(req: Request) {
   const { question: prompt } = await req.json();
@@ -16,14 +16,14 @@ export async function POST(req: Request) {
   }
 
   try {
-    const stream  = await generateText({
+    const generate  = await generateText({
       model: google('gemini-1.5-flash'),
       prompt,
       maxSteps: 5,
       experimental_continueSteps: true,
     });
     
-    return new Response(stream.text, {
+    return new Response(generate.text, {
       headers: {
         'Content-Type': 'text/plain',
       },
