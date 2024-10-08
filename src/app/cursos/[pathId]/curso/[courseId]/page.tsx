@@ -64,10 +64,10 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
 
   useEffect(() => {
     async function fetchProgress() {
-      if (!session?.user?.id || !course) return;
+      // if (!session?.user?.id || !course) return;
 
       try {
-        const response = await fetch(`/cursos/api/progress/${session.user.id}/${course.id}`);
+        const response = await fetch(`/cursos/api/progress/${session?.user.id}/${course?.id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch progress');
         }
@@ -90,7 +90,7 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
   };
 
   if (!course) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center h-screen  text-white">Loading...</div>;
   }
   console.log('course', course);
 
