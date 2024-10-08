@@ -7,7 +7,6 @@ import { useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { useColorContext } from "~/lib/colorContext";
 import { type colorSets } from "~/lib/colors";
-import { HelloWorld } from "~/components/helloWorld";
 import { Hero } from "~/components/hero";
 
 const inter = Inter({
