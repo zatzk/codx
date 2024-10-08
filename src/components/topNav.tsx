@@ -89,7 +89,7 @@ export function TopNav() {
   };
 
   return (
-    <div className={`fixed z-10 flex justify-center font-sans ${silkscreen.variable} xl:max-w-6xl lg:max-w-4xl px-24 rounded-full ${scrolled ? 'bg-gray-500 bg-opacity-40 backdrop-blur-md translate-y-3' : 'transparent'} transition-all duration-300`}>
+    <div className={`fixed z-10 flex justify-center font-sans ${silkscreen.variable} xl:max-w-6xl lg:max-w-4xl md:max-w-2xl px-24 rounded-full ${scrolled ? 'bg-gray-500 bg-opacity-40 backdrop-blur-md translate-y-3' : 'transparent'} transition-all duration-300`}>
       <div className="flex items-center justify-between text-xs p-1 w-[1440px]">
 
         <div className="flex items-center text-xs p-1">
