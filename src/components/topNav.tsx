@@ -180,7 +180,7 @@ export function TopNav() {
           ) : (
             <Link href="/signIn" className={`flex relative items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
               <span className={`flex relative items-center justify-center mx-2 hover:text-white ${activeColorSet?.secondary}`}>
-                Sign in
+                Entrar
               </span>
             </Link>
           )}
