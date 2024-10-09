@@ -33,7 +33,7 @@ export default function SignIn() {
   return (
     <div className='w-full h-screen flex justify-center items-center'>
     <div className={`w-2/6 h-2/3 ${activeColorSet?.cardGradient} border ${activeColorSet?.borderButton} ${silkscreen.className} rounded-md text-white flex flex-col justify-center items-center`}>
-        <p className="text-2xl font-bold mb-6">Sign In</p>
+        <p className="text-2xl font-bold mb-6">Entrar</p>
         <div className={`flex flex-col ${inter.className}`}>
           {/* <button className={`bg-blue-500 hover:bg-opacity-80 flex items-center py-2 px-5 rounded-md mb-2`} onClick={() => signIn('google')}>
             <FaGoogle className="mr-3"/>
