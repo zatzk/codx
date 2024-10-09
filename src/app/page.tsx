@@ -8,6 +8,7 @@ import styled, { keyframes } from "styled-components";
 import { useColorContext } from "~/lib/colorContext";
 import { type colorSets } from "~/lib/colors";
 import { Hero } from "~/components/hero";
+import Background from "~/components/background";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -212,6 +213,7 @@ export default function HomePage() {
         </GradientsContainer>
       </GradientBg>
       <section className={`font-sans ${inter.variable} absolute flex h-screen w-screen flex-col items-center justify-center `}>
+        <Background/>
         <Hero />
       </section>
     </>
