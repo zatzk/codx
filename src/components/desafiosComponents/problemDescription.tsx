@@ -91,13 +91,13 @@ export default function ProblemDescription({ desafio }: { desafio: DesafioProps 
 
     switch (type) {
       case 'explain-like-5':
-        prompt += 'Explain this problem as if I were 5 years old. - write in markdown.';
+        prompt += 'Explique esse problema como se eu tivesse 5 anos de idade.';
         break;
       case 'step-by-step':
-        prompt += 'Explain the solution step-by-step in javascript. - write in markdown.';
+        prompt += 'Explique a solução passo a passo em javascript.';
         break;
       case 'code-explanation':
-        prompt += 'Give me a code explanation for solving this problem in javascript. - write in markdown.';
+        prompt += 'Dê-me uma explicação de código para resolver este problema em javascript.';
         break;
       default:
         prompt += '';
@@ -167,19 +167,19 @@ export default function ProblemDescription({ desafio }: { desafio: DesafioProps 
                   className='border hover:bg-gray-700 text-white px-4 py-2 rounded-lg mb-3'
                   onClick={() => handleAskAi(generatePrompt('explain-like-5'))}
                 >
-                  Explain like I was 5
+                  Explique como se eu tivesse 5 anos
                 </button>
                 <button
                   className='border hover:bg-gray-700 text-white px-4 py-2 rounded-lg mb-3'
                   onClick={() => handleAskAi(generatePrompt('step-by-step'))}
                 >
-                  Explain the solution step-by-step
+                  Explique a solução passo a passo
                 </button>
                 <button
                   className='border hover:bg-gray-700 text-white px-4 py-2 rounded-lg'
                   onClick={() => handleAskAi(generatePrompt('code-explanation'))}
                 >
-                  Show code explanation
+                  Dê-me uma explicação de código
                 </button>
               </div>
             </div>
