@@ -3,6 +3,7 @@
 "use client"
 import { useColorContext } from "~/lib/colorContext";
 import { Inter, Silkscreen } from 'next/font/google';
+import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link";
 
 const inter = Inter({
@@ -18,6 +19,7 @@ const silkscreen = Silkscreen({
 
 export function Hero() {
   const { activeColorSet } = useColorContext()
+  const { data: session } = useSession()
 
 
   return (
@@ -44,10 +46,13 @@ export function Hero() {
           <span className="text-4xl text-gray-400 mr-2">·</span>
           <p style={{ boxShadow: '0 0 120px #f9fd00' }} className={`text-xl px-1 cursor-default text-yellow-300 bg-yellow-800 rounded hover:text-white hover:bg-yellow-500  ${silkscreen.className}`}>desenvolver</p>
         </div>
-
-        <Link href={'/signin'} className={`${silkscreen.className} ${activeColorSet?.bg} ${activeColorSet?.borderButton} text-xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-white hover:bg-opacity-20 flex items-center border-gray-300 border-2 py-2 px-5 rounded-full mb-2`}>
-          entrar
-        </Link>
+        {session ? (
+          ''
+        ) : (  
+          <Link href={'/signin'} className={`${silkscreen.className} ${activeColorSet?.bg} ${activeColorSet?.borderButton} text-xl drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] text-white hover:bg-opacity-20 flex items-center border-gray-300 border-2 py-2 px-5 rounded-full mb-2`}>
+            entrar
+          </Link>
+        )}
 
       </div>
     </div>
