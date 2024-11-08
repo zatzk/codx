@@ -154,7 +154,6 @@ export const questionUserProgressRelations = relations(questionUserProgress, ({ 
 }));
 
 
-// Define the Questions table schema
 export const questions = createTable(
   "questions",
   {

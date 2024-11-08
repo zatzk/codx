@@ -63,6 +63,8 @@ export default function Quizz() {
     return <QuestionLoader />;
   }
 
+  console.log('questionGroup:', questionGroup);
+
   return (
   <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
     <div className="flex items-center justify-center lg:w-2/3 md:w-full mb-6"> 
