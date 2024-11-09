@@ -3,9 +3,7 @@
 'use client'
 import React, { useState } from 'react';
 import { useColorContext } from "~/lib/colorContext";
-import { markdownToHtml } from '../../lib/markdown';
-import { Inter, Silkscreen } from "next/font/google";
-import { marked } from 'marked';
+import { Silkscreen } from "next/font/google";
 import DOMPurify from 'dompurify';
 
 const silkscreen = Silkscreen({
@@ -14,10 +12,6 @@ const silkscreen = Silkscreen({
   variable: "--font-sans" 
 });
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 interface Link {
   type: string;
@@ -53,7 +47,7 @@ export function TrilhasList({ roadmap }: TrilhasListProps) {
     setActiveTrilha(activeTrilha === trilhaId ? null : trilhaId);
   };
 
-  const renderTrilha = async (trilha: Trilha) => (
+  const renderTrilha = (trilha: Trilha) => (
     <div key={trilha.id} className="mb-4">
       <button
         onClick={() => toggleAccordion(trilha.id)}
@@ -63,7 +57,7 @@ export function TrilhasList({ roadmap }: TrilhasListProps) {
       </button>
       <div className={`overflow-hidden rounded-md rounded-t-none transition-max-height duration-500 ease-in-out ${activeTrilha === trilha.id ? 'max-h-[2200px]' : 'max-h-0'}`}>
         <div className={`px-6 py-2 pb-8 ${activeColorSet?.cardBg} bg-opacity-30 rounded-md rounded-t-none mt-[-4px]`}>
-          <p className="mb-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(await marked.parse(trilha.data)) }} />
+          <p className="mb-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(trilha.data) }} />
           <ul className={`rounded-md border-2 p-3 ${activeColorSet?.borderButton}`}>
             {trilha.links.map((link, index) => (
               <li className={`py-1 ${activeColorSet?.paragraph}`} key={index}>
