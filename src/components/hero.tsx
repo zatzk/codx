@@ -39,12 +39,12 @@ export function Hero() {
           </h1>
         </div>
 
-        <div className="flex justify-center items-center mb-10">
-          <p style={{ boxShadow: '0 0 120px #00fd37' }} className={`text-xl px-1 cursor-default text-green-300 bg-green-800 rounded hover:text-white hover:bg-green-500 mr-2 ${silkscreen.className}`}>aprender</p>
+        <div className="flex flex-col md:flex-row justify-center items-center mb-10">
+          <p style={{ boxShadow: '0 0 120px #00fd37' }} className={`text-xl px-1 cursor-default text-green-300 bg-green-800 rounded hover:text-white focus:text-white hover:bg-green-500 mr-2 ${silkscreen.className}`}>aprender</p>
           <span className="text-4xl text-gray-400 mr-2">·</span>
-          <p style={{ boxShadow: '0 0 120px #0065fd' }} className={`text-xl px-1 cursor-default  text-blue-300 bg-blue-800 rounded hover:text-white hover:bg-blue-500  mr-3 ${silkscreen.className}`}>praticar</p>
+          <p style={{ boxShadow: '0 0 120px #0065fd' }} className={`text-xl px-1 cursor-default  text-blue-300 bg-blue-800 rounded hover:text-white focus:text-white hover:bg-blue-500  mr-3 ${silkscreen.className}`}>praticar</p>
           <span className="text-4xl text-gray-400 mr-2">·</span>
-          <p style={{ boxShadow: '0 0 120px #f9fd00' }} className={`text-xl px-1 cursor-default text-yellow-300 bg-yellow-800 rounded hover:text-white hover:bg-yellow-500  ${silkscreen.className}`}>desenvolver</p>
+          <p style={{ boxShadow: '0 0 120px #f9fd00' }} className={`text-xl px-1 cursor-default text-yellow-300 bg-yellow-800 rounded hover:text-white focus:text-white hover:bg-yellow-500  ${silkscreen.className}`}>desenvolver</p>
         </div>
         {session ? (
           ''
