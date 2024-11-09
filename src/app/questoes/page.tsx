@@ -31,23 +31,21 @@ export default function Questoes() {
   const isAdmin = session?.user?.role === "admin";
 
   useEffect(() => {
-    async function fetchQuestoes() {
-      try {
-        const response = await fetch('/questoes/api');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setQuestoes(data);
-      } catch (error) {
-        console.error('Failed to fetch questoes:', error);
-      }
-    }
-
     void fetchQuestoes();
   }, []);
 
-  console.log(questoes);
+  async function fetchQuestoes() {
+    try {
+      const response = await fetch('/questoes/api');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setQuestoes(data);
+    } catch (error) {
+      console.error('Failed to fetch questoes:', error);
+    }
+  }
 
   const handleEditClick = (questao: Question) => {
     setSelectedQuestion(questao);
@@ -63,6 +61,8 @@ export default function Questoes() {
     setIsDrawerOpen(false);
     setSelectedQuestion(null);
   };
+
+
 
   return (
     <section className={`font-sans ${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20`}>
@@ -111,6 +111,7 @@ export default function Questoes() {
       <QuestionDrawer
         isOpen={isDrawerOpen}
         onClose={handleDrawerClose}
+        onFormSubmit={fetchQuestoes}
         question={selectedQuestion}
       />
     </section>

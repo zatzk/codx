@@ -57,12 +57,13 @@ interface QuestionGroup {
 interface QuestionDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  onFormSubmit: () => void;
   question: Question | null;
 }
 
 const AVAILABLE_TOPICS = ["Core", "Event", "Beginner", "Intermediate", "Advanced"];
 
-export function QuestionDrawer({ isOpen, onClose, question }: QuestionDrawerProps) {
+export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: QuestionDrawerProps) {
   const { activeColorSet } = useColorContext();
   const [loading, setLoading] = useState(false);
   const [questionGroup, setQuestionGroup] = useState<QuestionGroup | null>(null);
@@ -237,7 +238,8 @@ export function QuestionDrawer({ isOpen, onClose, question }: QuestionDrawerProp
   
       const result = await response.json();
       console.log('Success:', result);
-  
+      
+      onFormSubmit();
       onClose();
     } catch (error) {
       console.error('Error saving question group:', error);
@@ -259,7 +261,7 @@ export function QuestionDrawer({ isOpen, onClose, question }: QuestionDrawerProp
         <div className="p-7 h-full flex flex-col">
         <div className="flex justify-between items-center mb-6">
             <h2 className={`${silkscreen.className} text-lg font-semibold`}>
-              {question ? 'Editar questão' : 'Nova questão'}
+              {question ? 'Editar deck' : 'Novo deck'}
             </h2>
             <div className="flex gap-2">
               {questionGroup && (
@@ -328,7 +330,7 @@ export function QuestionDrawer({ isOpen, onClose, question }: QuestionDrawerProp
                     className={`${activeColorSet.borderButton} bg-none hover:border-white`}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Adicionar Questão
+                    Adicionar Deck
                   </Button>
                 </div>
 
@@ -392,7 +394,7 @@ export function QuestionDrawer({ isOpen, onClose, question }: QuestionDrawerProp
                   Cancelar
                 </Button>
                 <Button type="submit" className={`flex-1 ${activeColorSet.bgButton} ${activeColorSet.bgButtonHover}`}>
-                  {question ? 'Salvar Alterações' : 'Adicionar Questão'}
+                  Salvar Alterações
                 </Button>
               </div>
             </form>
