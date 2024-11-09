@@ -330,7 +330,7 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
                     className={`${activeColorSet.borderButton} bg-none hover:border-white`}
                   >
                     <Plus className="h-4 w-4 mr-2" />
-                    Adicionar Deck
+                    Adicionar Questão
                   </Button>
                 </div>
 
