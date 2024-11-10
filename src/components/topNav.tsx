@@ -214,14 +214,14 @@ export function TopNav() {
                 <div className="absolute origin-[0_0] shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] inset-0" />
                 <div className="flex flex-col">
                   {session ? (
-                    <a href="/perfil" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Ver Perfil</a>
+                    <Link href="/perfil" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Ver Perfil</Link>
                   ) : (
-                    <a href="/signIn" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Entrar</a>
+                    <Link href="/signIn" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Entrar</Link>
                   )}
-                  <a href="/trilhas" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Trilhas</a>
-                  <a href="/cursos" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Cursos</a>
-                  <a href="/questoes" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Questoes</a>
-                  <a href="/desafios" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Desafios</a>
+                  <Link href="/trilhas" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Trilhas</Link>
+                  <Link href="/cursos" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Cursos</Link>
+                  <Link href="/questoes" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Questoes</Link>
+                  <Link href="/desafios" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Desafios</Link>
                 </div>
               </motion.div>
             )}
