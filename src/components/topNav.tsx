@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link";
 import Image from 'next/image'
+import { useRef } from 'react';
+
 
 const silkscreen = Silkscreen({
   weight: ["400", "700"], 
@@ -32,6 +34,7 @@ export function TopNav() {
   const [isProfileHover, toggleProfileHover] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredColor, setHoveredColor] = useState('');
+  const submenuRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { data: session } = useSession()
@@ -64,6 +67,18 @@ export function TopNav() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (submenuRef.current && !submenuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const subMenuAnimate = {
     enter: {
       opacity: 1,
@@ -92,6 +107,11 @@ export function TopNav() {
     { href: "/", color: "text-green-600", label: "d" },
     { href: "/", color: "text-orange-500", label: "x" }
   ];
+
+  const handleLinkClick = () => {
+    setIsMenuOpen(false);
+  };
+
   const handleMouseEnter = (color: string) => {
     const colorKey = color.split('-')[1];
     if (colorKey && colorSets[colorKey]) {
@@ -99,6 +119,7 @@ export function TopNav() {
     }
     setHoveredColor(color);
   };
+
   const handleMouseLeave = () => {
     setHoveredColor('');
   };
@@ -218,6 +239,7 @@ export function TopNav() {
 
             {isMenuOpen && (
               <motion.div
+                ref={submenuRef}
                 className={`absolute ${activeColorSet?.bg} origin-[50%_-30px] px-3 pt-3 mt-2 w-[150px] rounded-md left-[-100px] md:left-0 top-[50px]`}
                 initial="exit"
                 animate="enter"
@@ -226,14 +248,14 @@ export function TopNav() {
                 <div className="absolute origin-[0_0] shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] inset-0" />
                 <div className="flex flex-col">
                   {session ? (
-                    <Link href="/perfil" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Ver Perfil</Link>
+                    <Link onClick={handleLinkClick} href="/perfil" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Ver Perfil</Link>
                   ) : (
-                    <Link href="/signIn" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Entrar</Link>
+                    <Link onClick={handleLinkClick} href="/signIn" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Entrar</Link>
                   )}
-                  <Link href="/trilhas" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Trilhas</Link>
-                  <Link href="/cursos" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Cursos</Link>
-                  <Link href="/questoes" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Questoes</Link>
-                  <Link href="/desafios" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Desafios</Link>
+                  <Link onClick={handleLinkClick} href="/trilhas" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Trilhas</Link>
+                  <Link onClick={handleLinkClick} href="/cursos" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Cursos</Link>
+                  <Link onClick={handleLinkClick} href="/questoes" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Questoes</Link>
+                  <Link onClick={handleLinkClick} href="/desafios" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Desafios</Link>
                 </div>
               </motion.div>
             )}
