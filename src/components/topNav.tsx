@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link";
-
+import Image from 'next/image'
 
 const silkscreen = Silkscreen({
   weight: ["400", "700"], 
@@ -32,6 +32,7 @@ export function TopNav() {
   const [isProfileHover, toggleProfileHover] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredColor, setHoveredColor] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession()
 
   useEffect(() => {
@@ -88,11 +89,18 @@ export function TopNav() {
     setHoveredColor('');
   };
 
-  return (
-    <div className={`fixed z-10 flex justify-center font-sans ${silkscreen.variable} xl:max-w-6xl lg:max-w-4xl md:max-w-2xl px-24 rounded-full ${scrolled ? 'bg-gray-500 bg-opacity-40 backdrop-blur-md translate-y-3' : 'transparent'} transition-all duration-300`}>
-      <div className="flex items-center justify-between text-xs p-1 w-[1440px]">
+  const isMobile = window.innerWidth <= 640;
 
-        <div className="flex items-center text-xs p-1">
+  return (
+    <div className={`fixed z-10 flex justify-center font-sans ${silkscreen.variable} w-full xl:max-w-6xl lg:max-w-4xl md:max-w-2xl md:px-24 rounded-full ${scrolled ? 'bg-gray-500 bg-opacity-40 backdrop-blur-md translate-y-3' : 'transparent'} transition-all duration-300`}>
+      <div className="flex items-center justify-between text-xs p-1 sm:w-[640px] w-full md:w-[1440px]">
+
+
+        <Link href="/" className="flex md:hidden mt-1 w-[60px] items-center justify-center">
+          <Image src="/home.png" alt="Logo" width={17} height={17} />
+        </Link>
+
+        <div className="hidden md:flex items-center text-xs p-1 ">
           <div className="border-none rounded-full p-3 hover:cursor-pointer">
             <motion.div
               className={`mx-2 ${activeColorSet?.secondary || 'text-white'}`}
@@ -143,10 +151,11 @@ export function TopNav() {
             {links.map(link => (
               <a
                 key={link.color}
-                href={link.href}
+                href={!isMobile ? link.href : undefined} // Disable link navigation on mobile
                 className={`mx-1 ${hoveredColor ? (hoveredColor === link.color ? 'text-white' : hoveredColor) : link.color}`}
-                onMouseEnter={() => handleMouseEnter(link.color)}
-                onMouseLeave={() => handleMouseLeave()}
+                onMouseEnter={!isMobile ? () => handleMouseEnter(link.color) : undefined} // Trigger on hover on larger screens
+                onClick={isMobile ? () => handleMouseEnter(link.color) : undefined} // Trigger on click on mobile
+                onMouseLeave={!isMobile ? handleMouseLeave : undefined}
               >
                 {link.label}
               </a>
@@ -156,7 +165,7 @@ export function TopNav() {
 
         <div className="flex items-center justify-center text-xs p-1 text-white">
         {session ? (
-            <div className="border-none rounded-full p-3 hover:cursor-pointer mr-6">
+            <div className="hidden md:flex border-none rounded-full p-3 hover:cursor-pointer mr-6">
               <motion.div
                 className={`mx-2 ${activeColorSet?.secondary || 'text-white'}`}
                 onHoverStart={() => toggleProfileHover(true)}
@@ -178,15 +187,45 @@ export function TopNav() {
               </motion.div>
             </div>
           ) : (
-            <Link href="/signIn" className={`flex relative items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
+            <Link href="/signIn" className={`hidden md:flex relative items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-6`}>
               <span className={`flex relative items-center justify-center mx-2 hover:text-white ${activeColorSet?.secondary}`}>
                 Entrar
               </span>
             </Link>
           )}
-          <button className={`flex items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mr-12`}>
-            <span className="pixelarticons--menu mx-3 text-lg text-white"></span>
-          </button>
+
+          <div className="relative">
+            <button
+              className={`flex items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mt-[4px] md:mt-[1px] md:mr-12`}
+              onClick={() => setIsMenuOpen(!isMenuOpen)} // Toggle menu open state on mobile
+              onMouseEnter={() => !isMobile && setIsMenuOpen(true)}
+              onMouseLeave={() => !isMobile && setIsMenuOpen(false)}
+            >
+              <span className={`pixelarticons--menu md:mx-3 text-2xl ${activeColorSet?.paragraph}`}></span>
+            </button>
+
+            {isMenuOpen && (
+              <motion.div
+                className={`absolute ${activeColorSet?.bg} origin-[50%_-30px] px-3 pt-3 mt-2 w-[150px] rounded-md left-[-100px] md:left-0 top-[50px]`}
+                initial="exit"
+                animate="enter"
+                variants={subMenuAnimate}
+              >
+                <div className="absolute origin-[0_0] shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] inset-0" />
+                <div className="flex flex-col">
+                  {session ? (
+                    <a href="/perfil" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Ver Perfil</a>
+                  ) : (
+                    <a href="/signIn" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded border-b-2 text-white md:hidden`}>Entrar</a>
+                  )}
+                  <a href="/trilhas" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Trilhas</a>
+                  <a href="/cursos" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Cursos</a>
+                  <a href="/questoes" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Questoes</a>
+                  <a href="/desafios" className={`mb-[10px] z-10 ${activeColorSet?.barHover} p-2 px-2 m-0 rounded text-white md:hidden`}>Desafios</a>
+                </div>
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
     </div>
