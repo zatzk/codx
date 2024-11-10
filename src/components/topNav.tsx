@@ -33,7 +33,21 @@ export function TopNav() {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredColor, setHoveredColor] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { data: session } = useSession()
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIsMobile);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,8 +102,6 @@ export function TopNav() {
   const handleMouseLeave = () => {
     setHoveredColor('');
   };
-
-  const isMobile = window.innerWidth <= 640;
 
   return (
     <div className={`fixed z-10 flex justify-center font-sans ${silkscreen.variable} w-full xl:max-w-6xl lg:max-w-4xl md:max-w-2xl md:px-24 rounded-full ${scrolled ? 'bg-gray-500 bg-opacity-40 backdrop-blur-md translate-y-3' : 'transparent'} transition-all duration-300`}>
