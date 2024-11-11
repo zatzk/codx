@@ -51,12 +51,22 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
   const [resultsCount, setResultsCount] = useState<number>(0);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"test" | "submit">("test");
-
+  const [isMobile, setIsMobile] = useState(false);
   const [settings, setSettings] = useState<ISettings>({
     fontSize: fontSize,
     settingsModalIsOpen: false,
     dropdownIsOpen: false,
   });
+
+  useEffect(() => {
+    const checkWindowSize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    checkWindowSize();
+    window.addEventListener('resize', checkWindowSize);
+    return () => window.removeEventListener('resize', checkWindowSize);
+  }, []);
 
   const handleRunCode = async (
     userCode: string,
@@ -231,7 +241,7 @@ export default function Playground({ desafio }: { desafio: DesafioProps }) {
   return (
     <div className="relative flex flex-col overflow-hidden rounded-lg">
       <Split
-        className="h-[calc(100vh-235px)]"
+        className={isMobile ? "h-[calc(50vh-80px)]" : "h-[calc(100vh-235px)]"}
         direction="vertical"
         sizes={[60, 40]}
         minSize={60}
