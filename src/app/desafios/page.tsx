@@ -1,72 +1,103 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client'
-import { useColorContext } from "../../lib/colorContext"
-import { useEffect, useState } from "react";
-import { SimplePagHeader } from "~/components/simplePageHeader";
 import { Inter, Silkscreen } from "next/font/google";
+import { useColorContext } from "../../lib/colorContext";
+import { SimplePagHeader } from "~/components/simplePageHeader";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import DesafioDrawer from "~/components/desafiosComponents/desafioDrawer";
+import { GridItemDesafio } from "~/components/desafiosComponents/gridItemDesafio";
+import { FilterButton } from "~/components/desafiosComponents/filterButton";
+import { CATEGORY_OPTIONS } from "~/components/desafiosComponents/desafioDrawer";
 
 const silkscreen = Silkscreen({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-sans"
+  weight: ["400", "700"], 
+  subsets: ["latin"], 
+  variable: "--font-sans" 
 });
 
-interface Desafio {
-  id: number;
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+interface Example {
+  inputText: string;
+  outputText: string;
+}
+
+interface TestCase {
+  id?: number;
+  input: string;
+  target: string;
+  expectedOutput: string;
+}
+
+export interface Desafio {
+  id?: number;
   title: string;
+  problemStatement: string;
+  starterCode: string;
+  functionName: string;
+  examples: Example[];
   difficulty: string;
   category: string;
+  testCases: TestCase[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default function Desafios() {
+  const { data: session } = useSession();
   const { activeColorSet } = useColorContext();
   const [desafios, setDesafios] = useState<Desafio[]>([]);
-  const [filteredDesafios, setFilteredDesafios] = useState<Desafio[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedDesafio, setSelectedDesafio] = useState<Desafio | null>(null);
   const [filters, setFilters] = useState<{ difficulties: string[], categories: string[] }>({
     difficulties: [],
     categories: []
   });
 
-  const difficultyColor: { [key in 'Easy' | 'Medium' | 'Hard']: string } = {
-    'Easy': 'border-green-600 bg-green-600/10 text-green-600',
-    'Medium': 'border-yellow-600 bg-yellow-600/10 text-yellow-600',
-    'Hard': 'border-red-600 bg-red-600/10 text-red-600',
-  };
+  const isAdmin = session?.user?.role === "admin";
 
   useEffect(() => {
-    async function fetchDesafios() {
-      try {
-        const response = await fetch('/desafios/api');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        setDesafios(data);
-        setFilteredDesafios(data);
-      } catch (error) {
-        console.error('Failed to fetch desafios:', error);
-      }
-    }
-    fetchDesafios();
+    void fetchDesafios();
   }, []);
 
-  useEffect(() => {
-    const filtered = desafios.filter((desafio: { difficulty: string; category: string; title: string }) => {
-      const matchesDifficulty = filters.difficulties.length === 0 || 
-        filters.difficulties.includes(desafio.difficulty);
-      const matchesCategory = filters.categories.length === 0 || 
-        filters.categories.includes(desafio.category);
-      return matchesDifficulty && matchesCategory;
-    });
-    setFilteredDesafios(filtered);
-  }, [filters, desafios]);
+  async function fetchDesafios() {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/desafios/api');
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      setDesafios(data);
+    } catch (error) {
+      console.error('Failed to fetch desafios:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
+  const handleEditClick = (desafio: Desafio) => {
+    if (!desafio) return; // Add a guard clause
+    setSelectedDesafio(desafio);
+    setIsDrawerOpen(true);
+  };
 
-  const allDifficulties = ['Easy', 'Medium', 'Hard'];
-  const allCategories = [...new Set(desafios.map(d => d.category))];
+  const handleAddClick = () => {
+    setSelectedDesafio(null);
+    setIsDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setIsDrawerOpen(false);
+    setSelectedDesafio(null);
+  };
 
   function toggleFilter(type: 'difficulties' | 'categories', value: string) {
     setFilters(prev => {
@@ -78,12 +109,31 @@ export default function Desafios() {
     });
   }
 
-  function redirectToDesafio(desafioTitle: string) {
-    window.location.href = `/desafios/${desafioTitle.replace(/\s/g, '-')}`;
+  const allDifficulties = ['Easy', 'Medium', 'Hard'];
+  const allCategories = desafios.length > 0 
+  ? [...new Set(desafios.map(d => d.category))]
+  : CATEGORY_OPTIONS; // Import this from your DesafioDrawer component
+
+  const filteredDesafios = (desafios || []).filter(desafio => {
+    if (!desafio?.difficulty || !desafio.category) return false;
+    
+    const matchesDifficulty = filters.difficulties.length === 0 || 
+      filters.difficulties.includes(desafio.difficulty);
+    const matchesCategory = filters.categories.length === 0 || 
+      filters.categories.includes(desafio.category);
+    return matchesDifficulty && matchesCategory;
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
   }
 
   return (
-    <section className="font-sans flex h-auto w-full flex-col items-center mt-20">
+    <section className={`font-sans ${inter.variable} flex h-auto w-full flex-col items-center mt-20`}>
       <SimplePagHeader 
         title="Desafios" 
         description="Desafios para ajudá-lo a testar e melhorar seu conhecimento e habilidades" 
@@ -96,17 +146,15 @@ export default function Desafios() {
             <h3 className={`${silkscreen.className} text-sm mb-2 text-white`}>Dificuldade</h3>
             <div className="flex flex-wrap gap-2">
               {allDifficulties.map(diff => (
-                <button
+                <FilterButton
                   key={diff}
+                  label={diff}
+                  active={filters.difficulties.includes(diff)}
                   onClick={() => toggleFilter('difficulties', diff)}
-                  className={`px-3 py-1 rounded-full border text-sm transition-all
-                    ${filters.difficulties.includes(diff)
-                      ? difficultyColor[diff as keyof typeof difficultyColor]
-                      : 'border-gray-600 text-gray-400 hover:border-gray-400'
-                    }`}
-                >
-                  {diff}
-                </button>
+                  colorClass={filters.difficulties.includes(diff) ? 
+                    `border-${diff.toLowerCase()}-600 bg-${diff.toLowerCase()}-600/10 text-${diff.toLowerCase()}-600` : 
+                    undefined}
+                />
               ))}
             </div>
           </div>
@@ -115,46 +163,60 @@ export default function Desafios() {
             <h3 className={`${silkscreen.className} text-sm mb-2 text-white`}>Categoria</h3>
             <div className="flex flex-wrap gap-2">
               {allCategories.map(cat => (
-                <button
+                <FilterButton
                   key={cat}
+                  label={cat}
+                  active={filters.categories.includes(cat)}
                   onClick={() => toggleFilter('categories', cat)}
-                  className={`px-3 py-1 rounded-full border text-sm transition-all
-                    ${filters.categories.includes(cat)
-                      ? 'border-blue-500 bg-blue-500/10 text-blue-500'
-                      : 'border-gray-600 text-gray-400 hover:border-gray-400'
-                    }`}
-                >
-                  {cat}
-                </button>
+                />
               ))}
             </div>
           </div>
         </div>
 
-        {/* Cards Grid */}
+        {/* Desafios Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-20">
           {filteredDesafios.map((desafio) => (
-            <div
-              key={desafio.id}
-              onClick={() => redirectToDesafio(desafio.title)}
-              className={`${activeColorSet?.bg} bg-opacity-20 hover:bg-opacity-30 
-                rounded-lg p-6 cursor-pointer transition-all`}
-            >
-              <h3 className="text-lg font-medium text-white mb-4">{desafio.title}</h3>
-              <div className="flex flex-wrap gap-2">
-                <span className={`${difficultyColor[desafio.difficulty as 'Easy' | 'Medium' | 'Hard'] } 
-                  text-xs px-3 py-1 rounded-full border`}>
-                  {desafio.difficulty}
-                </span>
-                <span className="text-xs px-3 py-1 rounded-full border
-                  border-blue-500 bg-blue-500/10 text-blue-500">
-                  {desafio.category}
-                </span>
-              </div>
-            </div>
+            <GridItemDesafio
+              key={desafio.id ?? `desafio-${Math.random()}`}
+              desafio={desafio}
+              isAdmin={isAdmin}
+              onEdit={() => {
+                if (desafio) {  // Add this check
+                  handleEditClick(desafio);
+                }
+              }}
+            />
           ))}
+          {isAdmin && (
+            <button
+              onClick={handleAddClick}
+              className={`
+                hover:bg-opacity-30 
+                bg-opacity-20 
+                p-6
+                rounded-lg
+                flex 
+                items-center 
+                justify-center
+                transition-all
+                border-2
+                border-white/10
+                hover:border-white/20
+              `}
+            >
+              <span className="pixelarticons--plus text-white/60 text-lg"></span>
+            </button>
+          )}
         </div>
       </div>
+
+      <DesafioDrawer
+        isOpen={isDrawerOpen}
+        onClose={handleDrawerClose}
+        onFormSubmit={fetchDesafios}
+        desafio={selectedDesafio}
+      />
     </section>
   );
 }
