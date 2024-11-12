@@ -33,8 +33,8 @@ export function GridItem({ name, route, isAdmin, onEdit }: GridItemProps) {
         ${silkscreen.className}
         hover:bg-opacity-30 
         bg-opacity-20 
-        p-5 
-        rounded-xl 
+        p-6
+        rounded-lg
         h-24 
         w-[360px] 
         flex 
