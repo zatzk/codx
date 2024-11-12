@@ -48,15 +48,35 @@ export default function Questoes() {
       <div className="w-full flex sm:pb-16 sm:pt-8">
         <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-x-12 gap-y-6 xs:grid-cols-1">
-            {
-              questoes.map((questao) => (
-                <GridItem
-                  route="questoes"
-                  key={questao.id}
-                  name={questao.name} 
-                />
-              ))
-            }
+            {questoes.map((questao) => (
+              <GridItem
+                key={questao.id}
+                route="questoes"
+                name={questao.name}
+                isAdmin={isAdmin}
+                onEdit={() => handleEditClick(questao)}
+              />
+            ))}
+            {isAdmin && (
+              <button
+                onClick={handleAddClick}
+                className={`
+                  hover:bg-opacity-30 
+                  bg-opacity-20 
+                  p-6
+                  rounded-lg
+                  flex 
+                  items-center 
+                  justify-center
+                  transition-all
+                  border-2
+                  border-white/10
+                  hover:border-white/20
+                `}
+              >
+                <span className="pixelarticons--plus text-white/60 text-lg"></span>
+              </button>
+            )}
           </div>
         </div>
       </div>

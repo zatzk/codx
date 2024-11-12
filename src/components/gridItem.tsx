@@ -26,12 +26,15 @@ export function GridItem({ name, route }: { name: string, route: string }) {
         ${silkscreen.className}
         hover:bg-opacity-30 
         bg-opacity-20 
-        p-5 
-        rounded-xl 
+        p-6
+        rounded-lg
         h-24 
         w-[360px] 
         flex 
         items-center
+        relative
+        group
+        transition-all
       `}
     >
       <h1 className={`text-white text-md ml-5`}>{name}</h1>
