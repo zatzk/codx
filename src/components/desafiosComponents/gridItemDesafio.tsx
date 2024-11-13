@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // GridItemDesafio.tsx
@@ -8,7 +9,7 @@ import { type Desafio } from "~/app/desafios/page";
 interface GridItemDesafioProps {
   desafio: Desafio;
   isAdmin?: boolean;
-  onEdit?: () => void;
+  onEdit?: (desafio: Desafio) => void;
 }
 
 const difficultyColor: Record<string, string> = {
@@ -20,9 +21,16 @@ const difficultyColor: Record<string, string> = {
 export function GridItemDesafio({ desafio, isAdmin, onEdit }: GridItemDesafioProps) {
   const { activeColorSet } = useColorContext();
 
-  const handleEditClick = (e: React.MouseEvent) => {
+  const handleEditClick = async (e: React.MouseEvent) => {
     e.preventDefault();
-    onEdit?.();
+    try {
+      const response = await fetch(`/desafios/api/${desafio.title.replace(/\s/g, '-')}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const fetchedDesafio = await response.json();
+      onEdit?.(fetchedDesafio[0]);
+    } catch (error) {
+      console.error('Failed to fetch desafio:', error);
+    }
   };
 
   return (

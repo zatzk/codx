@@ -33,7 +33,6 @@ interface Example {
 interface TestCase {
   id?: number;
   input: string;
-  target: string;
   expectedOutput: string;
 }
 
@@ -62,6 +61,7 @@ const DIFFICULTY_OPTIONS = ["Easy", "Medium", "Hard"];
 export const CATEGORY_OPTIONS = ["Arrays", "Strings", "Linked List", "Binary Search", "Dynamic Programming"];
 
 export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }: DesafioDrawerProps) {
+  console.log(desafio);
   const { activeColorSet } = useColorContext();
   const [loading, setLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -124,7 +124,7 @@ export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }
       ...prev,
       testCases: [
         ...prev.testCases,
-        { input: "", target: "", expectedOutput: "" }
+        { input: "", expectedOutput: "" }
       ]
     }));
   };
@@ -400,7 +400,7 @@ export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }
                         />
                       </div>
                       
-                      <div>
+                      {/* <div>
                         <Label>Target</Label>
                         <Input
                           value={testCase.target}
@@ -408,7 +408,7 @@ export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }
                           placeholder="Valor alvo"
                           className="w-full bg-transparent mt-2"
                         />
-                      </div>
+                      </div> */}
 
                       <div>
                         <Label>Expected Output</Label>

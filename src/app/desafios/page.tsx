@@ -33,7 +33,6 @@ interface Example {
 interface TestCase {
   id?: number;
   input: string;
-  target: string;
   expectedOutput: string;
 }
 
@@ -53,7 +52,6 @@ export interface Desafio {
 
 export default function Desafios() {
   const { data: session } = useSession();
-  const { activeColorSet } = useColorContext();
   const [desafios, setDesafios] = useState<Desafio[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -83,9 +81,8 @@ export default function Desafios() {
     }
   }
 
-  const handleEditClick = (desafio: Desafio) => {
-    if (!desafio) return; // Add a guard clause
-    setSelectedDesafio(desafio);
+  const handleEditClick = (fetchedDesafio: Desafio) => {
+    setSelectedDesafio(fetchedDesafio);
     setIsDrawerOpen(true);
   };
 
@@ -112,7 +109,7 @@ export default function Desafios() {
   const allDifficulties = ['Easy', 'Medium', 'Hard'];
   const allCategories = desafios.length > 0 
   ? [...new Set(desafios.map(d => d.category))]
-  : CATEGORY_OPTIONS; // Import this from your DesafioDrawer component
+  : CATEGORY_OPTIONS; 
 
   const filteredDesafios = (desafios || []).filter(desafio => {
     if (!desafio?.difficulty || !desafio.category) return false;
@@ -181,11 +178,7 @@ export default function Desafios() {
               key={desafio.id ?? `desafio-${Math.random()}`}
               desafio={desafio}
               isAdmin={isAdmin}
-              onEdit={() => {
-                if (desafio) {  // Add this check
-                  handleEditClick(desafio);
-                }
-              }}
+              onEdit={handleEditClick}
             />
           ))}
           {isAdmin && (

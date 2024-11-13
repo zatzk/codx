@@ -47,7 +47,7 @@ export default function Desafio() {
   const params = useParams<{id: string}>();
   const name = params.id;
 
-  
+  console.log('Name:', name);
 
   useEffect(() => {
     if (name) {
@@ -67,6 +67,8 @@ export default function Desafio() {
       fetchDesafio();
     }
   }, [name]);
+
+  console.log('Desafio:', desafio);
 
 
   return (
