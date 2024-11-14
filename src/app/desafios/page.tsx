@@ -33,6 +33,7 @@ interface Example {
 interface TestCase {
   id?: number;
   input: string;
+  target?: string;
   expectedOutput: string;
 }
 

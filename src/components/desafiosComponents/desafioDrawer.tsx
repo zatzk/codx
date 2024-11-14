@@ -33,6 +33,7 @@ interface Example {
 interface TestCase {
   id?: number;
   input: string;
+  target?: string;
   expectedOutput: string;
 }
 
@@ -98,7 +99,7 @@ export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }
       ...prev,
       examples: [
         ...prev.examples,
-        { inputText: "", outputText: "" }
+        { inputText: "", target: "", outputText: "" }
       ]
     }));
   };
@@ -124,7 +125,7 @@ export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }
       ...prev,
       testCases: [
         ...prev.testCases,
-        { input: "", expectedOutput: "" }
+        { input: "", target: "", expectedOutput: "" }
       ]
     }));
   };
@@ -400,7 +401,7 @@ export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }
                         />
                       </div>
                       
-                      {/* <div>
+                      <div>
                         <Label>Target</Label>
                         <Input
                           value={testCase.target}
@@ -408,7 +409,7 @@ export default function DesafioDrawer({ isOpen, onClose, onFormSubmit, desafio }
                           placeholder="Valor alvo"
                           className="w-full bg-transparent mt-2"
                         />
-                      </div> */}
+                      </div>
 
                       <div>
                         <Label>Expected Output</Label>
