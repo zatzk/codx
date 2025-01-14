@@ -43,10 +43,24 @@ export const users = createTable("user", {
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }),
+  level: integer("level").notNull().default(1),
+  exp: integer("exp").notNull().default(0),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+}));
+
+export const expEvents = createTable(
+  "exp_events",
+  {
+    minExp: integer("min_exp").notNull(),
+    level: integer("level").notNull(),
+  }
+)
+
+export const expEventsRelations = relations(expEvents, ({ one }) => ({
+  user: one(users, { fields: [expEvents.minExp], references: [users.exp] }),
 }));
 
 export const accounts = createTable(
