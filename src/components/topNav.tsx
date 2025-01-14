@@ -227,7 +227,7 @@ export function TopNav() {
             </Link>
           )}
 
-          <div className="relative">
+          <div className="relative md:hidden">
             <button
               className={`flex items-center justify-center border border-transparent ${activeColorSet?.hoverBorderButton} hover:cursor-pointer rounded-full p-3 mt-[4px] md:mt-[1px] md:mr-12`}
               onClick={() => setIsMenuOpen(!isMenuOpen)} // Toggle menu open state on mobile
