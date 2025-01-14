@@ -116,7 +116,7 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
 
   const handleAddQuestion = () => {
     const newQuestion: DetailedQuestion = {
-      id: 0,
+      id: Date.now(),
       questionGroupId: questionGroup?.id ?? 0,
       question: "",
       answer: "",
