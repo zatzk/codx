@@ -6,7 +6,6 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import TrilhasList from '~/components/trilhasComponents/trilhasList';
 import { SimplePagHeader } from '~/components/simplePageHeader';
@@ -19,6 +18,8 @@ const inter = Inter({
 export default function Trilhas() {
   const params = useParams<{id: string}>();
   const name = params.id;
+  const [isLoading, setIsLoading] = useState(true);
+  const [roadmap, setRoadmap] = useState<Roadmap[]  | null>(null);
 
 
   interface Roadmap {
@@ -35,11 +36,10 @@ export default function Trilhas() {
     };
   }
   
-  const [roadmap, setRoadmap] = useState<Roadmap[]  | null>(null);
-
   useEffect(() => {
     if (name) {
       async function fetchRoadmap() {
+        setIsLoading(true);
         try {
           const response = await fetch(`/trilhas/api/${name}`);
           if (!response.ok) {
@@ -49,6 +49,8 @@ export default function Trilhas() {
           setRoadmap(data);
         } catch (error) {
           console.error('Failed to fetch roadmap:', error);
+        } finally {
+          setIsLoading(false);
         }
       }
       fetchRoadmap();
@@ -56,6 +58,14 @@ export default function Trilhas() {
   }, [name]);
 
   console.log('roadmap:', roadmap);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
 
   return (
   <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>

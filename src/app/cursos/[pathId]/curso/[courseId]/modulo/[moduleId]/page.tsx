@@ -38,6 +38,7 @@ interface Module {
 export default function ModuleLessonsPage({ params }: { params: { moduleId: string } }) {
   const [module, setModule] = useState<Module | null>(null);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState<number>(0); // Tracks the current lesson index from progress
   const { data: session } = useSession();
   const { activeColorSet } = useColorContext();
@@ -45,6 +46,7 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
   // Fetch the module first
   useEffect(() => {
     async function fetchModule() {
+      setIsLoading(false);
       try {
         const response = await fetch(`/cursos/api/modules/${params.moduleId}`);
         if (!response.ok) {
@@ -57,6 +59,8 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
         }
       } catch (error) {
         console.error('Failed to fetch module:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -122,11 +126,25 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
   };
 
   if (!module) {
-    return <div className="flex items-center justify-center h-screen  text-white">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    )
   }
 
   const sortedLessons = [...module.lessons].sort((a, b) => a.order - b.order);
 
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
+  
   return (
     <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full overflow-hidden text-white flex-col items-center mt-20`}>
       <SimplePagHeader title={module.title} description={module.description} />

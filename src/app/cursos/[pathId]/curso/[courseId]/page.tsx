@@ -41,12 +41,14 @@ interface Lesson {
 export default function CourseModulesPage({ params }: { params: { pathId: string, courseId: string } }) {
   const [course, setCourse] = useState<Course | null>(null);
   const [progressData, setProgressData] = useState<Record<number, number>>({});
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { data: session } = useSession();
   const { activeColorSet } = useColorContext();
 
   useEffect(() => {
     async function fetchCourse() {
+      setIsLoading(true);
       try {
         const response = await fetch(`/cursos/api/courses/${params.courseId}`);
         if (!response.ok) {
@@ -56,6 +58,8 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
         setCourse(data);
       } catch (error) {
         console.error('Failed to fetch course:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -89,14 +93,19 @@ export default function CourseModulesPage({ params }: { params: { pathId: string
     router.push(`/cursos/${params.pathId}/curso/${course?.id}/modulo/${moduleId}`)
   };
 
-  if (!course) {
-    return <div className="flex items-center justify-center h-screen  text-white">Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
   }
+
   console.log('course', course);
 
   return (
     <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20`}>
-      <SimplePagHeader title={course.title} description={course.description} />
+      <SimplePagHeader title={course?.title ?? ''} description={course?.description ?? ''} />
       <div className="w-full flex pb-16 pt-12">
         <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-1 gap-x-12 gap-y-6 xs:grid-cols-1">

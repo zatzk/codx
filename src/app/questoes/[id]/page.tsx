@@ -20,7 +20,8 @@ const inter = Inter({
 export default function Quizz() {
   const params = useParams<{id: string}>();
   const name = params.id;
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [questionGroup, setQuestionGroup] = useState<QuestionGroup[]  | null>(null);
 
   interface Question {
     id: number;
@@ -39,12 +40,11 @@ export default function Quizz() {
   }
   
   console.log('id:', name);
-  
-  const [questionGroup, setQuestionGroup] = useState<QuestionGroup[]  | null>(null);
 
   useEffect(() => {
     if (name) {
       async function fetchQuestao() {
+        setIsLoading(true);
         try {
           const response = await fetch(`/questoes/api/${name}`);
           if (!response.ok) {
@@ -54,6 +54,8 @@ export default function Quizz() {
           setQuestionGroup(data);
         } catch (error) {
           console.error('Failed to fetch questao:', error);
+        } finally {
+          setIsLoading(false);
         }
       }
       fetchQuestao();
@@ -65,6 +67,13 @@ export default function Quizz() {
 
   console.log('questionGroup:', questionGroup);
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
   return (
   <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
     <div className="flex items-center justify-center lg:w-2/3 md:w-full mb-6"> 

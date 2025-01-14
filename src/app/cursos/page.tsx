@@ -24,11 +24,13 @@ interface Path {
 
 export default function PathsPage() {
   const [paths, setPaths] = useState<Path[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const {activeColorSet} = useColorContext();
 
   useEffect(() => {
     async function fetchPaths() {
+      setIsLoading(true);
       try {
         const response = await fetch('/cursos/api/');
         if (!response.ok) {
@@ -38,6 +40,8 @@ export default function PathsPage() {
         setPaths(data);
       } catch (error) {
         console.error('Failed to fetch paths:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -48,6 +52,14 @@ export default function PathsPage() {
   const handlePathClick = (pathId: number) => {
     router.push(`/cursos/${pathId}`);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
 
   return (
     <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-24 `}>

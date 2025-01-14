@@ -45,14 +45,15 @@ interface Progress {
 export default function PathCoursesPage({ params }: { params: { pathId: string } }) {
   const [path, setPath] = useState<Path | null>(null);
   const [progress, setProgress] = useState<Progress[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { data: session } = useSession();
   const { activeColorSet } = useColorContext();
 
   useEffect(() => {
     // if (!session?.user?.id) return;
-
     async function fetchPath() {
+      setIsLoading(true);
       try {
         const response = await fetch(`/cursos/api/paths/${params.pathId}`);
         if (!response.ok) {
@@ -62,6 +63,8 @@ export default function PathCoursesPage({ params }: { params: { pathId: string }
         setPath(data);
       } catch (error) {
         console.error('Failed to fetch path:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -85,17 +88,22 @@ export default function PathCoursesPage({ params }: { params: { pathId: string }
     router.push(`/cursos/${params.pathId}/curso/${courseId}`);
   };
 
-  if (!path) {
-    return <div className="flex items-center justify-center h-screen  text-white">Loading...</div>;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
   }
 
   return (
     <section className={`${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20 `}>
-      <SimplePagHeader title={path.title} description={path.description} />
+      <SimplePagHeader title={path?.title ?? ''} description={path?.description ?? ''} />
       <div className="w-full flex pb-16 pt-12">
         <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-x-12 gap-y-6 xs:grid-cols-1">
-            {path.pathCourses.map(({ course }) => {
+            {path?.pathCourses.map(({ course }) => {
               // Find the progress that matches the course ID
               const courseProgress = progress?.find((p) => p.courseId === course.id);
 

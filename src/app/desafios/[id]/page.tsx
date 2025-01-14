@@ -44,6 +44,7 @@ export interface TestCaseProps {
 
 export default function Desafio() {
   const [desafio, setDesafio] = useState({} as DesafioProps);
+  const [isLoading, setIsLoading] = useState(true);
   const params = useParams<{id: string}>();
   const name = params.id;
 
@@ -52,6 +53,7 @@ export default function Desafio() {
   useEffect(() => {
     if (name) {
       async function fetchDesafio() {
+        setIsLoading(true);
         try {
           const response = await fetch(`/desafios/api/${name}`);
           if (!response.ok) {
@@ -62,6 +64,8 @@ export default function Desafio() {
           setDesafio(data[0]);
         } catch (error) {
           console.error('Failed to fetch desafio:', error);
+        } finally {
+          setIsLoading(false);
         }
       }
       fetchDesafio();
@@ -70,7 +74,14 @@ export default function Desafio() {
 
   console.log('Desafio:', desafio);
 
-
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+  
   return (
   <section className={`font-sans ${inter.variable} w-[98%] mt-28 text-white`}>
     <TopBar title={desafio.title}/>

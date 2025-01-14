@@ -27,7 +27,7 @@ export default function Questoes() {
   const [questoes, setQuestoes] = useState<Question[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
-
+  const [isLoading, setIsLoading] = useState(true);
   const isAdmin = session?.user?.role === "admin";
 
   useEffect(() => {
@@ -35,6 +35,7 @@ export default function Questoes() {
   }, []);
 
   async function fetchQuestoes() {
+    setIsLoading(true);
     try {
       const response = await fetch('/questoes/api');
       if (!response.ok) {
@@ -44,6 +45,8 @@ export default function Questoes() {
       setQuestoes(data);
     } catch (error) {
       console.error('Failed to fetch questoes:', error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -62,7 +65,13 @@ export default function Questoes() {
     setSelectedQuestion(null);
   };
 
-
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
 
   return (
     <section className={`font-sans ${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20`}>
