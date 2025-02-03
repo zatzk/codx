@@ -26,6 +26,8 @@ export function GridItem({ name, route, isAdmin, onEdit }: GridItemProps) {
     onEdit?.();
   };
 
+  const title = name.replace(/_/g, ' ');
+
   return (
     <Link href={`/${route}/${name}`}
       className={`
@@ -43,7 +45,7 @@ export function GridItem({ name, route, isAdmin, onEdit }: GridItemProps) {
         group
       `}
     >
-      <h1 className="text-white text-md ml-5">{name}</h1>
+      <h1 className="text-white text-md ml-5">{title}</h1>
       {isAdmin && (
         <button
           onClick={handleEditClick}

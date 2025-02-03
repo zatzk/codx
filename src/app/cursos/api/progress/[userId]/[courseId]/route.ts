@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+// app/cursos/api/progress/[userId]/[courseId]/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '~/server/db';
 import { courseUserProgress } from '~/server/db/schema';

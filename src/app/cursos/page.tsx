@@ -9,6 +9,8 @@ import PathCard from '~/components/cursosComponents/pathCard';
 import { useColorContext } from "~/lib/colorContext";
 import { SimplePagHeader } from "~/components/simplePageHeader";
 import { Inter } from "next/font/google";
+import { useSession } from "next-auth/react";
+import { PathDrawer } from "~/components/cursosComponents/pathDrawer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,39 +21,56 @@ interface Path {
   id: number;
   title: string;
   description: string;
-  pathCourses: unknown;
+  pathCourses?: unknown[] | undefined;
 }
 
 export default function PathsPage() {
   const [paths, setPaths] = useState<Path[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedPath, setSelectedPath] = useState<Path | null>(null);
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'admin';
   const {activeColorSet} = useColorContext();
 
   useEffect(() => {
-    async function fetchPaths() {
-      setIsLoading(true);
-      try {
-        const response = await fetch('/cursos/api/');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setPaths(data);
-      } catch (error) {
-        console.error('Failed to fetch paths:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
     void fetchPaths();
   }, []);
   console.log('paths', paths);
 
-  const handlePathClick = (pathId: number) => {
-    router.push(`/cursos/${pathId}`);
-  };
+  async function fetchPaths() {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/cursos/api/paths/');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setPaths(data);
+    } catch (error) {
+      console.error('Failed to fetch paths:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+    // Handle adding a new path
+    const handleAddClick = () => {
+      setSelectedPath(null);
+      setIsDrawerOpen(true);
+    };
+  
+    // Handle editing an existing path
+    const handleEditClick = (path: Path) => {
+      setSelectedPath(path);
+      setIsDrawerOpen(true);
+    };
+  
+    // Handle closing the drawer
+    const handleDrawerClose = () => {
+      setIsDrawerOpen(false);
+      setSelectedPath(null);
+    };
 
   if (isLoading) {
     return (
@@ -71,12 +90,41 @@ export default function PathsPage() {
               <PathCard 
                 key={path.id} 
                 path={path} 
-                onClick={() => handlePathClick(path.id)}
+                isAdmin={isAdmin}
+                onEdit={() => handleEditClick(path)}
               />
             ))}
+            {isAdmin && (
+              <button
+                onClick={handleAddClick}
+                className={`
+                  hover:bg-opacity-30 
+                  bg-opacity-20 
+                  p-6
+                  rounded-2xl
+                  h-24
+                  w-[380px] 
+                  flex 
+                  items-center 
+                  justify-center
+                  transition-all
+                  border-2
+                  border-white/10
+                  hover:border-white/20
+                `}
+              >
+                <span className="pixelarticons--plus text-white/60 text-lg"></span>
+              </button>
+            )}
           </div>
         </div>
       </div>
+      <PathDrawer
+        isOpen={isDrawerOpen}
+        onClose={handleDrawerClose}
+        onFormSubmit={fetchPaths}
+        path={selectedPath}
+      />
     </section>
   );
 }

@@ -20,7 +20,6 @@ interface Question {
 interface QuestionGroup {
   id: number;
   name: string;
-  title: string;
   description: string;
   questions: Question[];
 }[];
@@ -45,28 +44,17 @@ export function QuestionList({ questionGroup }: { questionGroup: QuestionGroup[]
       const fetchProgress = async () => {
         try {
           const response = await fetch(`/questoes/api/progress/${session.user.id}/${questionGroup[0]?.id}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
+          if (!response.ok) throw new Error('Network response was not ok');
+          
           const data = await response.json();
-          if (data.length > 0) {
-            console.log('Data fetched successfully:', data[0]);
-            const progressData = data[0];
-            setCurrentQuestionIndex(progressData.currentQuestionIndex ?? 0);
-            setKnowCount(progressData.currentKnowCount ?? 0);
-            setDidNotKnowCount(progressData.currentDidntKnowCount ?? 0);
-            setSkippedCount(progressData.currentSkipCount ?? 0);
-          } else {
-            const localProgress = JSON.parse(localStorage.getItem(`progress_${session.user.id}_${questionGroup[0]?.id}`) ?? '{}');
-            if (localProgress.currentQuestionIndex !== undefined) {
-              setCurrentQuestionIndex(localProgress.currentQuestionIndex ?? 0);
-              setKnowCount(localProgress.currentKnowCount ?? 0);
-              setDidNotKnowCount(localProgress.currentDidntKnowCount ?? 0);
-              setSkippedCount(localProgress.currentSkipCount ?? 0);
-            }
+          if (data) {
+            setCurrentQuestionIndex(data.responses?.length || 0);
+            setKnowCount(data.stats?.knowCount || 0);
+            setDidNotKnowCount(data.stats?.didntKnowCount || 0);
+            setSkippedCount(data.stats?.skipCount || 0);
           }
         } catch (error) {
-          console.error('Failed to fetch user progress:', error);
+          console.error('Failed to fetch progress:', error);
         }
       };
       void fetchProgress();
@@ -86,34 +74,92 @@ export function QuestionList({ questionGroup }: { questionGroup: QuestionGroup[]
     }
   }, [currentQuestionIndex, knowCount, didNotKnowCount, skippedCount, session, questionGroup]);
 
+  // useEffect(() => {
+  //     if (session) {
+  //       const handleBeforeUnload = async () => {
+  //         const progress = JSON.parse(localStorage.getItem(`progress_${session.user.id}_${questionGroup[0]?.id}`) ?? '{}');
+  //         if (progress) {
+  //           try {
+  //             await fetch(`/questoes/api/progress/${session.user.id}/${questionGroup[0]?.id}`, {
+  //               method: 'POST',
+  //               headers: {
+  //                 'Content-Type': 'application/json',
+  //               },
+  //               body: JSON.stringify(progress),
+  //             });
+  //             console.log('Saved progress on unload:', progress);
+  //           } catch (error) {
+  //             console.error('Failed to save user progress on unload:', error);
+  //           }
+  //         }
+  //       };
+  //       const handleBeforeUnloadWrapper = () => {
+  //         void handleBeforeUnload();
+  //       };
+  //       window.addEventListener('beforeunload', handleBeforeUnloadWrapper);
+  //       return () => {
+  //         window.removeEventListener('beforeunload', handleBeforeUnloadWrapper);
+  //       };
+  //     }
+  //   }, [session, questionGroup]);
+
   useEffect(() => {
-      if (session) {
-        const handleBeforeUnload = async () => {
-          const progress = JSON.parse(localStorage.getItem(`progress_${session.user.id}_${questionGroup[0]?.id}`) ?? '{}');
-          if (progress) {
-            try {
-              await fetch(`/questoes/api/progress/${session.user.id}/${questionGroup[0]?.id}`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(progress),
-              });
-              console.log('Saved progress on unload:', progress);
-            } catch (error) {
-              console.error('Failed to save user progress on unload:', error);
-            }
+    if (session) {
+      const fetchProgress = async () => {
+        try {
+          const response = await fetch(`/questoes/api/progress/${session.user.id}/${questionGroup[0]?.id}`);
+          if (!response.ok) throw new Error('Network response was not ok');
+          
+          const data = await response.json();
+          if (data) {
+            setCurrentQuestionIndex(data.responses?.length || 0);
+            setKnowCount(data.stats?.knowCount || 0);
+            setDidNotKnowCount(data.stats?.didntKnowCount || 0);
+            setSkippedCount(data.stats?.skipCount || 0);
           }
-        };
-        const handleBeforeUnloadWrapper = () => {
-          void handleBeforeUnload();
-        };
-        window.addEventListener('beforeunload', handleBeforeUnloadWrapper);
-        return () => {
-          window.removeEventListener('beforeunload', handleBeforeUnloadWrapper);
-        };
+        } catch (error) {
+          console.error('Failed to fetch progress:', error);
+        }
+      };
+      void fetchProgress();
+    }
+  }, [session, questionGroup]);
+  
+  // Update beforeunload handler
+  const handleBeforeUnload = async () => {
+    const progress = {
+      responses: questionGroup[0]?.questions
+        .slice(0, currentQuestionIndex)
+        .map((q, idx) => ({
+          questionId: q.id,
+          questionText: q.question,
+          response: getResponseType(idx),
+          correct: false, // You'll need to implement actual correctness check
+          timestamp: new Date()
+        })),
+      stats: {
+        knowCount,
+        didntKnowCount: didNotKnowCount,
+        skipCount: skippedCount
       }
-    }, [session, questionGroup]);
+    };
+  
+    try {
+      await fetch(`/questoes/api/progress/${session?.user.id}/${questionGroup[0]?.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(progress)
+      });
+    } catch (error) {
+      console.error('Failed to save progress:', error);
+    }
+  };
+  
+  // Add helper function to determine response type
+  const getResponseType = (index: number) => {
+    // You'll need to track individual question responses to implement this properly
+    return 'know'; // Simplified example
+  };
 
 
     useEffect(() => {

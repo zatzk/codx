@@ -5,6 +5,7 @@
 'use client'
 import { useColorContext } from "~/lib/colorContext";
 import { Inter, Silkscreen } from "next/font/google";
+import Link from "next/link";
 
 const silkscreen = Silkscreen({
   weight: ["400", "700"], 
@@ -22,16 +23,23 @@ interface PathCardProps {
     id: number;
     title: string;
     description: string;
-    pathCourses: any;
+    pathCourses?: any[];
   };
-  onClick: () => void;
+  isAdmin?: boolean;
+  onEdit?: () => void;
 }
 
-export default function PathCard({ path, onClick }: PathCardProps) {
+export default function PathCard({ path, isAdmin, onEdit }: PathCardProps) {
   const {activeColorSet} = useColorContext();
+
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault(); 
+    onEdit?.();
+  };
   
   return (
-    <div 
+    <Link href={`/cursos/${path.id}`} 
       className={`
           ${activeColorSet?.cardBg} 
           text-white 
@@ -45,16 +53,25 @@ export default function PathCard({ path, onClick }: PathCardProps) {
           justify-between
           items-start 
           cursor-pointer
+          relative
+          group
           ${silkscreen.className}
       `} 
-      onClick={onClick}
     >
       <div className="flex text-xs justify-between w-full">
         <p>path</p>
-        <p className="">{path.pathCourses.length} cursos</p>
+        <p className="">{path?.pathCourses?.length} cursos</p>
       </div>
       <h2 className={`text-xl mb-2`}>{path.title}</h2>
       <p className={`text-sm ${inter.className}`}>{path.description}</p>
-    </div>
+      {isAdmin && (
+        <button
+          onClick={handleEditClick}
+          className="relative bottom-3 right-3 p-2 rounded-md h-[37px] bg-white/10 hover:bg-white/20 transition-all opacity-0 group-hover:opacity-100 top-[5px] left-[300px]"
+        >
+          <span className="pixelarticons--edit-box text-white text-xl"></span>
+        </button>
+      )}
+    </Link>
   );
 }

@@ -179,7 +179,7 @@ export function TopNav() {
           </div>
         </div>
 
-        <div className="flex relative items-center font-bold text-lg p-1">
+        <div className="flex relative items-center font-bold text-lg p-1 md:mr-24">
           <div className="border-none flex items-center rounded-full p-3 hover:cursor-pointer">
             {links.map(link => (
               <a

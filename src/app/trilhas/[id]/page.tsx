@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// app/questoes/[id]/page.tsx
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Inter } from 'next/font/google';
@@ -11,31 +10,38 @@ import TrilhasList from '~/components/trilhasComponents/trilhasList';
 import { SimplePagHeader } from '~/components/simplePageHeader';
 
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
+  subsets: ['latin'],
+  variable: '--font-sans',
 });
 
 export default function Trilhas() {
-  const params = useParams<{id: string}>();
+  const params = useParams<{ id: string }>();
   const name = params.id;
   const [isLoading, setIsLoading] = useState(true);
-  const [roadmap, setRoadmap] = useState<Roadmap[]  | null>(null);
+  const [roadmap, setRoadmap] = useState<Roadmap[] | null>(null);
 
+  interface Link {
+    type: string;
+    title: string;
+    link: string;
+  }
+
+  interface Trilha {
+    id: number;
+    name: string;
+    description: string;
+    level: number;
+    data: string;
+    links: Link[]; // Links are now fetched from the `trilhas_links` table
+  }
 
   interface Roadmap {
     id: number;
     trilhaId: number;
     trilhaGroupId: number;
-    trilha: {
-      id: number;
-      name: string;
-      description: string;
-      level: number;
-      data: string;
-      links: { type: string; title: string; link: string }[];
-    };
+    trilha: Trilha;
   }
-  
+
   useEffect(() => {
     if (name) {
       async function fetchRoadmap() {
@@ -57,8 +63,6 @@ export default function Trilhas() {
     }
   }, [name]);
 
-  console.log('roadmap:', roadmap);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -68,12 +72,12 @@ export default function Trilhas() {
   }
 
   return (
-  <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
-    <SimplePagHeader title="Trilhas" description="Trilhas com melhores conteudos de aprendizado" />
+    <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
+      <SimplePagHeader title="Trilhas" description="Trilhas com melhores conteudos de aprendizado" />
       <div className="flex flex-col items-center justify-center pb-16 pt-12 w-2/3">
         {roadmap && <TrilhasList roadmap={roadmap} />}
       </div>
-  </section>
+    </section>
   );
-};
+}
 

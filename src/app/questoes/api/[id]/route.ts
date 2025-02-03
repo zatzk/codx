@@ -15,7 +15,6 @@ interface QuestionUpdate {
 
 interface UpdateRequestBody {
   name: string;
-  title: string;
   description: string;
   questions: QuestionUpdate[];
   questionsToDelete?: number[];
@@ -83,8 +82,7 @@ export async function PUT(request: Request) {
       await tx
         .update(questionGroups)
         .set({
-          name: body.name,
-          title: body.title,
+          name: body.name.replace(/\s/g, '_'),
           description: body.description,
           updatedAt: new Date(),
         })

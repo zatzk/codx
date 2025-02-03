@@ -12,7 +12,6 @@ interface QuestionCreate {
 
 interface CreateRequestBody {
   name: string;
-  title: string;
   description: string;
   questions: QuestionCreate[];
 }
@@ -23,12 +22,14 @@ export async function POST(request: Request) {
     console.log('Received POST request with body:', body);
 
     // Validate required fields
-    if (!body.name || !body.title) {
+    if (!body.name ) {
       return NextResponse.json(
-        { error: 'Name and title are required' },
+        { error: 'Name are required' },
         { status: 400 }
       );
     }
+
+    body.name = body.name.replace(/\s/g, '_');
 
     // Check if a question group with the same name already exists
     const existingGroup = await db.query.questionGroups.findFirst({
@@ -50,7 +51,6 @@ export async function POST(request: Request) {
         .insert(questionGroups)
         .values({
           name: body.name,
-          title: body.title,
           description: body.description,
           createdAt: new Date(),
         })

@@ -27,12 +27,27 @@ interface CourseCardProps {
   totalLessons: number;
   onClick: () => void;
   session: Session | null;
+  onEdit?: () => void;
+  isAdmin?: boolean;
 }
 
-export default function CourseCard({ course, completedLessons, totalLessons, onClick }: CourseCardProps) {
+export default function CourseCard({ 
+  course, 
+  completedLessons, 
+  totalLessons, 
+  onClick,
+  session,
+  onEdit,
+  isAdmin 
+}: CourseCardProps) {
   const { activeColorSet } = useColorContext();
-
   const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onEdit?.();
+  };
 
   return (
     <div
@@ -48,6 +63,8 @@ export default function CourseCard({ course, completedLessons, totalLessons, onC
         justify-between
         items-start 
         cursor-pointer
+        relative
+        group
         ${silkscreen.className}
       `}
       onClick={onClick}
@@ -65,6 +82,15 @@ export default function CourseCard({ course, completedLessons, totalLessons, onC
         </div>
         <p className="text-xs mt-1">{progressPercentage.toFixed(1)}% complete</p>
       </div>
+
+      {isAdmin && (
+        <button
+          onClick={handleEditClick}
+          className="absolute top-2 right-2 p-2 rounded-md h-[37px] bg-white/10 hover:bg-white/20 transition-all opacity-0 group-hover:opacity-100"
+        >
+          <span className="pixelarticons--edit-box text-white text-xl"></span>
+        </button>
+      )}
     </div>
   );
 }

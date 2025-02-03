@@ -18,7 +18,6 @@ const inter = Inter({
 interface Question {
   id: string;
   name: string;
-  title: string;
 }
 
 export default function Questoes() {
@@ -77,7 +76,7 @@ export default function Questoes() {
     <section className={`font-sans ${inter.variable} ${activeColorSet?.secondary} flex w-full flex-col items-center mt-20`}>
       <SimplePagHeader 
         title="Questões" 
-        description="Perguntas para ajudá-lo a testar e melhorar seu conhecimento e habilidades" 
+        description="Flashcards da comunidade para ajudá-lo a testar e melhorar seu conhecimento e habilidades" 
       />
       <div className="w-full flex sm:pb-16 sm:pt-8">
         <div className="ml-auto mr-auto max-w-7xl px-4 sm:px-6 lg:px-8">

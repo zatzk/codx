@@ -139,7 +139,6 @@ export const questionGroups = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
-    title: varchar("title", { length: 256 }),
     description: varchar("description"),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -148,19 +147,41 @@ export const questionGroups = createTable(
   },
 );
 
-export const questionUserProgress = createTable('question_user_progress', {
-  id: serial('id').primaryKey(),
-  userId: varchar('user_id', { length: 255 }).notNull().references(() => users.id),
-  questionGroupId: integer('question_group_id').references(() => questionGroups.id).notNull(),
-  currentQuestionIndex: integer('current_question_index').default(0).notNull(),
-  currentKnowCount: integer('current_know_count').default(0).notNull(),
-  currentDidntKnowCount: integer('current_didnt_know_count').default(0).notNull(),
-  currentSkipCount: integer('current_skip_count').default(0).notNull(),
-  createdAt: timestamp('created_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp('updated_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
-}, (table) => ({
-  userQuestionGroupUnique: unique().on(table.userId, table.questionGroupId),
-}));
+export const questionUserProgress = createTable(
+  "question_user_progress",
+  {
+    id: serial("id").primaryKey(),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    // Denormalized question data
+    questionGroupId: integer("question_group_id").notNull(),
+    questionGroupName: varchar("question_group_name", { length: 256 }).notNull(),
+    // Progress data
+    responses: json("responses").$type<Array<{
+      questionId: number;
+      questionText: string;
+      response: string;
+      correct: boolean;
+      timestamp: Date;
+    }>>().default([]),
+    stats: json("stats").$type<{
+      knowCount: number;
+      didntKnowCount: number;
+      skipCount: number;
+    }>().default({ knowCount: 0, didntKnowCount: 0, skipCount: 0 }),
+    completedAt: timestamp("completed_at"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (table) => ({
+    userQuestionGroupIdx: index("user_question_group_idx").on(table.userId, table.questionGroupId),
+  })
+);
 
 export const questionUserProgressRelations = relations(questionUserProgress, ({ one }) => ({
   user: one(users, { fields: [questionUserProgress.userId], references: [users.id] }),
@@ -204,7 +225,6 @@ export const trilhas = createTable(
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
     data: text("data"),
-    links: json("links"),
     level: integer("level"),
     description: varchar("description"),
     createdAt: timestamp("created_at")
@@ -213,6 +233,24 @@ export const trilhas = createTable(
     updatedAt: timestamp("updatedAt"),
   },
 );
+
+export const trilhasLinks = createTable(
+  "trilhas_links",
+  {
+    id: serial("id").primaryKey(),
+    trilhaId: integer("trilha_id")
+      .references(() => trilhas.id, { onDelete: "cascade", onUpdate: "cascade" })
+      .notNull(),
+    type: varchar("type", { length: 50 }).notNull(), // e.g., "ARTICLE", "YOUTUBE"
+    title: varchar("title", { length: 255 }).notNull(),
+    link: text("link").notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt"),
+  }
+);
+
 
 export const roadmaps = createTable(
   "roadmaps",
@@ -283,18 +321,20 @@ export const pathCourses = createTable(
   {
     id: serial("id").primaryKey(),
     pathId: integer("path_id")
-      .references(() => paths.id,
-        { onDelete: "cascade", onUpdate: "cascade", }),
+      .references(() => paths.id, { onDelete: "cascade", onUpdate: "cascade" }),
     courseId: integer("course_id")
-      .references(() => courses.id,
-        { onDelete: "cascade", onUpdate: "cascade", }),
+      .references(() => courses.id, { onDelete: "cascade", onUpdate: "cascade" }),
     order: integer("order"),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt"),
   },
+  (table) => ({
+    uniquePathOrder: unique().on(table.pathId, table.order), // Ensure unique order per path
+  })
 );
+
 export const courses = createTable (
   "courses",
   {
@@ -307,6 +347,7 @@ export const courses = createTable (
     updatedAt: timestamp("updatedAt"),
   },
 );
+
 export const courseModules = createTable(
   "course_modules",
   {
@@ -327,7 +368,7 @@ export const lessons = createTable(
   "lessons",
   {
     id: serial("id").primaryKey(),
-    courseModuleId: integer("course_module_id")
+    moduleId: integer("module_id")
       .references(() => courseModules.id,
         { onDelete: "cascade", onUpdate: "cascade", }),
     title: varchar("title", { length: 256 }),
@@ -349,20 +390,31 @@ export const courseUserProgress = createTable(
     userId: varchar("user_id", { length: 255 })
       .notNull()
       .references(() => users.id),
-    courseId: integer("course_id")
-      .references(() => courses.id,
-        { onDelete: "cascade", onUpdate: "cascade", }),
-    currentModuleIndex: integer("current_module_index").default(0).notNull(),
-    currentLessonIndex: integer("current_lesson_index").default(0).notNull(),
-    moduleProgress: json("module_progress").default({}).notNull(),
-    totalLessons: integer("total_lessons").default(0).notNull(),
+    // Denormalized course data
+    courseId: integer("course_id").notNull(),
+    courseTitle: varchar("course_title", { length: 256 }).notNull(),
+    courseDescription: text("course_description"),
+    // Progress data
+    modules: json("modules").$type<Array<{
+      moduleId: number;
+      moduleTitle: string;
+      lessons: Array<{
+        lessonId: number;
+        completedAt: Date;
+      }>
+    }>>().default([]),
+    currentModule: integer("current_module_index").default(0).notNull(),
+    currentLesson: integer("current_lesson_index").default(0).notNull(),
+    completedAt: timestamp("completed_at"),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    updatedAt: timestamp("updated_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
   },
   (table) => ({
-    userCourseUnique: unique().on(table.userId, table.courseId),
+    userCourseIdx: index("user_course_idx").on(table.userId, table.courseId),
   })
 );
 
@@ -382,7 +434,7 @@ export const courseModulesRelations = relations(courseModules, ({ one, many }) =
   lessons: many(lessons),
 }));
 export const lessonsRelations = relations(lessons, ({ one }) => ({
-  module: one(courseModules, { fields: [lessons.courseModuleId], references: [courseModules.id] }),
+  module: one(courseModules, { fields: [lessons.moduleId], references: [courseModules.id] }),
 }));
 
 
@@ -414,7 +466,14 @@ export const trilhasGroupsRelations = relations(trilhasGroups, ({ many }) => ({
 }));
 
 export const trilhasRelations = relations(trilhas, ({ many }) => ({
-  roadmaps: many(roadmaps),
+  links: many(trilhasLinks), // One trilha can have many links
+}));
+
+export const trilhasLinksRelations = relations(trilhasLinks, ({ one }) => ({
+  trilha: one(trilhas, {
+    fields: [trilhasLinks.trilhaId],
+    references: [trilhas.id],
+  }), // Each link belongs to one trilha
 }));
 
 export const questionGroupRelations = relations(questionGroups, ({ many }) => ({

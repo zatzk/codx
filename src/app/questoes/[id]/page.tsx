@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { QuestionList } from '~/components/questionComponents/questionList';
 import { QuestionLoader } from '~/components/questionComponents/questionLoader';
-import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { SimplePagHeader } from '~/components/simplePageHeader';
 
@@ -19,7 +18,8 @@ const inter = Inter({
 
 export default function Quizz() {
   const params = useParams<{id: string}>();
-  const name = params.id;
+  const name = params.id
+  const title = params.id.replace(/_/g, ' ');
   const [isLoading, setIsLoading] = useState(true);
   const [questionGroup, setQuestionGroup] = useState<QuestionGroup[]  | null>(null);
 
@@ -34,7 +34,6 @@ export default function Quizz() {
   interface QuestionGroup {
     id: number;
     name: string;
-    title: string;
     description: string;
     questions: Question[];
   }
@@ -77,7 +76,7 @@ export default function Quizz() {
   return (
   <section className={`font-sans ${inter.variable} flex w-full flex-col items-center mt-28 text-white`}>
     <div className="flex items-center justify-center lg:w-2/3 md:w-full mb-6"> 
-      <SimplePagHeader title={`${name} Quizz`} description="" />
+      <SimplePagHeader title={`${title} Flashcard`} description="" />
     </div>
 
     <div className="">

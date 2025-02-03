@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -7,6 +9,7 @@ import { useSession } from 'next-auth/react';
 import { Inter, Silkscreen } from "next/font/google";
 import { useColorContext } from "~/lib/colorContext";
 import { SimplePagHeader } from "~/components/simplePageHeader";
+import { LessonsDrawer } from "~/components/cursosComponents/lessonsDrawer";
 
 const silkscreen = Silkscreen({
   weight: ["400", "700"], 
@@ -24,6 +27,7 @@ interface Lesson {
   title: string;
   content: string;
   videoUrl: string | null;
+  description: string;
   order: number;
 }
 
@@ -42,20 +46,38 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
   const [progress, setProgress] = useState<number>(0); // Tracks the current lesson index from progress
   const { data: session } = useSession();
   const { activeColorSet } = useColorContext();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+
+  const refreshLessons = async () => {
+    const response = await fetch(`/cursos/api/lessons/by-module/${params.moduleId}`);
+    const data = await response.json();
+    setModule(data);
+    if (data.lessons.length > 0) {
+      setActiveLesson(data.lessons[0]);
+    }
+  };
 
   // Fetch the module first
   useEffect(() => {
     async function fetchModule() {
-      setIsLoading(false);
+      setIsLoading(true);
       try {
-        const response = await fetch(`/cursos/api/modules/${params.moduleId}`);
+        const response = await fetch(`/cursos/api/lessons/by-module/${params.moduleId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setModule(data);
-        if (data.lessons.length > 0) {
-          setActiveLesson(data.lessons[0]);
+        
+        // Ensure lessons array exists and is properly formatted
+        const normalizedModule = {
+          ...data,
+          lessons: Array.isArray(data.lessons) ? data.lessons : []
+        };
+  
+        setModule(normalizedModule);
+        if (normalizedModule.lessons.length > 0) {
+          setActiveLesson(normalizedModule.lessons[0]);
         }
       } catch (error) {
         console.error('Failed to fetch module:', error);
@@ -63,65 +85,46 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
         setIsLoading(false);
       }
     }
-
+  
     void fetchModule();
   }, [params.moduleId]);
+  
 
   // Fetch progress only after module is fetched
   useEffect(() => {
     async function fetchProgress() {
-      // if (!session?.user?.id || !module) return;
-    
       try {
         const response = await fetch(`/cursos/api/progress/${session?.user.id}/${module?.courseId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch progress in the module page');
-        }
-        const data = await response.json();
+        if (!response.ok) throw new Error('Failed to fetch progress');
         
-        const moduleProgress = data.moduleProgress || {};
-        if (module && module.id in moduleProgress) {
-          setProgress(moduleProgress[module.id]); // Set progress to the current lesson index for this module
-        } else {
-          setProgress(0); // If no progress found, start from 0
-        }
+        const data = await response.json();
+        const moduleProgress = data.modules.find((m: any) => m.moduleId === module?.id);
+        setProgress(moduleProgress?.lessons.length || 0);
       } catch (error) {
         console.error('Error fetching progress:', error);
       }
     }
-
-    if (module) {
-      void fetchProgress();
-    }
+    if (module) void fetchProgress();
   }, [session?.user.id, module]);
 
   const markLessonAsComplete = async (lessonId: number) => {
-    if (!session?.user?.id || !module) return;
-  
     try {
       const response = await fetch('/cursos/api/progress', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: session.user.id,
-          lessonId: lessonId,
-          moduleId: module.id,
-          currentLessonIndex: activeLesson?.order,
-        }),
+          userId: session?.user.id,
+          lessonId,
+          moduleId: module?.id,
+          courseId: module?.courseId
+        })
       });
   
-      if (!response.ok) {
-        throw new Error('Failed to mark lesson as complete');
-      }
-  
-      const lesson = module.lessons.find(lesson => lesson.id === lessonId);
-      if (lesson) {
-        setProgress(prev => Math.max(prev, lesson.order)); // Update progress
+      if (response.ok) {
+        setProgress(prev => Math.max(prev, activeLesson?.order ?? 0));
       }
     } catch (error) {
-      console.error('Error marking lesson as complete:', error);
+      console.error('Error marking lesson complete:', error);
     }
   };
 
@@ -161,47 +164,94 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
                 <h4 className={`${activeLesson?.id === lesson.id ? 'border-b opacity-90' : ''}`}>{lesson.title}</h4>
               </li>
             ))}
+            {session?.user.role === 'admin' && (
+              <li
+                className="p-2 flex items-center cursor-pointer hover:bg-white/10 rounded-lg"
+                onClick={() => {
+                  setSelectedLesson(null);
+                  setIsDrawerOpen(true);
+                }}
+              >
+                <span className="pixelarticons--plus text-lg mr-2"></span>
+                <h4>Adicionar Nova Aula</h4>
+              </li>
+            )}
           </ul>
         </div>
-
-        <div className="w-3/4 max-h-[76%] p-4 ml-36">
+  
+        <div className="w-3/4 max-h-[76%] p-4">
           {activeLesson ? (
             <>
               <div className="max-h-full min-h-full overflow-auto">
-                <h3 className={`${silkscreen.className} text-2xl font-bold mb-8`}>{activeLesson.title}</h3>
-                {activeLesson.videoUrl && (
-                  <div className="mb-4">
-                    <video src={activeLesson.videoUrl} controls className="w-full" />
-                  </div>
-                )}
-                <div dangerouslySetInnerHTML={{ __html: activeLesson.content }} />
-              </div>
-              <div className="w-full justify-end flex">
-                <button
-                  className={`mt-4 text-white flex items-center px-3 py-1 ${silkscreen.className} ${activeColorSet?.bg} bg-opacity-30 hover:bg-opacity-40 rounded-lg`}
-                  onClick={() => markLessonAsComplete(activeLesson.id)}
-                  disabled={activeLesson.order <= progress}
-                >
-                  {activeLesson.order <= progress 
-                    ? 
-                      <>
-                        <span className="pixelarticons--check-double text-xl mr-3"></span>
-                        <p>Concluído</p>
-                      </>
-                    : 
-                      <>
-                        <span className="pixelarticons--check text-xl mr-3"></span>
-                        <p>Completar</p>
-                      </>
-                  }
-                </button>
+                <div className="flex justify-between items-center mb-8">
+                  <h3 className={`${silkscreen.className} text-2xl font-bold`}>{activeLesson.title}</h3>
+                  {session?.user.role === 'admin' && (
+                    <button
+                      onClick={() => {
+                        setSelectedLesson(activeLesson);
+                        setIsDrawerOpen(true);
+                      }}
+                      className={`text-white flex items-center px-3 py-1 ${silkscreen.className} ${activeColorSet?.bg} bg-opacity-30 hover:bg-opacity-40 rounded-lg`}
+                    >
+                      <span className="pixelarticons--edit-box text-xl mr-3"></span>
+                      Editar
+                    </button>
+                  )}
+                </div>
+                <div className="max-h-[76%] pl-4">
+                  {activeLesson ? (
+                    <>
+                      <div className="max-h-full min-h-full overflow-auto">
+                        {activeLesson.videoUrl && (
+                          <div className="mb-4">
+                            <video src={activeLesson.videoUrl} controls className="w-full" />
+                          </div>
+                        )}
+                        <div dangerouslySetInnerHTML={{ __html: activeLesson.content }} />
+                      </div>
+                      <div className="w-full justify-end flex">
+                        <button
+                          className={`mt-4 text-white flex items-center px-3 py-1 ${silkscreen.className} ${activeColorSet?.bg} bg-opacity-30 hover:bg-opacity-40 rounded-lg`}
+                          onClick={() => markLessonAsComplete(activeLesson.id)}
+                          disabled={activeLesson.order <= progress}
+                        >
+                          {activeLesson.order <= progress 
+                            ? 
+                              <>
+                                <span className="pixelarticons--check-double text-xl mr-3"></span>
+                                <p>Concluído</p>
+                              </>
+                            : 
+                              <>
+                                <span className="pixelarticons--check text-xl mr-3"></span>
+                                <p>Completar</p>
+                              </>
+                          }
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <p>Selecione uma lição para começar</p>
+                  )}
+                </div>
               </div>
             </>
           ) : (
-            <p>Select a lesson to begin</p>
+            <p>Selecione uma lição para começar</p>
           )}
         </div>
       </div>
+  
+      <LessonsDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => {
+          setIsDrawerOpen(false);
+          setSelectedLesson(null);
+        }}
+        onFormSubmit={refreshLessons}
+        moduleId={parseInt(params.moduleId)}
+        selectedLesson={selectedLesson}
+      />
     </section>
   );
 }

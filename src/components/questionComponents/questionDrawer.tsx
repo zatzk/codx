@@ -47,7 +47,6 @@ interface DetailedQuestion {
 interface QuestionGroup {
   id: number;
   name: string;
-  title: string;
   description: string;
   createdAt: string;
   updatedAt: string | null;
@@ -70,7 +69,6 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    title: "",
     description: "",
     questions: [] as DetailedQuestion[],
     questionsToDelete: [] as number[]
@@ -82,12 +80,12 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
         setLoading(true);
         try {
           const response = await fetch(`/questoes/api/${question.name}`);
+          console.log('question:', question);
           if (!response.ok) throw new Error('Failed to fetch question data');
           const data = await response.json();
           setQuestionGroup(data[0]);
           setFormData({
             name: data[0].name,
-            title: data[0].title,
             description: data[0].description,
             questions: data[0].questions || [],
             questionsToDelete: []
@@ -100,7 +98,6 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
       } else {
         setFormData({
           name: "",
-          title: "",
           description: "",
           questions: [],
           questionsToDelete: []
@@ -143,6 +140,7 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
         throw new Error('Failed to delete question group');
       }
 
+      onFormSubmit();
       onClose();
     } catch (error) {
       console.error('Error deleting question group:', error);
@@ -206,7 +204,6 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
       
       const requestData = {
         name: formData.name,
-        title: formData.title,
         description: formData.description,
         questions: formData.questions.map(q => ({
           ...(isNewQuestionGroup ? {} : { id: q.id > 0 ? q.id : undefined }),
@@ -291,20 +288,9 @@ export function QuestionDrawer({ isOpen, onClose, onFormSubmit, question }: Ques
                 <Label htmlFor="name">Nome</Label>
                 <Input
                   id="name"
-                  value={formData.name}
+                  value={formData.name.replace(/_/g, ' ')}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Nome do grupo de questões"
-                  className="w-full bg-transparent"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="title">Título</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Título do grupo"
                   className="w-full bg-transparent"
                 />
               </div>
