@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// app/questoes/api/route.ts
+// app/desafios/api/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '~/server/db';
 import { desafios, testCases } from '~/server/db/schema';
-
-// export const runtime = 'edge';
 
 interface TestCasesCreate {
   input: string;

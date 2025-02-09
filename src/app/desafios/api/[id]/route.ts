@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// app/questoes/api/[id]/route.ts
+// app/desafios/api/[id]/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '~/server/db';
 import { eq, inArray } from 'drizzle-orm';

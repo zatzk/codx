@@ -1,0 +1,877 @@
+<html><head><meta charset="utf-8"/><title>Test Report</title><style type="text/css">html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+body {
+  padding: 2rem 1rem;
+  font-size: 0.85rem;
+}
+.jesthtml-content {
+  margin: 0 auto;
+  max-width: 70rem;
+}
+header {
+  display: flex;
+  align-items: center;
+}
+#title {
+  margin: 0;
+  flex-grow: 1;
+}
+#logo {
+  height: 4rem;
+}
+#timestamp {
+  color: #777;
+  margin-top: 0.5rem;
+}
+
+/** SUMMARY */
+#summary {
+  color: #333;
+  margin: 2rem 0;
+  display: flex;
+  font-family: monospace;
+  font-size: 1rem;
+}
+#summary > div {
+  margin-right: 2rem;
+  background: #eee;
+  padding: 1rem;
+  min-width: 15rem;
+}
+#summary > div:last-child {
+  margin-right: 0;
+}
+@media only screen and (max-width: 720px) {
+  #summary {
+    flex-direction: column;
+  }
+  #summary > div {
+    margin-right: 0;
+    margin-top: 2rem;
+  }
+  #summary > div:first-child {
+    margin-top: 0;
+  }
+}
+
+.summary-total {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.summary-passed {
+  color: #4f8a10;
+  border-left: 0.4rem solid #4f8a10;
+  padding-left: 0.5rem;
+}
+.summary-failed,
+.summary-obsolete-snapshots {
+  color: #d8000c;
+  border-left: 0.4rem solid #d8000c;
+  padding-left: 0.5rem;
+}
+.summary-pending {
+  color: #9f6000;
+  border-left: 0.4rem solid #9f6000;
+  padding-left: 0.5rem;
+}
+.summary-empty {
+  color: #999;
+  border-left: 0.4rem solid #999;
+}
+
+.test-result {
+  padding: 1rem;
+  margin-bottom: 0.25rem;
+}
+.test-result:last-child {
+  border: 0;
+}
+.test-result.passed {
+  background-color: #dff2bf;
+  color: #4f8a10;
+}
+.test-result.failed {
+  background-color: #ffbaba;
+  color: #d8000c;
+}
+.test-result.pending {
+  background-color: #ffdf61;
+  color: #9f6000;
+}
+
+.test-info {
+  display: flex;
+  justify-content: space-between;
+}
+.test-suitename {
+  width: 20%;
+  text-align: left;
+  font-weight: bold;
+  word-break: break-word;
+}
+.test-title {
+  width: 40%;
+  text-align: left;
+  font-style: italic;
+}
+.test-status {
+  width: 20%;
+  text-align: right;
+}
+.test-duration {
+  width: 10%;
+  text-align: right;
+  font-size: 0.75rem;
+}
+
+.failureMessages {
+  padding: 0 1rem;
+  margin-top: 1rem;
+  border-top: 1px dashed #d8000c;
+}
+.failureMessages.suiteFailure {
+  border-top: none;
+}
+.failureMsg {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.suite-container {
+  margin-bottom: 2rem;
+}
+.suite-container > input[type="checkbox"] {
+  position: absolute;
+  left: -100vw;
+}
+.suite-container label {
+  display: block;
+}
+.suite-container .suite-tests {
+  overflow-y: hidden;
+  height: 0;
+}
+.suite-container > input[type="checkbox"]:checked ~ .suite-tests {
+  height: auto;
+  overflow: visible;
+}
+.suite-info {
+  padding: 1rem;
+  background-color: #eee;
+  color: #777;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.suite-info:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+.suite-info .suite-path {
+  word-break: break-all;
+  flex-grow: 1;
+  font-family: monospace;
+  font-size: 1rem;
+}
+.suite-info .suite-time {
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.75rem;
+}
+.suite-info .suite-time.warn {
+  background-color: #d8000c;
+  color: #fff;
+}
+.suite-info:before {
+  content: "\2303";
+  display: inline-block;
+  margin-right: 0.5rem;
+  transform: rotate(0deg);
+}
+.suite-container > input[type="checkbox"]:checked ~ label .suite-info:before {
+  transform: rotate(180deg);
+}
+
+/* CONSOLE LOGS */
+.suite-consolelog {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: #efefef;
+}
+.suite-consolelog-header {
+  font-weight: bold;
+}
+.suite-consolelog-item {
+  padding: 0.5rem;
+}
+.suite-consolelog-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-consolelog-item-origin {
+  color: #777;
+  font-weight: bold;
+}
+.suite-consolelog-item-message {
+  color: #000;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+
+/* OBSOLETE SNAPSHOTS */
+.suite-obsolete-snapshots {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: #ffbaba;
+  color: #d8000c;
+}
+.suite-obsolete-snapshots-header {
+  font-weight: bold;
+}
+.suite-obsolete-snapshots-item {
+  padding: 0.5rem;
+}
+.suite-obsolete-snapshots-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-obsolete-snapshots-item-message {
+  color: #000;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+</style></head><body><div class="jesthtml-content"><header><h1 id="title">Test Report</h1></header><div id="metadata-container"><div id="timestamp">Started: 2025-02-09 20:44:15</div><div id="summary"><div id="suite-summary"><div class="summary-total">Suites (12)</div><div class="summary-passed ">4 passed</div><div class="summary-failed ">8 failed</div><div class="summary-pending  summary-empty">0 pending</div></div><div id="test-summary"><div class="summary-total">Tests (29)</div><div class="summary-passed ">15 passed</div><div class="summary-failed ">14 failed</div><div class="summary-pending  summary-empty">0 pending</div></div></div></div><div id="suite-1" class="suite-container"><input id="collapsible-0" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-0"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\modules\modules-update.test.ts</div><div class="suite-time warn">25.899s</div></div></label><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/modules/[moduleId] route</div><div class="test-title">should update a module</div><div class="test-status">failed</div><div class="test-duration">1.618s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_course_modules" violates foreign key constraint "codx_course_modules_course_id_codx_courses_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\modules\modules-update.test.ts:14:22)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/modules/[moduleId] route</div><div class="test-title">should delete a module</div><div class="test-status">failed</div><div class="test-duration">0.722s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_course_modules" violates foreign key constraint "codx_course_modules_course_id_codx_courses_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\modules\modules-update.test.ts:14:22)</pre></div></div></div></div><div id="suite-2" class="suite-container"><input id="collapsible-1" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-1"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-route.test.ts</div><div class="suite-time warn">26.029s</div></div></label><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/desafios</div><div class="test-title">should create a new desafio with test cases (POST)</div><div class="test-status">failed</div><div class="test-duration">0.941s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toHaveProperty(path)
+
+Expected path: "id"
+Received path: []
+
+Received value: {"success": true}
+    at test (C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-route.test.ts:59:24)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at testApiHandler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:134:5)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-route.test.ts:38:5)</pre></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:26:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received POST request with body: {
+  problemStatement: 'Some problem',
+  starterCode: 'function foo() {}',
+  functionName: 'foo',
+  difficulty: 'easy',
+  category: 'algorithms',
+  testCases: []
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:26:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received POST request with body: {
+  title: 'Unique Desafio',
+  problemStatement: 'Solve this problem',
+  starterCode: 'function solve() {}',
+  functionName: 'solve',
+  difficulty: 'medium',
+  category: 'math',
+  testCases: [
+    { input: '1,2', target: '3', expectedOutput: '3' },
+    { input: '2,3', target: '5', expectedOutput: '5' }
+  ]
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:60:15
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:46:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Created desafio: {
+  id: 38,
+  title: 'Unique Desafio',
+  problemStatement: 'Solve this problem',
+  starterCode: 'function solve() {}',
+  functionName: 'solve',
+  examples: null,
+  difficulty: 'medium',
+  category: 'math',
+  createdAt: 2025-02-09T23:44:42.000Z,
+  updatedAt: null
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:75:17
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:46:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Inserting test cases: [
+  {
+    input: '1,2',
+    target: '3',
+    expectedOutput: '3',
+    desafioId: 38,
+    createdAt: 2025-02-09T23:44:42.186Z
+  },
+  {
+    input: '2,3',
+    target: '5',
+    expectedOutput: '5',
+    desafioId: 38,
+    createdAt: 2025-02-09T23:44:42.186Z
+  }
+]</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:82:17
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:46:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Inserted test cases: [
+  {
+    id: 38,
+    desafioId: 38,
+    input: '1,2',
+    target: '3',
+    expectedOutput: '3',
+    createdAt: 2025-02-09T23:44:42.000Z,
+    updatedAt: null
+  },
+  {
+    id: 39,
+    desafioId: 38,
+    input: '2,3',
+    target: '5',
+    expectedOutput: '5',
+    createdAt: 2025-02-09T23:44:42.000Z,
+    updatedAt: null
+  }
+]</pre></div></div></div><div id="suite-3" class="suite-container"><input id="collapsible-2" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-2"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\paths\paths-update.test.ts</div><div class="suite-time warn">26.378s</div></div></label><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/cursos/paths/[pathId]</div><div class="test-title">should update a path successfully</div><div class="test-status">failed</div><div class="test-duration">1.852s</div></div><div class="failureMessages"> <pre class="failureMsg">TypeError: Cannot read properties of undefined (reading 'title')
+    at test (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\paths\paths-update.test.ts:41:30)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at testApiHandler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:134:5)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\paths\paths-update.test.ts:26:5)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/cursos/paths/[pathId]</div><div class="test-title">should return 404 when updating a non-existent path</div><div class="test-status">failed</div><div class="test-duration">0.487s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 404
+Received: 200
+    at test (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\paths\paths-update.test.ts:85:33)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at testApiHandler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:134:5)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\paths\paths-update.test.ts:73:5)</pre></div></div></div></div><div id="suite-4" class="suite-container"><input id="collapsible-3" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-3"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-update.test.ts</div><div class="suite-time warn">26.608s</div></div></label><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/lessons/[lessonId]</div><div class="test-title">should update a lesson with valid fields (PUT)</div><div class="test-status">failed</div><div class="test-duration">2.314s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_lessons" violates foreign key constraint "codx_lessons_module_id_codx_course_modules_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-update.test.ts:14:22)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/lessons/[lessonId]</div><div class="test-title">should return 404 for PUT if lesson not found</div><div class="test-status">failed</div><div class="test-duration">0.633s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_lessons" violates foreign key constraint "codx_lessons_module_id_codx_course_modules_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-update.test.ts:14:22)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/lessons/[lessonId]</div><div class="test-title">should delete a lesson (DELETE)</div><div class="test-status">failed</div><div class="test-duration">0.596s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_lessons" violates foreign key constraint "codx_lessons_module_id_codx_course_modules_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-update.test.ts:14:22)</pre></div></div></div></div><div id="suite-5" class="suite-container"><input id="collapsible-4" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-4"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-route.test.ts</div><div class="suite-time warn">26.624s</div></div></label><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/lessons/[moduleId]</div><div class="test-title">should return 404 for GET if module not found</div><div class="test-status">failed</div><div class="test-duration">1.963s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_course_modules" violates foreign key constraint "codx_course_modules_course_id_codx_courses_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-route.test.ts:14:22)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/lessons/[moduleId]</div><div class="test-title">should GET module with lessons (even if lessons array is empty)</div><div class="test-status">failed</div><div class="test-duration">0.647s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_course_modules" violates foreign key constraint "codx_course_modules_course_id_codx_courses_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-route.test.ts:14:22)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/lessons/[moduleId]</div><div class="test-title">should create a new lesson (POST) and handle order conflicts</div><div class="test-status">failed</div><div class="test-duration">0.704s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_course_modules" violates foreign key constraint "codx_course_modules_course_id_codx_courses_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgPreparedQuery.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:59:20)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\lessons\lessons-route.test.ts:14:22)</pre></div></div></div></div><div id="suite-6" class="suite-container"><input id="collapsible-5" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-5"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\courses\path-courses.test.ts</div><div class="suite-time warn">27.074s</div></div></label><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/courses/[pathId] route</div><div class="test-title">should create a new course and link it to the path (POST)</div><div class="test-status">failed</div><div class="test-duration">2.677s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 500
+    at test (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\courses\path-courses.test.ts:47:33)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at testApiHandler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:134:5)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\courses\path-courses.test.ts:35:5)</pre></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\cursos\api\courses\by-path\[pathId]\route.ts:70:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Failed to create course: error: insert or update on table "codx_path_courses" violates foreign key constraint "codx_path_courses_path_id_codx_paths_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\cursos\api\courses\by-path\[pathId]\route.ts:62:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55 {
+  length: 321,
+  severity: 'ERROR',
+  code: '23503',
+  detail: 'Key (path_id)=(232) is not present in table "codx_paths".',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'codx_path_courses',
+  column: undefined,
+  dataType: undefined,
+  constraint: 'codx_path_courses_path_id_codx_paths_id_fk',
+  file: 'ri_triggers.c',
+  line: '2599',
+  routine: 'ri_ReportViolation'
+}</pre></div></div></div><div id="suite-7" class="suite-container"><input id="collapsible-6" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-6"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-update.test.ts</div><div class="suite-time warn">27.259s</div></div></label><div class="suite-tests"><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/desafios/[id]</div><div class="test-title">should delete a desafio (DELETE)</div><div class="test-status">failed</div><div class="test-duration">2.42s</div></div><div class="failureMessages"> <pre class="failureMsg">error: insert or update on table "codx_test_cases" violates foreign key constraint "codx_test_cases_desafio_id_codx_desafios_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-update.test.ts:28:5)</pre></div></div><div class="test-result failed"><div class="test-info"><div class="test-suitename">/api/desafios/[id]</div><div class="test-title">should update a desafio with test case updates (PUT)</div><div class="test-status">failed</div><div class="test-duration">1.369s</div></div><div class="failureMessages"> <pre class="failureMsg">Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 200
+Received: 500
+    at test (C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-update.test.ts:81:28)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at testApiHandler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:134:5)
+    at Object.&lt;anonymous&gt; (C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-update.test.ts:72:5)</pre></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:74:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received PUT request with body: {
+  title: 'Updated Desafio',
+  problemStatement: 'Updated problem',
+  starterCode: 'updated code',
+  functionName: 'updatedFunc',
+  difficulty: 'medium',
+  category: 'math',
+  testCases: [ { id: 1, input: '2,3', target: '5', expectedOutput: '5' } ]
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:86:15
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:25)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:76:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Updating desafio: 39</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:102:19
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:76:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Updating test case: 1</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:139:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Failed to update desafio: TypeError: Value is not JSON serializable
+    at serializeJavascriptValueToJSONString (node:internal/deps/undici/undici:4232:15)
+    at Function.json (node:internal/deps/undici/undici:8784:11)
+    at Function.json (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\web\spec-extension\response.ts:79:41)
+    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:137:25)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at GET (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:148:11)
+    at handler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:39)
+    at fn (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:313:28)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NoopTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\NoopTracer.ts:98:27)
+    at ProxyTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\ProxyTracer.ts:51:20)
+    at startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:266:32)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NextTracerImpl.trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:265:24)
+    at trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:369:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\static-generation-async-storage-wrapper.ts:104:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:279:49)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\request-async-storage-wrapper.ts:137:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:275:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at AppRouteRouteModule.run [as execute] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:61)
+    at AppRouteRouteModule.execute [as handle] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:35)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:234:49
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</pre><pre class="suite-consolelog-item-message">Received request for ID: Request {
+  method: 'GET',
+  url: 'ntarh:///api/desafios/Update-Desafio',
+  headers: Headers {
+    host: '[::1]:56450',
+    connection: 'keep-alive',
+    'x-msw-intention': 'bypass',
+    'x-msw-bypass': 'true',
+    accept: '*/*',
+    'accept-language': '*',
+    'sec-fetch-mode': 'cors',
+    'user-agent': 'node',
+    'accept-encoding': 'gzip, deflate'
+  },
+  destination: '',
+  referrer: 'about:client',
+  referrerPolicy: 'no-referrer',
+  mode: 'cors',
+  credentials: 'same-origin',
+  cache: 'default',
+  redirect: 'follow',
+  integrity: '',
+  keepalive: false,
+  isReloadNavigation: false,
+  isHistoryNavigation: false,
+  signal: AbortSignal { aborted: false }
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at GET (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:153:11)
+    at handler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:39)
+    at fn (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:313:28)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NoopTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\NoopTracer.ts:98:27)
+    at ProxyTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\ProxyTracer.ts:51:20)
+    at startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:266:32)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NextTracerImpl.trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:265:24)
+    at trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:369:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\static-generation-async-storage-wrapper.ts:104:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:279:49)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\request-async-storage-wrapper.ts:137:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:275:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at AppRouteRouteModule.run [as execute] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:61)
+    at AppRouteRouteModule.execute [as handle] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:35)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:234:49
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</pre><pre class="suite-consolelog-item-message">Name: Update Desafio</pre></div></div></div><div id="suite-8" class="suite-container"><input id="collapsible-7" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-7"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\paths\paths.test.ts</div><div class="suite-time warn">25.261s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/cursos/paths</div><div class="test-title">should create a new path and then retrieve it</div><div class="test-status">passed</div><div class="test-duration">1.742s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/cursos/paths</div><div class="test-title">should return validation error for missing required fields</div><div class="test-status">passed</div><div class="test-duration">0.166s</div></div></div></div></div><div id="suite-9" class="suite-container"><input id="collapsible-8" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-8"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\courses\course-route.test.ts</div><div class="suite-time warn">25.68s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/courses/[courseId] route</div><div class="test-title">should update a course</div><div class="test-status">passed</div><div class="test-duration">1.756s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/courses/[courseId] route</div><div class="test-title">should delete a course</div><div class="test-status">passed</div><div class="test-duration">0.546s</div></div></div></div></div><div id="suite-10" class="suite-container"><input id="collapsible-9" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-9"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\questoes\api\questoes-route.test.ts</div><div class="suite-time warn">26.177s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/questoes</div><div class="test-title">should return 400 for POST if name is missing</div><div class="test-status">passed</div><div class="test-duration">1.717s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/questoes</div><div class="test-title">should create a new question group with questions (POST)</div><div class="test-status">passed</div><div class="test-duration">0.97s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/questoes</div><div class="test-title">should GET all question groups with questions</div><div class="test-status">passed</div><div class="test-duration">0.467s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:22:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received POST request with body: { description: 'Some description', questions: [] }</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:22:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received POST request with body: {
+  name: 'Unique Group',
+  description: 'Group Desc',
+  questions: [
+    { question: 'Q1?', answer: 'A1', topics: [Array] },
+    { question: 'Q2?', answer: 'A2', topics: [Array] }
+  ]
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:59:15
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:47:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Created question group: {
+  id: 3,
+  name: 'Unique_Group',
+  description: 'Group Desc',
+  createdAt: 2025-02-09T23:44:42.000Z,
+  updatedAt: null
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:76:17
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:47:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Inserting questions: [
+  {
+    questionGroupId: 3,
+    question: 'Q1?',
+    answer: 'A1',
+    topics: [ 'topic1' ],
+    createdAt: 2025-02-09T23:44:42.189Z
+  },
+  {
+    questionGroupId: 3,
+    question: 'Q2?',
+    answer: 'A2',
+    topics: [ 'topic2' ],
+    createdAt: 2025-02-09T23:44:42.189Z
+  }
+]</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:83:17
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\questoes\api\route.ts:47:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Created questions: [
+  {
+    id: 3,
+    questionGroupId: 3,
+    question: 'Q1?',
+    answer: 'A1',
+    topics: [ 'topic1' ],
+    createdAt: 2025-02-09T23:44:42.000Z,
+    updatedAt: null
+  },
+  {
+    id: 4,
+    questionGroupId: 3,
+    question: 'Q2?',
+    answer: 'A2',
+    topics: [ 'topic2' ],
+    createdAt: 2025-02-09T23:44:42.000Z,
+    updatedAt: null
+  }
+]</pre></div></div></div><div id="suite-11" class="suite-container"><input id="collapsible-10" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-10"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-route.test.ts</div><div class="suite-time warn">26.029s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/desafios</div><div class="test-title">should return 400 for POST if title is missing</div><div class="test-status">passed</div><div class="test-duration">1.551s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/desafios</div><div class="test-title">should GET all desafios</div><div class="test-status">passed</div><div class="test-duration">0.452s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:26:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received POST request with body: {
+  problemStatement: 'Some problem',
+  starterCode: 'function foo() {}',
+  functionName: 'foo',
+  difficulty: 'easy',
+  category: 'algorithms',
+  testCases: []
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:26:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received POST request with body: {
+  title: 'Unique Desafio',
+  problemStatement: 'Solve this problem',
+  starterCode: 'function solve() {}',
+  functionName: 'solve',
+  difficulty: 'medium',
+  category: 'math',
+  testCases: [
+    { input: '1,2', target: '3', expectedOutput: '3' },
+    { input: '2,3', target: '5', expectedOutput: '5' }
+  ]
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:60:15
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:46:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Created desafio: {
+  id: 38,
+  title: 'Unique Desafio',
+  problemStatement: 'Solve this problem',
+  starterCode: 'function solve() {}',
+  functionName: 'solve',
+  examples: null,
+  difficulty: 'medium',
+  category: 'math',
+  createdAt: 2025-02-09T23:44:42.000Z,
+  updatedAt: null
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:75:17
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:46:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Inserting test cases: [
+  {
+    input: '1,2',
+    target: '3',
+    expectedOutput: '3',
+    desafioId: 38,
+    createdAt: 2025-02-09T23:44:42.186Z
+  },
+  {
+    input: '2,3',
+    target: '5',
+    expectedOutput: '5',
+    desafioId: 38,
+    createdAt: 2025-02-09T23:44:42.186Z
+  }
+]</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:82:17
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\route.ts:46:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Inserted test cases: [
+  {
+    id: 38,
+    desafioId: 38,
+    input: '1,2',
+    target: '3',
+    expectedOutput: '3',
+    createdAt: 2025-02-09T23:44:42.000Z,
+    updatedAt: null
+  },
+  {
+    id: 39,
+    desafioId: 38,
+    input: '2,3',
+    target: '5',
+    expectedOutput: '5',
+    createdAt: 2025-02-09T23:44:42.000Z,
+    updatedAt: null
+  }
+]</pre></div></div></div><div id="suite-12" class="suite-container"><input id="collapsible-11" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-11"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\paths\paths-update.test.ts</div><div class="suite-time warn">26.378s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/cursos/paths/[pathId]</div><div class="test-title">should delete a path and return 404 on subsequent GET</div><div class="test-status">passed</div><div class="test-duration">0.532s</div></div></div></div></div><div id="suite-13" class="suite-container"><input id="collapsible-12" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-12"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\courses\path-courses.test.ts</div><div class="suite-time warn">27.074s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/courses/[pathId] route</div><div class="test-title">should fetch courses for the given path (GET)</div><div class="test-status">passed</div><div class="test-duration">1.139s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at POST (C:\Coding\TCC PROJECT\codx\src\app\cursos\api\courses\by-path\[pathId]\route.ts:70:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Failed to create course: error: insert or update on table "codx_path_courses" violates foreign key constraint "codx_path_courses_path_id_codx_paths_id_fk"
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@neondatabase+serverless@0.7.2\node_modules\@neondatabase\serverless\index.js:1340:74
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at POST (C:\Coding\TCC PROJECT\codx\src\app\cursos\api\courses\by-path\[pathId]\route.ts:62:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55 {
+  length: 321,
+  severity: 'ERROR',
+  code: '23503',
+  detail: 'Key (path_id)=(232) is not present in table "codx_paths".',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'codx_path_courses',
+  column: undefined,
+  dataType: undefined,
+  constraint: 'codx_path_courses_path_id_codx_paths_id_fk',
+  file: 'ri_triggers.c',
+  line: '2599',
+  routine: 'ri_ReportViolation'
+}</pre></div></div></div><div id="suite-14" class="suite-container"><input id="collapsible-13" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-13"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\desafios\api\desafios-update.test.ts</div><div class="suite-time warn">27.259s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/desafios/[id]</div><div class="test-title">should GET desafio by name (GET)</div><div class="test-status">passed</div><div class="test-duration">0.612s</div></div></div></div><div class="suite-consolelog"><div class="suite-consolelog-header">Console Log</div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:74:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Received PUT request with body: {
+  title: 'Updated Desafio',
+  problemStatement: 'Updated problem',
+  starterCode: 'updated code',
+  functionName: 'updatedFunc',
+  difficulty: 'medium',
+  category: 'math',
+  testCases: [ { id: 1, input: '2,3', target: '5', expectedOutput: '5' } ]
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:86:15
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:25)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:76:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Updating desafio: 39</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:102:19
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at VercelPgSession.transaction (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\drizzle-orm@0.29.5_@neondatabase+serverless@0.7.2_@opentelemetry+api@1.9.0_@types+pg@8.6.6_@t_gmpaaecx6nlrcvl552qvejs2o4\node_modules\src\vercel-postgres\session.ts:147:19)
+    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:76:20)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Updating test case: 1</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:139:13)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre><pre class="suite-consolelog-item-message">Failed to update desafio: TypeError: Value is not JSON serializable
+    at serializeJavascriptValueToJSONString (node:internal/deps/undici/undici:4232:15)
+    at Function.json (node:internal/deps/undici/undici:8784:11)
+    at Function.json (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\web\spec-extension\response.ts:79:41)
+    at PUT (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:137:25)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:33
+    at AppRouteRouteModule.execute (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:31)
+    at AppRouteRouteModule.handle (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:24)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:255:55</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at GET (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:148:11)
+    at handler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:39)
+    at fn (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:313:28)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NoopTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\NoopTracer.ts:98:27)
+    at ProxyTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\ProxyTracer.ts:51:20)
+    at startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:266:32)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NextTracerImpl.trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:265:24)
+    at trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:369:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\static-generation-async-storage-wrapper.ts:104:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:279:49)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\request-async-storage-wrapper.ts:137:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:275:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at AppRouteRouteModule.run [as execute] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:61)
+    at AppRouteRouteModule.execute [as handle] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:35)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:234:49
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</pre><pre class="suite-consolelog-item-message">Received request for ID: Request {
+  method: 'GET',
+  url: 'ntarh:///api/desafios/Update-Desafio',
+  headers: Headers {
+    host: '[::1]:56450',
+    connection: 'keep-alive',
+    'x-msw-intention': 'bypass',
+    'x-msw-bypass': 'true',
+    accept: '*/*',
+    'accept-language': '*',
+    'sec-fetch-mode': 'cors',
+    'user-agent': 'node',
+    'accept-encoding': 'gzip, deflate'
+  },
+  destination: '',
+  referrer: 'about:client',
+  referrerPolicy: 'no-referrer',
+  mode: 'cors',
+  credentials: 'same-origin',
+  cache: 'default',
+  redirect: 'follow',
+  integrity: '',
+  keepalive: false,
+  isReloadNavigation: false,
+  isHistoryNavigation: false,
+  signal: AbortSignal { aborted: false }
+}</pre></div><div class="suite-consolelog-item"><pre class="suite-consolelog-item-origin">    at GET (C:\Coding\TCC PROJECT\codx\src\app\desafios\api\[id]\route.ts:153:11)
+    at handler (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:384:39)
+    at fn (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:313:28)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NoopTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\NoopTracer.ts:98:27)
+    at ProxyTracer.startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\trace\ProxyTracer.ts:51:20)
+    at startActiveSpan (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:266:32)
+    at NoopContextManager.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\context\NoopContextManager.ts:31:15)
+    at ContextAPI.with (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api\src\api\context.ts:77:42)
+    at NextTracerImpl.trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\lib\trace\tracer.ts:265:24)
+    at trace (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:369:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\static-generation-async-storage-wrapper.ts:104:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:279:49)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at Object.run [as wrap] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\async-storage\request-async-storage-wrapper.ts:137:20)
+    at wrap (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:275:36)
+    at AsyncLocalStorage.run (node:async_hooks:346:14)
+    at AppRouteRouteModule.run [as execute] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:269:61)
+    at AppRouteRouteModule.execute [as handle] (C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_react-dom@18.2.0_react@18.2.0__react@18.2.0\node_modules\next\src\server\future\route-modules\app-route\module.ts:484:35)
+    at C:\Coding\TCC PROJECT\codx\node_modules\.pnpm\next-test-api-route-handler@4.0.14_next@14.2.2_@babel+core@7.26.8_@opentelemetry+api@1.9.0_re_xg6mztvhswjxm46vsh7llaofea\node_modules\next-test-api-route-handler\dist\src\index.js:234:49
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)</pre><pre class="suite-consolelog-item-message">Name: Update Desafio</pre></div></div></div><div id="suite-15" class="suite-container"><input id="collapsible-14" type="checkbox" class="toggle" checked="checked"/><label for="collapsible-14"><div class="suite-info"><div class="suite-path">C:\Coding\TCC PROJECT\codx\src\app\__tests__\cursos\api\modules\modules-route.test.ts</div><div class="suite-time warn">27.473s</div></div></label><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/modules/by-course/[courseId]</div><div class="test-title">should return 404 for GET if course not found</div><div class="test-status">passed</div><div class="test-duration">2.703s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/modules/by-course/[courseId]</div><div class="test-title">should GET modules with course info when course exists</div><div class="test-status">passed</div><div class="test-duration">0.947s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">/api/modules/by-course/[courseId]</div><div class="test-title">should create a new module (POST) with order validation</div><div class="test-status">passed</div><div class="test-duration">1.057s</div></div></div></div></div></div></body></html>
