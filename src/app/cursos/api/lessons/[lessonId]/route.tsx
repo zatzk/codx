@@ -12,7 +12,7 @@ interface UpdateRequestBody {
   content?: string;
   videoUrl?: string;
   description?: string;
-  order: number;
+  lessonOrder: number;
 }
 
 export async function PUT(request: Request, { params }: { params: { lessonId: string } }) {
@@ -20,7 +20,7 @@ export async function PUT(request: Request, { params }: { params: { lessonId: st
     const body: UpdateRequestBody = await request.json();
     
     // Validate required fields (content must be non-empty string)
-    if (!body.title?.trim() || !body.content?.trim() || !body.description?.trim() || body.order === undefined) {
+    if (!body.title?.trim() || !body.content?.trim() || !body.description?.trim() || body.lessonOrder === undefined) {
       return NextResponse.json(
         { error: 'Title, content, description, and order are required' },
         { status: 400 }
@@ -35,36 +35,36 @@ export async function PUT(request: Request, { params }: { params: { lessonId: st
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });
     }
     
-    // Handle order changes
-    if (body.order !== existingLesson.order) {
+    // Handle lessonOrder changes
+    if (body.lessonOrder !== existingLesson.lessonOrder) {
       // Decrement higher orders when moving down
-      if (existingLesson.order !== null && body.order < existingLesson.order) {
+      if (existingLesson.lessonOrder !== null && body.lessonOrder < existingLesson.lessonOrder) {
         await db.update(lessons)
-          .set({ order: sql`${lessons.order} + 1` })
+          .set({ lessonOrder: sql`${lessons.lessonOrder} + 1` })
           .where(and(
             eq(lessons.moduleId, existingLesson.moduleId!),
-            gte(lessons.order, body.order),
-            lt(lessons.order, existingLesson.order ?? 0)
+            gte(lessons.lessonOrder, body.lessonOrder),
+            lt(lessons.lessonOrder, existingLesson.lessonOrder ?? 0)
           ));
       }
-      // Increment lower orders when moving up
+      // Increment lower lessonOrders when moving up
       else {
         await db.update(lessons)
-          .set({ order: sql`${lessons.order} - 1` })
+          .set({ lessonOrder: sql`${lessons.lessonOrder} - 1` })
           .where(and(
             eq(lessons.moduleId, existingLesson.moduleId!),
-            gt(lessons.order, existingLesson.order ?? 0),
-            lte(lessons.order, body.order)
+            gt(lessons.lessonOrder, existingLesson.lessonOrder ?? 0),
+            lte(lessons.lessonOrder, body.lessonOrder)
           ));
       }
     }
 
     if (existingLesson && existingLesson.id !== parseInt(params.lessonId)) {
       await db.update(lessons)
-        .set({ order: sql`${lessons.order} + 1` })
+        .set({ lessonOrder: sql`${lessons.lessonOrder} + 1` })
         .where(and(
           eq(lessons.moduleId, lessons.moduleId),
-          gte(lessons.order, body.order)
+          gte(lessons.lessonOrder, body.lessonOrder)
         ));
     }
 
@@ -75,7 +75,7 @@ export async function PUT(request: Request, { params }: { params: { lessonId: st
         content: body.content,
         videoUrl: body.videoUrl ?? null,
         description: body.description,
-        order: body.order,
+        lessonOrder: body.lessonOrder,
       })
       .where(eq(lessons.id, parseInt(params.lessonId)))
       .returning();

@@ -375,7 +375,7 @@ export const lessons = createTable(
     content: text("content"),
     videoUrl: varchar("video_url", { length: 256 }),
     description: varchar("description"),
-    order: integer("order"),
+    lessonOrder: integer("lesson_order"),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

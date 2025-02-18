@@ -28,7 +28,7 @@ interface Lesson {
   content: string;
   videoUrl: string | null;
   description: string;
-  order: number;
+  lessonOrder: number;
 }
 
 interface Module {
@@ -121,7 +121,7 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
       });
   
       if (response.ok) {
-        setProgress(prev => Math.max(prev, activeLesson?.order ?? 0));
+        setProgress(prev => Math.max(prev, activeLesson?.lessonOrder ?? 0));
       }
     } catch (error) {
       console.error('Error marking lesson complete:', error);
@@ -136,7 +136,7 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
     )
   }
 
-  const sortedLessons = [...module.lessons].sort((a, b) => a.order - b.order);
+  const sortedLessons = [...module.lessons].sort((a, b) => a.lessonOrder - b.lessonOrder);
 
 
   if (isLoading) {
@@ -160,7 +160,7 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
                 className={`cursor-pointer p-2 flex items-center`}
                 onClick={() => setActiveLesson(lesson)}
               >
-                <span className={`${lesson.order <= progress ? 'pixelarticons--check' : 'pixelarticons--circle'} text-lg mr-2`}></span>
+                <span className={`${lesson.lessonOrder <= progress ? 'pixelarticons--check' : 'pixelarticons--circle'} text-lg mr-2`}></span>
                 <h4 className={`${activeLesson?.id === lesson.id ? 'border-b opacity-90' : ''}`}>{lesson.title}</h4>
               </li>
             ))}
@@ -213,9 +213,9 @@ export default function ModuleLessonsPage({ params }: { params: { moduleId: stri
                         <button
                           className={`mt-4 text-white flex items-center px-3 py-1 ${silkscreen.className} ${activeColorSet?.bg} bg-opacity-30 hover:bg-opacity-40 rounded-lg`}
                           onClick={() => markLessonAsComplete(activeLesson.id)}
-                          disabled={activeLesson.order <= progress}
+                          disabled={activeLesson.lessonOrder <= progress}
                         >
-                          {activeLesson.order <= progress 
+                          {activeLesson.lessonOrder <= progress 
                             ? 
                               <>
                                 <span className="pixelarticons--check-double text-xl mr-3"></span>

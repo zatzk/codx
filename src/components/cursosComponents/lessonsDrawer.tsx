@@ -26,7 +26,7 @@ interface Lesson {
   content: string;
   videoUrl: string | null;
   description: string;
-  order: number;
+  lessonOrder: number;
 }
 
 interface LessonsDrawerProps {
@@ -44,7 +44,7 @@ export function LessonsDrawer({ isOpen, onClose, onFormSubmit, moduleId, selecte
     content: '',
     videoUrl: '',
     description: '',
-    order: 1,
+    lessonOrder: 1,
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ export function LessonsDrawer({ isOpen, onClose, onFormSubmit, moduleId, selecte
         content: selectedLesson.content,
         videoUrl: selectedLesson.videoUrl ?? '',
         description: selectedLesson.description,
-        order: selectedLesson.order,
+        lessonOrder: selectedLesson.lessonOrder,
       });
     } else {
       setFormData({
@@ -64,7 +64,7 @@ export function LessonsDrawer({ isOpen, onClose, onFormSubmit, moduleId, selecte
         content: '',
         videoUrl: '',
         description: '',
-        order: 1,
+        lessonOrder: 1,
       });
     }
   }, [selectedLesson]);
@@ -74,7 +74,7 @@ export function LessonsDrawer({ isOpen, onClose, onFormSubmit, moduleId, selecte
     if (!formData.title.trim() || 
         !formData.content.trim() || 
         !formData.description.trim() || 
-        formData.order < 1
+        formData.lessonOrder < 1
     ) {
       alert('Please fill all required fields');
       return;
@@ -90,7 +90,7 @@ export function LessonsDrawer({ isOpen, onClose, onFormSubmit, moduleId, selecte
         url = `/cursos/api/lessons/${selectedLesson.id}`;
         method = 'PUT';
       } else {
-        url = `/cursos/api/lessons/${moduleId}`;
+        url = `/cursos/api/lessons/by-module/${moduleId}`;
         method = 'POST';
       }
   
@@ -99,11 +99,7 @@ export function LessonsDrawer({ isOpen, onClose, onFormSubmit, moduleId, selecte
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          // For POST requests, include moduleId in the body
-          ...(!selectedLesson && { moduleId: moduleId })
-        }),
+        body: JSON.stringify(formData),
       });
   
       if (!response.ok) {
@@ -220,8 +216,8 @@ export function LessonsDrawer({ isOpen, onClose, onFormSubmit, moduleId, selecte
                 <Input
                   type="number"
                   id="order"
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
+                  value={formData.lessonOrder}
+                  onChange={(e) => setFormData({ ...formData, lessonOrder: Number(e.target.value) })}
                   className="w-full bg-transparent"
                   min="1"
                 />
